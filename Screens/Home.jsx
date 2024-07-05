@@ -35,7 +35,7 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     setTimeout(() => {
       setLoad(true);
-    }, 1000);
+    }, 100);
   }, []);
 
   // show user activity functions
@@ -190,7 +190,7 @@ const Home = ({ navigation }) => {
               style={{
                 color: Colors.veryDarkGrey,
                 fontSize: 10,
-                fontFamily: "PopIns-Regular",
+                // fontFamily: "PopIns-Regular",
                 // fontWeight: 700,
               }}
               numberOfLines={1}

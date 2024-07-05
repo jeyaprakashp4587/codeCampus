@@ -10,7 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 
-const SelectedCourse = () => {
+const SelectedCourse = ({ navigation }) => {
   const { selectedCourse } = useData();
 
   const courses = [
@@ -154,6 +154,7 @@ const SelectedCourse = () => {
         rippleColor={Colors.violet}
         rippleOpacity={1}
         style={styles.button}
+        onPress={() => navigation.navigate("learn")}
       >
         <Text style={styles.buttonText}>Let's Begin</Text>
       </Ripple>

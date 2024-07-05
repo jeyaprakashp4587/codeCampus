@@ -23,6 +23,7 @@ import { useEffect } from "react";
 import SignUp from "../LoginSystem/SignUp";
 import Carrer from "../Pages/Carrer";
 import SelectedCourse from "../Pages/SelectedCourse";
+import LearnPage from "../Pages/LearnPage";
 
 // ------------- //
 // Tab navigations
@@ -181,6 +182,11 @@ const StackNavigations = (props) => {
       <Stack.Screen
         name="course"
         component={SelectedCourse}
+        options={{ headerShadow: false }}
+      />
+      <Stack.Screen
+        name="learn"
+        component={LearnPage}
         options={{ headerShadow: false }}
       />
     </Stack.Navigator>
