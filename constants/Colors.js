@@ -14,5 +14,4 @@ export const pageView = {
 
 export const font = {
   poppins: null,
-  poppinsBold: "PopIns-Bold",
 };
