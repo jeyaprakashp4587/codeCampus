@@ -80,7 +80,7 @@ const Home = ({ navigation }) => {
   };
   // render skeleton
   if (!load) {
-    console.log(load);
+    // console.log(load);
     return <HomeSkeleton />;
   }
   return (
@@ -103,7 +103,7 @@ const Home = ({ navigation }) => {
         markingType={"multi-dot"}
         onDayPress={(day) => {
           setActivitiesDis(!activitiesdis);
-          console.log("act", act[day.dateString].course);
+          // console.log("act", act[day.dateString].course);
           setActivitiesList(act[day.dateString].course);
         }}
       />
@@ -207,7 +207,6 @@ const Home = ({ navigation }) => {
               style={{
                 color: Colors.veryDarkGrey,
                 fontSize: 10,
-                fontFamily: "PopIns-Regular",
                 // fontWeight: 700,
               }}
             >
@@ -223,7 +222,7 @@ const Home = ({ navigation }) => {
               style={{
                 color: Colors.veryDarkGrey,
                 fontSize: 10,
-                fontFamily: "PopIns-Regular",
+                // fontFamily: "PopIns-Regular",
                 // fontWeight: 700,
               }}
             >
@@ -246,7 +245,7 @@ const Home = ({ navigation }) => {
               style={{
                 color: Colors.veryDarkGrey,
                 fontSize: 10,
-                fontFamily: "PopIns-Regular",
+                // fontFamily: "PopIns-Regular",
                 fontWeight: 600,
               }}
               numberOfLines={1}

@@ -52,7 +52,7 @@ const LearnPage = () => {
       {/* postioning */}
       <WebView
         javaScriptEnabled={true}
-        source={{ uri: "https://www.w3schools.com/cpp/default.asp" }}
+        // source={{ uri:  }}
       />
     </View>
   );
