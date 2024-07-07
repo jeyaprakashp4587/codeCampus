@@ -25,11 +25,61 @@ const Carrer = ({ navigation }) => {
       introduction:
         "Learn to create engaging and responsive web interfaces using HTML, CSS, and JavaScript. Master popular frameworks like React, Bootstrap",
       technologies: [
-        <FontAwesome5 name="html5" size={35} color="#EF6C33" />,
-        <FontAwesome5 name="css3" size={35} color="#0874C5" />,
-        <Ionicons name="logo-javascript" size={35} color="#E2A534" />,
-        <FontAwesome5 name="react" size={35} color="#9EE6F7" />,
-        <FontAwesome5 name="bootstrap" size={35} color="#A983FF" />,
+        {
+          name: "html",
+          icon: <FontAwesome5 name="html5" size={35} color="#EF6C33" />,
+          details:
+            "HTML (HyperText Markup Language) is the standard language for creating web pages. It describes the structure of a webpage and is used alongside CSS and JavaScript to create visually appealing and interactive websites.",
+          basics: [
+            "Elements and Tags: Understanding the basic HTML elements like headings, paragraphs, links, images, and lists.",
+            "Attributes: Learning how to use attributes to provide additional information about elements.",
+            "Document Structure: Knowing how to structure an HTML document with doctype, html, head, and body tags.",
+          ],
+        },
+        {
+          name: "css",
+          icon: <FontAwesome5 name="css3" size={35} color="#0874C53" />,
+          details:
+            "CSS (Cascading Style Sheets) is used to style and layout web pages. It allows you to apply styles to HTML elements, control the layout of multiple web pages, and adapt the presentation to different devices.",
+          basics: [
+            "Selectors: Understanding how to select elements to apply styles.",
+            "Box Model: Learning about the box model, including margins, borders, padding, and content.",
+            "Flexbox and Grid: Using modern layout techniques like Flexbox and CSS Grid to create complex layouts.",
+          ],
+        },
+        {
+          name: "js",
+          icon: <Ionicons name="logo-javascript" size={35} color="#E2A534" />,
+          details:
+            "JavaScript is a programming language that allows you to create dynamically updating content, control multimedia, animate images, and much more. It is an essential technology for creating interactive web applications.",
+          basics: [
+            "Variables and Data Types: Understanding how to declare variables and work with different data types.",
+            "Functions: Learning how to write reusable code blocks with functions.",
+            "DOM Manipulation: Using JavaScript to interact with and manipulate the Document Object Model (DOM).",
+          ],
+        },
+        {
+          name: "react",
+          icon: <FontAwesome5 name="react" size={35} color="#9EE6F7" />,
+          details:
+            "React is a JavaScript library for building user interfaces. It allows developers to create large web applications that can update and render efficiently in response to data changes.",
+          basics: [
+            "Components: Building reusable components to create complex user interfaces.",
+            "State and Props: Managing the state and passing data between components.",
+            "JSX: Using JSX syntax to write HTML within JavaScript.",
+          ],
+        },
+        {
+          name: "bootstrap",
+          icon: <FontAwesome5 name="bootstrap" size={35} color="#A983FF" />,
+          details:
+            "Bootstrap is a popular front-end framework for developing responsive and mobile-first websites. It includes CSS- and JavaScript-based design templates for typography, forms, buttons, navigation, and other interface components.",
+          basics: [
+            "Grid System: Using Bootstrap's grid system to create responsive layouts.",
+            "Components: Utilizing pre-built components like modals, carousels, and navbars.",
+            "Utilities: Applying utility classes for spacing, alignment, and more.",
+          ],
+        },
       ],
       topics: [
         "HTML Basics",
@@ -40,7 +90,8 @@ const Carrer = ({ navigation }) => {
         "Component-based Architecture",
       ],
       img: "https://i.ibb.co/vzxBjQM/webdevelopment.jpg",
-      guidance: `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/s6156ZBcfGk?si=iCIRRTcLVqOJ-mNp&amp;start=60" title="YouTube video player" frameborder="0" borderradius="10" allow="accelerometer;  clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`,
+      guidance:
+        '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/s6156ZBcfGk?si=iCIRRTcLVqOJ-mNp&amp;start=60" title="YouTube video player" frameborder="0" borderradius="10" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
       bgColor: "#b8b894",
       platform: [],
     },
@@ -49,13 +100,39 @@ const Carrer = ({ navigation }) => {
       introduction:
         "Discover server-side programming with Node.js, Express, Mongo DB, and more. Build REST APIs, manage databases, and implement authentication.",
       technologies: [
-        <FontAwesome5 name="node" size={35} color="#46473D" />,
-        <MaterialCommunityIcons
-          name="microsoft-internet-explorer"
-          size={35}
-          color="#414141"
-        />,
-        <Fontisto name="mongodb" size={35} color="#72B545" />,
+        {
+          name: "node",
+          icon: <FontAwesome5 name="node" size={35} color="#46473D" />,
+          details:
+            "Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. It allows you to run JavaScript on the server-side, enabling the creation of scalable network applications.",
+          basics: [
+            "Event-driven Programming: Understanding the event-driven architecture of Node.js.",
+            "Modules: Using Node.js modules to organize code.",
+            "Asynchronous Programming: Managing asynchronous operations with callbacks, promises, and async/await.",
+          ],
+        },
+        {
+          name: "express",
+          icon: '<MaterialCommunityIcons name="microsoft-internet-explorer" size={35} color="#414141" />',
+          details:
+            "Express is a minimal and flexible Node.js web application framework that provides a robust set of features to develop web and mobile applications.",
+          basics: [
+            "Routing: Defining routes to handle different HTTP requests.",
+            "Middleware: Using middleware functions to handle requests and responses.",
+            "Templates: Rendering dynamic content using template engines like EJS or Pug.",
+          ],
+        },
+        {
+          name: "mongodb",
+          icon: <Fontisto name="mongodb" size={35} color="#72B545" />,
+          details:
+            "MongoDB is a document-oriented NoSQL database used for high volume data storage. It stores data in flexible, JSON-like documents, making it easy to store and retrieve data.",
+          basics: [
+            "Documents and Collections: Understanding the basic building blocks of MongoDB.",
+            "CRUD Operations: Performing create, read, update, and delete operations.",
+            "Indexes: Improving query performance with indexes.",
+          ],
+        },
       ],
       topics: [
         "Server-side Programming",
@@ -66,7 +143,8 @@ const Carrer = ({ navigation }) => {
         "Microservices",
       ],
       img: "https://i.ibb.co/frB3LrD/11668623-20945227.jpg",
-      guidance: `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/G-EAVcMHEko?si=h-WzoTp5lCQ7idun" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`,
+      guidance:
+        '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/G-EAVcMHEko?si=h-WzoTp5lCQ7idun" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
       bgColor: "#008080",
     },
     {
@@ -74,13 +152,45 @@ const Carrer = ({ navigation }) => {
       introduction:
         "Develop high-quality mobile applications with Swift, Kotlin, Flutter, and React Native. Focus on UI design, state management, and cross-platform solutions.",
       technologies: [
-        <FontAwesome5 name="swift" size={35} color="#DF833A" />,
-        <FontAwesome5 name="react" size={35} color="#4CC1E0" />,
-        <MaterialCommunityIcons
-          name="language-kotlin"
-          size={35}
-          color="#70D152"
-        />,
+        {
+          name: "swift",
+          icon: <FontAwesome5 name="swift" size={35} color="#DF833A" />,
+          details:
+            "Swift is a powerful and intuitive programming language for macOS, iOS, watchOS, and tvOS. It is designed to give developers more freedom than ever before.",
+          basics: [
+            "Syntax: Understanding the basic syntax and structure of Swift.",
+            "Optionals: Using optionals to handle the absence of values.",
+            "Protocols: Defining blueprints of methods, properties, and other requirements.",
+          ],
+        },
+        {
+          name: "react",
+          icon: <FontAwesome5 name="react" size={35} color="#4CC1E0" />,
+          details:
+            "React Native is a framework for building native apps using React. It enables developers to use the same codebase for both iOS and Android applications.",
+          basics: [
+            "Components: Creating reusable UI components.",
+            "Navigation: Implementing navigation between different screens.",
+            "Native Modules: Integrating with native code to use platform-specific features.",
+          ],
+        },
+        {
+          name: "kotlin",
+          icon: (
+            <MaterialCommunityIcons
+              name="language-kotlin"
+              size={35}
+              color="#70D152"
+            />
+          ),
+          details:
+            "Kotlin is a modern programming language that makes developers happier. It is concise, safe, interoperable with Java, and provides many ways to reuse code.",
+          basics: [
+            "Syntax: Understanding the basic syntax and structure of Kotlin.",
+            "Null Safety: Handling null values safely with nullable types.",
+            "Coroutines: Simplifying asynchronous programming with coroutines.",
+          ],
+        },
       ],
       topics: [
         "Mobile UI Design",
@@ -91,14 +201,27 @@ const Carrer = ({ navigation }) => {
         "Performance Optimization",
       ],
       img: "https://i.ibb.co/Lvvq3kP/appdevelopment.jpg",
-      guidance: `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/fwdiH3343oM?si=_7dmKfgbpqvCGnKT" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`,
+      guidance:
+        '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/fwdiH3343oM?si=_7dmKfgbpqvCGnKT" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
       bgColor: "#8cb3d9",
     },
     {
       name: "Java",
       introduction:
         "Gain expertise in Java for enterprise-level applications. Cover OOP, data structures, concurrency, and frameworks like Spring and Hibernate.",
-      technologies: [<FontAwesome5 name="java" size={35} color="#158EC9" />],
+      technologies: [
+        {
+          name: "java",
+          icon: <FontAwesome5 name="java" size={35} color="#158EC9" />,
+          details:
+            "Java is a high-level, class-based, object-oriented programming language that is designed to have as few implementation dependencies as possible. It is a widely-used language for building enterprise-scale applications.",
+          basics: [
+            "OOP Concepts: Understanding the principles of object-oriented programming.",
+            "Java Syntax: Learning the basic syntax and structure of Java.",
+            "Exception Handling: Handling errors and exceptions gracefully.",
+          ],
+        },
+      ],
       topics: [
         "Object-oriented Programming",
         "Data Structures",
@@ -106,7 +229,8 @@ const Carrer = ({ navigation }) => {
         "Exception Handling",
       ],
       img: "https://i.ibb.co/qFbgSNf/java.jpg",
-      guidance: `<iframe width="100%" height="100%"src="https://www.youtube.com/embed/vgm6AJLu6F4?si=1Oxz5wM2q8RNw7a5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`,
+      guidance:
+        '<iframe width="100%" height="100%"src="https://www.youtube.com/embed/vgm6AJLu6F4?si=1Oxz5wM2q8RNw7a5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
       bgColor: "#b3b3ff",
     },
     {
@@ -114,11 +238,23 @@ const Carrer = ({ navigation }) => {
       introduction:
         "Master C++ programming for performance-critical applications. Learn advanced topics like templates, STL, memory management, and multithreading.",
       technologies: [
-        <MaterialCommunityIcons
-          name="language-cpp"
-          size={35}
-          color="#085E9F"
-        />,
+        {
+          name: "cpp",
+          icon: (
+            <MaterialCommunityIcons
+              name="language-cpp"
+              size={35}
+              color="#085E9F"
+            />
+          ),
+          details:
+            "C++ is a general-purpose programming language created as an extension of the C programming language. It has imperative, object-oriented, and generic programming features.",
+          basics: [
+            "Syntax: Understanding the basic syntax and structure of C++.",
+            "OOP Concepts: Applying object-oriented programming principles in C++.",
+            "Memory Management: Managing memory manually using pointers and dynamic allocation.",
+          ],
+        },
       ],
       topics: [
         "Object-oriented Programming",
@@ -129,10 +265,12 @@ const Carrer = ({ navigation }) => {
         "Advanced Data Structures",
       ],
       img: "https://i.ibb.co/JRXrmhX/7441053-3657405.jpg",
-      guidance: `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/x0xjvTIvmT4?si=D5w0dGGvYHI0k8fS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`,
+      guidance:
+        '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/x0xjvTIvmT4?si=D5w0dGGvYHI0k8fS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
       bgColor: "#ff6666",
     },
   ];
+
   return (
     <View style={pageView}>
       <Text

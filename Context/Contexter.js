@@ -2,11 +2,17 @@ import { createContext, useContext, useState } from "react";
 
 const Contexter = createContext();
 export const ContextProvider = ({ children }) => {
-  const [first, setFirst] = useState("jeya");
-  const [selectedCourse, setSelectedCourse] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState();
+  const [selectedTechnologie, setselectedTechnologie] = useState();
+
   return (
     <Contexter.Provider
-      value={{ first, setFirst, selectedCourse, setSelectedCourse }}
+      value={{
+        selectedCourse,
+        setSelectedCourse,
+        selectedTechnologie,
+        setselectedTechnologie,
+      }}
     >
       {children}
     </Contexter.Provider>

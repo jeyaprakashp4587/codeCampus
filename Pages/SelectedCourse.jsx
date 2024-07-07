@@ -1,12 +1,14 @@
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useData } from "../Context/Contexter";
 import { Colors, font, pageView } from "../constants/Colors";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Fontisto } from "@expo/vector-icons";
 import Skeleton from "../Skeletons/Skeleton";
 import Ripple from "react-native-material-ripple";
 
@@ -32,21 +34,11 @@ const SelectedCourse = ({ navigation }) => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Technologies</Text>
         <View style={styles.technologiesContainer}>
-          {selectedCourse?.technologies.map((icon, index) => icon)}
+          {selectedCourse?.technologies.map((icon, index) => (
+            <TouchableOpacity key={index}>{icon.icon}</TouchableOpacity>
+          ))}
         </View>
       </View>
-      {/* <Text style={styles.sectionTitle}>Road Map Guidance</Text> */}
-      {/* <View style={styles.webviewContainer}>
-        {selectedCourse?.guidance ? (
-          <WebView
-            source={{
-              html: selectedCourse?.guidance,
-            }}
-          />
-        ) : (
-          <Skeleton width={200} height={200} />
-        )}
-      </View> */}
       {/* learing platforms */}
       <View>
         <Text style={styles.sectionTitle}>Learning Plaforms</Text>
@@ -55,7 +47,7 @@ const SelectedCourse = ({ navigation }) => {
         rippleColor={Colors.violet}
         rippleOpacity={1}
         style={styles.button}
-        onPress={() => navigation.navigate("learn")}
+        onPress={() => navigation.navigate("courseDetails")}
       >
         <Text style={styles.buttonText}>Let's Begin</Text>
       </Ripple>
@@ -96,7 +88,7 @@ const styles = StyleSheet.create({
     color: Colors.lightGrey,
     fontSize: 15,
     letterSpacing: 0.8,
-    marginBottom: 10,
+    lineHeight: 30,
   },
   technologiesContainer: {
     flexDirection: "row",

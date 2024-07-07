@@ -22,8 +22,9 @@ const Button = (props) => {
       <Text
         style={{
           fontFamily: font.poppins,
-          fontSize: 15,
+          fontSize: props.fsize ? props.fsize : 15,
           color: props.textColor ? props.textColor : "black",
+          fontWeight: props.fweight ? props.fweight : "400",
         }}
       >
         {props.text}
