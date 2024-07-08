@@ -11,6 +11,8 @@ import { useData } from "../Context/Contexter";
 import { Colors, font, pageView } from "../constants/Colors";
 import Skeleton from "../Skeletons/Skeleton";
 import Ripple from "react-native-material-ripple";
+import TopicsText from "../utils/TopicsText";
+import PragraphText from "../utils/PragraphText";
 
 const SelectedCourse = ({ navigation }) => {
   const { selectedCourse } = useData();
@@ -28,11 +30,11 @@ const SelectedCourse = ({ navigation }) => {
         <Skeleton widht={200} height={250} />
       )}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Course Intro</Text>
-        <Text style={styles.sectionText}>{selectedCourse?.introduction}</Text>
+        <TopicsText text="Course Intro" />
+        <PragraphText text={selectedCourse?.introduction} />
       </View>
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Technologies</Text>
+        <TopicsText text="Technologies" />
         <View style={styles.technologiesContainer}>
           {selectedCourse?.technologies.map((icon, index) => (
             <TouchableOpacity key={index}>{icon.icon}</TouchableOpacity>
@@ -40,9 +42,7 @@ const SelectedCourse = ({ navigation }) => {
         </View>
       </View>
       {/* learing platforms */}
-      <View>
-        <Text style={styles.sectionTitle}>Learning Plaforms</Text>
-      </View>
+
       <Ripple
         rippleColor={Colors.violet}
         rippleOpacity={1}

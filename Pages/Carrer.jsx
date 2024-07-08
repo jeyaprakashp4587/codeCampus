@@ -35,10 +35,11 @@ const Carrer = ({ navigation }) => {
             "Attributes: Learning how to use attributes to provide additional information about elements.",
             "Document Structure: Knowing how to structure an HTML document with doctype, html, head, and body tags.",
           ],
+          web: "https://www.w3schools.com/html/default.asp",
         },
         {
           name: "css",
-          icon: <FontAwesome5 name="css3" size={35} color="#0874C53" />,
+          icon: <FontAwesome5 name="css3" size={35} color="#0874C5" />,
           details:
             "CSS (Cascading Style Sheets) is used to style and layout web pages. It allows you to apply styles to HTML elements, control the layout of multiple web pages, and adapt the presentation to different devices.",
           basics: [
@@ -46,6 +47,7 @@ const Carrer = ({ navigation }) => {
             "Box Model: Learning about the box model, including margins, borders, padding, and content.",
             "Flexbox and Grid: Using modern layout techniques like Flexbox and CSS Grid to create complex layouts.",
           ],
+          web: "https://www.w3schools.com/css/default.asp",
         },
         {
           name: "js",
@@ -57,6 +59,7 @@ const Carrer = ({ navigation }) => {
             "Functions: Learning how to write reusable code blocks with functions.",
             "DOM Manipulation: Using JavaScript to interact with and manipulate the Document Object Model (DOM).",
           ],
+          web: "https://www.w3schools.com/js/default.asp",
         },
         {
           name: "react",
@@ -68,6 +71,7 @@ const Carrer = ({ navigation }) => {
             "State and Props: Managing the state and passing data between components.",
             "JSX: Using JSX syntax to write HTML within JavaScript.",
           ],
+          web: "https://react.dev/learn",
         },
         {
           name: "bootstrap",
@@ -79,6 +83,7 @@ const Carrer = ({ navigation }) => {
             "Components: Utilizing pre-built components like modals, carousels, and navbars.",
             "Utilities: Applying utility classes for spacing, alignment, and more.",
           ],
+          web: "https://getbootstrap.com/docs/5.3/getting-started/introduction/",
         },
       ],
       topics: [
@@ -102,7 +107,7 @@ const Carrer = ({ navigation }) => {
       technologies: [
         {
           name: "node",
-          icon: <FontAwesome5 name="node" size={35} color="#46473D" />,
+          icon: <FontAwesome5 name="node" size={35} color="orange" />,
           details:
             "Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. It allows you to run JavaScript on the server-side, enabling the creation of scalable network applications.",
           basics: [
@@ -110,10 +115,17 @@ const Carrer = ({ navigation }) => {
             "Modules: Using Node.js modules to organize code.",
             "Asynchronous Programming: Managing asynchronous operations with callbacks, promises, and async/await.",
           ],
+          web: "https://www.geeksforgeeks.org/nodejs/?ref=shm",
         },
         {
           name: "express",
-          icon: '<MaterialCommunityIcons name="microsoft-internet-explorer" size={35} color="#414141" />',
+          icon: (
+            <MaterialCommunityIcons
+              name="microsoft-internet-explorer"
+              size={35}
+              color="#414141"
+            />
+          ),
           details:
             "Express is a minimal and flexible Node.js web application framework that provides a robust set of features to develop web and mobile applications.",
           basics: [
@@ -121,6 +133,7 @@ const Carrer = ({ navigation }) => {
             "Middleware: Using middleware functions to handle requests and responses.",
             "Templates: Rendering dynamic content using template engines like EJS or Pug.",
           ],
+          web: "https://www.geeksforgeeks.org/express-js/?ref=lbp",
         },
         {
           name: "mongodb",
@@ -132,6 +145,7 @@ const Carrer = ({ navigation }) => {
             "CRUD Operations: Performing create, read, update, and delete operations.",
             "Indexes: Improving query performance with indexes.",
           ],
+          web: "https://www.w3schools.com/mongodb/index.php",
         },
       ],
       topics: [

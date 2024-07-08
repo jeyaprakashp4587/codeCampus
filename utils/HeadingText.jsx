@@ -1,0 +1,15 @@
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { Colors } from "../constants/Colors";
+
+const HeadingText = (props) => {
+  return (
+    <Text style={{ color: Colors.mildGrey, fontSize: 25, paddingVertical: 10 }}>
+      {props.text}
+    </Text>
+  );
+};
+
+export default HeadingText;
+
+const styles = StyleSheet.create({});

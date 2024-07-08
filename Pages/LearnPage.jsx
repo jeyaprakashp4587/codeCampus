@@ -1,59 +1,74 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { WebView } from "react-native-webview";
 import { Colors, pageView } from "../constants/Colors";
+import HeadingText from "../utils/HeadingText";
+import { useData } from "../Context/Contexter";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { SimpleLineIcons } from "@expo/vector-icons";
 const LearnPage = () => {
+  const { selectedTechnology } = useData();
+  // time
+  const [hours, setHours] = useState(1);
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    let interval = null;
+
+    if (hours > 0 || minutes > 0 || seconds > 0) {
+      interval = setInterval(() => {
+        if (seconds > 0) {
+          setSeconds(seconds - 1);
+        } else if (minutes > 0) {
+          setMinutes(minutes - 1);
+          setSeconds(59);
+        } else if (hours > 0) {
+          setHours(hours - 1);
+          setMinutes(59);
+          setSeconds(59);
+        }
+      }, 1000);
+    }
+
+    return () => clearInterval(interval);
+  }, [hours, minutes, seconds]);
   return (
     <View style={[pageView]}>
       <View
         style={{
-          //   borderWidth: 1,
-          position: "absolute",
-          zIndex: 20,
-          backgroundColor: "white",
-          width: "100%",
-          height: 50,
-          alignSelf: "center",
+          flexDirection: "row",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "space-between",
         }}
       >
-        <Text style={{ fontSize: 25, color: Colors.mildGrey }}>Study Area</Text>
+        <HeadingText text="Study Area" />
+        <View style={{ flexDirection: "row", columnGap: 10 }}>
+          <SimpleLineIcons name="note" size={22} color={Colors.mildGrey} />
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <MaterialCommunityIcons
+              name="timer-outline"
+              size={24}
+              color={Colors.mildGrey}
+            />
+            <Text
+              style={{
+                borderWidth: 0,
+                minWidth: 70,
+                textAlign: "left",
+                color: "orange",
+              }}
+            >
+              {" "}
+              {hours}:{minutes < 10 ? `0${minutes}` : minutes}:
+              {seconds < 10 ? `0${seconds}` : seconds}
+            </Text>
+          </View>
+        </View>
       </View>
-      <View
-        style={{
-          //   borderWidth: 1,
-          position: "absolute",
-          zIndex: 20,
-          backgroundColor: "white",
-          width: "100%",
-          height: 55,
-          alignSelf: "center",
-          alignItems: "center",
-          justifyContent: "center",
-          top: "4.5%",
-          left: 70,
-        }}
-      />
-      <View
-        style={{
-          //   borderWidth: 1,
-          position: "absolute",
-          zIndex: 20,
-          backgroundColor: "white",
-          width: "100%",
-          height: 70,
-          alignSelf: "center",
-          alignItems: "center",
-          justifyContent: "center",
-          top: "9%",
-        }}
-      ></View>
-      {/* postioning */}
-      <WebView
-        javaScriptEnabled={true}
-        // source={{ uri:  }}
-      />
+      <View style={{ height: 20 }} />
+      <WebView source={{ uri: selectedTechnology }} />
     </View>
   );
 };
