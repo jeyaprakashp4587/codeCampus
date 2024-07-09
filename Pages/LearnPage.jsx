@@ -7,6 +7,7 @@ import { useData } from "../Context/Contexter";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
+import Skeleton from "../Skeletons/Skeleton";
 const LearnPage = () => {
   const { selectedTechnology } = useData();
   // time
@@ -68,7 +69,11 @@ const LearnPage = () => {
         </View>
       </View>
       <View style={{ height: 20 }} />
-      <WebView source={{ uri: selectedTechnology }} />
+      {selectedTechnology ? (
+        <WebView source={{ uri: selectedTechnology }} />
+      ) : (
+        <Skeleton widht={200} height={200} />
+      )}
     </View>
   );
 };

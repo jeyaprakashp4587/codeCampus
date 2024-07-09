@@ -29,8 +29,9 @@ const CourseDetails = ({ navigation }) => {
         }}
       /> */}
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        {selectedCourse?.technologies.map((item) => (
+        {selectedCourse?.technologies.map((item, index) => (
           <View
+            key={index}
             style={{
               marginBottom: 50,
               borderWidth: 0,
@@ -49,8 +50,9 @@ const CourseDetails = ({ navigation }) => {
             <PragraphText text={item.details} />
             <View>
               <TopicsText text="Concepts" />
-              {item.basics.map((basic) => (
+              {item.basics.map((basic, index) => (
                 <Text
+                  key={index}
                   style={{
                     color: Colors.mildGrey,
                     fontSize: 16,

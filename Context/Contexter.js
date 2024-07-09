@@ -4,7 +4,7 @@ const Contexter = createContext();
 export const ContextProvider = ({ children }) => {
   const [selectedCourse, setSelectedCourse] = useState();
   const [selectedTechnology, setselectedTechnology] = useState();
-
+  const [selectedChallengeTopic, setselectedChallengeTopic] = useState();
   return (
     <Contexter.Provider
       value={{
@@ -12,6 +12,8 @@ export const ContextProvider = ({ children }) => {
         setSelectedCourse,
         selectedTechnology,
         setselectedTechnology,
+        selectedChallengeTopic,
+        setselectedChallengeTopic,
       }}
     >
       {children}

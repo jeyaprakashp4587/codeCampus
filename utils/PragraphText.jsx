@@ -6,8 +6,8 @@ const PragraphText = (props) => {
   return (
     <Text
       style={{
-        color: Colors.mildGrey,
-        fontSize: 16,
+        color: props.color ? props.color : Colors.mildGrey,
+        fontSize: props.fsize ? props.fsize : 16,
         lineHeight: 27,
         letterSpacing: 0.9,
         paddingVertical: 10,
