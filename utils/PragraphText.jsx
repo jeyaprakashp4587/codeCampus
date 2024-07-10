@@ -10,7 +10,7 @@ const PragraphText = (props) => {
         fontSize: props.fsize ? props.fsize : 16,
         lineHeight: 27,
         letterSpacing: 0.9,
-        paddingVertical: 10,
+        paddingVertical: props.padding ? props.padding : 10,
       }}
     >
       {props.text}

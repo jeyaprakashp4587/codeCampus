@@ -6,7 +6,7 @@ const TopicsText = (props) => {
   return (
     <Text
       style={{
-        fontSize: 23,
+        fontSize: props.fszie ? props.fszie : 23,
         color: Colors.mildGrey,
         marginBottom: 20,
       }}

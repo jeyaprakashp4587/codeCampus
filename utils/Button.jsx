@@ -13,9 +13,10 @@ const Button = (props) => {
         justifyContent: "center",
         alignItems: "center",
         padding: 10,
-        borderRadius: 5,
+        borderRadius: props.radius ? props.radius : 5,
         backgroundColor: props.bgcolor ? props.bgcolor : Colors.veryLightGrey,
-        elevation: 2,
+        // backgroundColor: "t"
+        elevation: props.elevation ? props.elevation : 2,
         width: props.width ? props.width : "auto",
       }}
     >

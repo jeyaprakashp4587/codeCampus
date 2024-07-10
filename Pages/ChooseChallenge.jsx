@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { pageView } from "../constants/Colors";
+import { Colors, pageView } from "../constants/Colors";
 import web from "../Json/WebChallenge.json";
 import { useData } from "../Context/Contexter";
 import HeadingText from "../utils/HeadingText";
@@ -9,6 +9,9 @@ import ParagraphText from "../utils/PragraphText";
 import Ripple from "react-native-material-ripple";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import Button from "../utils/Button";
+import { LinearGradient } from "expo-linear-gradient";
+import { Feather } from "@expo/vector-icons";
 
 const ChooseChallenge = () => {
   const web = [
@@ -19,12 +22,12 @@ const ChooseChallenge = () => {
         "Create an HTML page with a heading, paragraph, and an image.",
       technologies: [
         {
-          name: "CSS",
-          icon: <FontAwesome5 name="css3" size={35} color="#0874C5" />,
-        },
-        {
           name: "HTML",
           icon: <FontAwesome5 name="html5" size={35} color="#EF6C33" />,
+        },
+        {
+          name: "CSS",
+          icon: <FontAwesome5 name="css3" size={35} color="#0874C5" />,
         },
       ],
       rules: [
@@ -498,17 +501,88 @@ const ChooseChallenge = () => {
   return (
     <View style={pageView}>
       <HeadingText text={selectedChallengeTopic} />
-      <ParagraphText text="Choose a Challenge & Make Fun" />
+      <View style={{ height: 10 }} />
+      <TopicsText text="Choose a Challenge & Make Fun" fszie={20} />
+      {/* levels */}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          marginBottom: 20,
+        }}
+      >
+        <Button text="Newbie" width={90} bgcolor="#009900" textColor="white" />
+        <Button text="Junior" width={90} bgcolor="#e6b800" textColor="white" />
+        <Button text="Expert" width={90} bgcolor="#ff0000" textColor="white" />
+        <Button text="Legend" width={90} bgcolor="#cc0000" textColor="white" />
+      </View>
+      {/* levels */}
       <FlatList
         data={Challenges}
-        numColumns={2}
-        columnWrapperStyle={{ justifyContent: "space-between", gap: 20 }}
-        style={{ alignSelf: "center" }}
+        // numColumns={2}
+        showsVerticalScrollIndicator={false}
+        // columnWrapperStyle={{ justifyContent: "space-between", gap: 20 }}
+        style={{
+          alignSelf: "center",
+          borderWidth: 0,
+          width: "100%",
+        }}
         renderItem={({ item, index }) => (
-          <Ripple style={{ width: 150, borderWidth: 0 }} key={index}>
-            <Text>{item.title}</Text>
-            <Text>{item.description}</Text>
-            <View>{item.technologies.map((i) => i.icon)}</View>
+          <Ripple
+            style={{
+              // borderWidth: 1,
+              flexDirection: "column",
+              rowGap: 5,
+              padding: 20,
+              backgroundColor: "white",
+              borderRadius: 5,
+              elevation: 2,
+              marginTop: 15,
+              marginHorizontal: 5,
+              marginBottom: 5,
+            }}
+            key={index}
+          >
+            <ParagraphText text={item.title} fsize={20} padding={5} />
+            <Text style={{ color: Colors.veryDarkGrey, lineHeight: 24 }}>
+              {item.description}
+            </Text>
+
+            <View
+              style={{
+                marginVertical: 10,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <View style={{ flexDirection: "row", columnGap: 20 }}>
+                {item.technologies.map((i) =>
+                  React.cloneElement(i.icon, { size: 20 })
+                )}
+              </View>
+              <View>
+                <Feather
+                  name="check-circle"
+                  size={20}
+                  color={Colors.mildGrey}
+                />
+              </View>
+            </View>
+            <LinearGradient
+              colors={["#003399", "#6699ff", "#003399"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={{ borderRadius: 10, overflow: "hidden" }}
+            >
+              <Button
+                text="View Challenge"
+                bgcolor="transparent"
+                radius={0.2}
+                elevation={0.1}
+                textColor="white"
+              />
+            </LinearGradient>
           </Ripple>
         )}
       />
