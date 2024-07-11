@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import Navigation from "./Navigations/Navigation";
 import { ContextProvider } from "./Context/Contexter";
 import SplashScreen from "./Splashscreen/SplashScreen";
+import { PaperProvider } from "react-native-paper";
 
 const App = () => {
   const [load, setLoad] = useState(true);
@@ -20,18 +21,20 @@ const App = () => {
   // render the components
 
   return (
-    <NavigationContainer>
-      <ContextProvider>
-        <SafeAreaView style={styles.cn}>
-          {/* {load ? (
+    <PaperProvider>
+      <NavigationContainer>
+        <ContextProvider>
+          <SafeAreaView style={styles.cn}>
+            {/* {load ? (
             <SplashScreen duration={Handleduration} status={HandleStatus} />
           ) : (
             <Navigation status={status} />
           )} */}
-          <Navigation status={status} />
-        </SafeAreaView>
-      </ContextProvider>
-    </NavigationContainer>
+            <Navigation status={status} />
+          </SafeAreaView>
+        </ContextProvider>
+      </NavigationContainer>
+    </PaperProvider>
   );
 };
 
@@ -41,7 +44,7 @@ const styles = StyleSheet.create({
   cn: {
     flex: 1,
     backgroundColor: "#ffff",
-    marginTop: "10%",
+    // marginTop: "10%",
     // paddingHorizontal: 10,
   },
 });

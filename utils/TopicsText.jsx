@@ -8,7 +8,7 @@ const TopicsText = (props) => {
       style={{
         fontSize: props.fszie ? props.fszie : 23,
         color: Colors.mildGrey,
-        marginBottom: 20,
+        marginBottom: props.mb ? props.mb : 20,
       }}
     >
       {props.text}

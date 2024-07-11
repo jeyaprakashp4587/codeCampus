@@ -8,9 +8,10 @@ const PragraphText = (props) => {
       style={{
         color: props.color ? props.color : Colors.mildGrey,
         fontSize: props.fsize ? props.fsize : 16,
-        lineHeight: 27,
+        lineHeight: 30,
         letterSpacing: 0.9,
         paddingVertical: props.padding ? props.padding : 10,
+        width: props.widht ? props.widht : "auto",
       }}
     >
       {props.text}

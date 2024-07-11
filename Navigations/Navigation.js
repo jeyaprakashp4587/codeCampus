@@ -26,6 +26,7 @@ import SelectedCourse from "../Pages/SelectedCourse";
 import LearnPage from "../Pages/LearnPage";
 import CourseDetails from "../Pages/CourseDetails";
 import ChooseChallenge from "../Pages/ChooseChallenge";
+import ChallengeDetail from "../Pages/ChallengeDetail";
 
 // ------------- //
 // Tab navigations
@@ -199,6 +200,11 @@ const StackNavigations = (props) => {
       <Stack.Screen
         name="chooseChallenge"
         component={ChooseChallenge}
+        options={{ headerShadow: false }}
+      />
+      <Stack.Screen
+        name="challengeDetail"
+        component={ChallengeDetail}
         options={{ headerShadow: false }}
       />
     </Stack.Navigator>

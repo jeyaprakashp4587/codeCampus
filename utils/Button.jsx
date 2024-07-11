@@ -1,10 +1,12 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { Colors, font } from "../constants/Colors";
+import Ripple from "react-native-material-ripple";
 
 const Button = (props) => {
   return (
-    <TouchableOpacity
+    <Ripple
+      rippleOpacity={0.6}
       onPressIn={props.function}
       onPress={props.function}
       style={{
@@ -30,7 +32,7 @@ const Button = (props) => {
       >
         {props.text}
       </Text>
-    </TouchableOpacity>
+    </Ripple>
   );
 };
 
