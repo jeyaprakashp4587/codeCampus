@@ -4,7 +4,14 @@ import { Colors } from "../constants/Colors";
 
 const HeadingText = (props) => {
   return (
-    <Text style={{ color: Colors.mildGrey, fontSize: 25, paddingVertical: 10 }}>
+    <Text
+      style={{
+        color: Colors.mildGrey,
+        fontSize: 25,
+        paddingVertical: 10,
+        letterSpacing: 1,
+      }}
+    >
       {props.text}
     </Text>
   );
