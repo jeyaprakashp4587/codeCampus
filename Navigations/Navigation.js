@@ -147,7 +147,7 @@ const StackNavigations = (props) => {
   }, [props.status]);
   return (
     <Stack.Navigator
-      initialRouteName="index"
+      initialRouteName="profile"
       screenOptions={{
         headerShown: false,
       }}
@@ -160,7 +160,7 @@ const StackNavigations = (props) => {
       <Stack.Screen
         name="index"
         component={TabNavigation}
-        options={{ headerShadow: false }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="profile"
@@ -170,7 +170,7 @@ const StackNavigations = (props) => {
       <Stack.Screen
         name="signup"
         component={SignUp}
-        options={{ headerShadow: false }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="message"
@@ -180,32 +180,32 @@ const StackNavigations = (props) => {
       <Stack.Screen
         name="carrerScreen"
         component={Carrer}
-        options={{ headerShadow: false }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="course"
         component={SelectedCourse}
-        options={{ headerShadow: false }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="learn"
         component={LearnPage}
-        options={{ headerShadow: false }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="courseDetails"
         component={CourseDetails}
-        options={{ headerShadow: false }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="chooseChallenge"
         component={ChooseChallenge}
-        options={{ headerShadow: false }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="challengeDetail"
         component={ChallengeDetail}
-        options={{ headerShadow: false }}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

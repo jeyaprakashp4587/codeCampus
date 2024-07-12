@@ -18,12 +18,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { EvilIcons } from "@expo/vector-icons";
 import Posts from "../components/Posts";
 import { Calendar } from "react-native-calendars";
-import {
-  faTimesCircle,
-  faTimesRectangle,
-} from "@fortawesome/free-regular-svg-icons";
+import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
+import { useNavigation } from "@react-navigation/native";
 
-const Home = ({ navigation }) => {
+const Home = () => {
+  const navigation = useNavigation();
   // calender display
   const [calendardis, setCalenderdis] = useState(false);
   const [act, setActdate] = useState();
@@ -128,6 +127,9 @@ const Home = ({ navigation }) => {
         />
       </View>
       {/* home header */}
+      {/* side bar */}
+
+      {/*side bar  */}
       <View
         style={{
           flexDirection: "row",
@@ -136,10 +138,12 @@ const Home = ({ navigation }) => {
           paddingBottom: 15,
         }}
       >
-        <Image
-          source={require("../assets/images/pr.png")}
-          style={{ width: 50, height: 50, borderRadius: 50 }}
-        />
+        <TouchableOpacity>
+          <Image
+            source={require("../assets/images/pr.png")}
+            style={{ width: 50, height: 50, borderRadius: 50 }}
+          />
+        </TouchableOpacity>
         <View
           style={{
             flexDirection: "row",

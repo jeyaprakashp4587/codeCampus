@@ -20,6 +20,7 @@ const Button = (props) => {
         // backgroundColor: "t"
         elevation: props.elevation ? props.elevation : 2,
         width: props.width ? props.width : "auto",
+        alignSelf: "center",
       }}
     >
       <Text
@@ -28,6 +29,7 @@ const Button = (props) => {
           fontSize: props.fsize ? props.fsize : 15,
           color: props.textColor ? props.textColor : "black",
           fontWeight: props.fweight ? props.fweight : "400",
+          letterSpacing: 1,
         }}
       >
         {props.text}
