@@ -11,12 +11,12 @@ import {
   faBell,
   faHome,
   faPlus,
+  faSuitcase,
   faUserGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import Post from "../Screens/Post";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Challenge from "../Screens/Challenge";
-import Notifications from "../Screens/Notifications";
 import MessageScreen from "../Screens/MessageScreen";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -27,6 +27,10 @@ import LearnPage from "../Pages/LearnPage";
 import CourseDetails from "../Pages/CourseDetails";
 import ChooseChallenge from "../Pages/ChooseChallenge";
 import ChallengeDetail from "../Pages/ChallengeDetail";
+import YourCourses from "../Pages/YourCourses";
+import YourRewards from "../Pages/YourReward";
+import Search from "../Pages/Search";
+import Placement from "../Screens/Placement";
 
 // ------------- //
 // Tab navigations
@@ -56,6 +60,7 @@ const TabNavigation = () => {
           marginBottom: 5,
           fontFamily: font.poppins,
           color: Colors.veryDarkGrey,
+          letterSpacing: 1,
         },
         tabBarHideOnKeyboard: true,
       }}
@@ -107,12 +112,12 @@ const TabNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="Notification"
-        component={Notifications}
+        name="Placement"
+        component={Placement}
         options={{
           headerShadow: false,
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faBell} color={color} size={24} />
+            <FontAwesomeIcon icon={faSuitcase} color={color} size={24} />
           ),
         }}
       />
@@ -205,6 +210,26 @@ const StackNavigations = (props) => {
       <Stack.Screen
         name="challengeDetail"
         component={ChallengeDetail}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="yourcarrer"
+        component={YourCourses}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="yourrewards"
+        component={YourRewards}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="search"
+        component={Search}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="placement"
+        component={Placement}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

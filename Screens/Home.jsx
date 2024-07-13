@@ -23,19 +23,18 @@ import { useNavigation } from "@react-navigation/native";
 
 const Home = () => {
   const navigation = useNavigation();
-  // calender display
-  const [calendardis, setCalenderdis] = useState(false);
-  const [act, setActdate] = useState();
-  const [activitiesdis, setActivitiesDis] = useState(false);
-  const [activitieslist, setActivitiesList] = useState();
   // initialize skeleton effect
   const [load, setLoad] = useState(false);
-
   useEffect(() => {
     setTimeout(() => {
       setLoad(true);
     }, 100);
   }, []);
+  // calender display
+  const [calendardis, setCalenderdis] = useState(false);
+  const [act, setActdate] = useState();
+  const [activitiesdis, setActivitiesDis] = useState(false);
+  const [activitieslist, setActivitiesList] = useState();
 
   // show user activity functions
   const activityobg = [
@@ -74,7 +73,7 @@ const Home = () => {
       formatted[date].dots.push({ color: "red" });
       formatted[date].course.push(...activity.course);
     });
-    // console.log("formated", formatted);
+
     return formatted;
   };
   // render skeleton
@@ -106,7 +105,6 @@ const Home = () => {
           setActivitiesList(act[day.dateString].course);
         }}
       />
-      {/* actividy indicator */}
       <View
         style={{
           // borderWidth: 1,
@@ -126,10 +124,8 @@ const Home = () => {
           renderItem={({ item }) => <Text>{item}</Text>}
         />
       </View>
+      {/* calender end */}
       {/* home header */}
-      {/* side bar */}
-
-      {/*side bar  */}
       <View
         style={{
           flexDirection: "row",
@@ -138,13 +134,15 @@ const Home = () => {
           paddingBottom: 15,
         }}
       >
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("profile")}>
           <Image
             source={require("../assets/images/pr.png")}
             style={{ width: 50, height: 50, borderRadius: 50 }}
           />
         </TouchableOpacity>
-        <View
+        {/* search button */}
+        <TouchableOpacity
+          onPress={() => navigation.navigate("search")}
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -157,6 +155,7 @@ const Home = () => {
         >
           <EvilIcons name="search" size={30} color={Colors.lightGrey} />
           <TextInput
+            onPress={() => navigation.navigate("search")}
             placeholder="Search"
             style={{
               color: Colors.lightGrey,
@@ -167,7 +166,7 @@ const Home = () => {
               padding: 10,
             }}
           />
-        </View>
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("message")}>
           <AntDesign name="message1" size={24} color={Colors.lightGrey} />
         </TouchableOpacity>
@@ -214,7 +213,7 @@ const Home = () => {
                 // fontWeight: 700,
               }}
             >
-              Learning
+              Your Course
             </Text>
           </View>
           <View style={styles.ideaBox}>
@@ -223,9 +222,11 @@ const Home = () => {
               style={{ width: 35, height: 35, tintColor: "#006622" }}
             />
             <Text
+              numberOfLines={1}
               style={{
                 color: Colors.veryDarkGrey,
                 fontSize: 10,
+
                 // fontFamily: "PopIns-Regular",
                 // fontWeight: 700,
               }}
@@ -249,8 +250,6 @@ const Home = () => {
               style={{
                 color: Colors.veryDarkGrey,
                 fontSize: 10,
-                // fontFamily: "PopIns-Regular",
-                fontWeight: 600,
               }}
               numberOfLines={1}
             >
