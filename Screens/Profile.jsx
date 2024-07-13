@@ -1,59 +1,299 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React from "react";
 import { Colors, pageView } from "../constants/Colors";
 import HeadingText from "../utils/HeadingText";
 import PragraphText from "../utils/PragraphText";
 import Button from "../utils/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faEdit } from "@fortawesome/free-regular-svg-icons";
+import { TouchableOpacity } from "react-native";
+import { faAward, faBook, faSignOut } from "@fortawesome/free-solid-svg-icons";
+import HrLine from "../utils/HrLine";
+import Post from "../components/Posts";
+import TopicsText from "../utils/TopicsText";
 
 const Profile = () => {
   return (
-    <View style={pageView}>
+    <ScrollView
+      style={{ flex: 1, backgroundColor: "white" }}
+      showsVerticalScrollIndicator={false}
+    >
       {/* header */}
-      <View>
+      <View style={{ paddingHorizontal: 20 }}>
         <HeadingText text="Profile" />
       </View>
       {/* header */}
-      {/* bg image */}
-      <View>
+      {/* about*/}
+      <View style={{ borderWidth: 0 }}>
+        {/* this icon for cover */}
+        <Pressable
+          style={{ position: "absolute", right: 20, top: 10, zIndex: 10 }}
+        >
+          <FontAwesomeIcon icon={faEdit} size={20} color="orange" />
+        </Pressable>
         <Image
-          source={require("../assets/images/jp.jpeg")}
-          style={{
-            width: 100,
-            height: 100,
-            borderRadius: 50,
-            alignSelf: "center",
+          source={{
+            uri: "https://i.ibb.co/YBfJxF3/60750.jpg",
           }}
+          style={{ width: "100%", height: 200, objectFit: "fill" }}
         />
-        <Text
+        <View
           style={{
-            color: Colors.mildGrey,
-            fontSize: 23,
-            letterSpacing: 1,
-            textAlign: "center",
+            // borderWidth: 1,
+            // position: "absolute",
+            top: -50,
+            width: "100%",
+            flexDirection: "column",
+            rowGap: 5,
+            justifyContent: "flex-start",
+            paddingHorizontal: 20,
           }}
         >
-          Jeya Prakash
-        </Text>
-        <Text
-          style={{
-            color: Colors.mildGrey,
-            fontSize: 20,
-            letterSpacing: 1,
-            textAlign: "center",
-          }}
-        >
-          The MDT Hindu College
-        </Text>
-        {/* edit profile */}
-        <Button
-          text="Edit Profile"
-          textColor="white"
-          bgcolor={Colors.violet}
-          fweight="700"
-          width={250}
-        />
+          {/* this icon for profile */}
+          <Pressable
+            style={{ position: "absolute", left: 100, top: 70, zIndex: 10 }}
+          >
+            <FontAwesomeIcon icon={faEdit} size={20} color="orange" />
+          </Pressable>
+          <Image
+            source={require("../assets/images/jp.jpeg")}
+            style={{
+              width: 100,
+              height: 100,
+              borderRadius: 50,
+              // alignSelf: "center",
+              borderColor: "white",
+              borderWidth: 5,
+              objectFit: "cover",
+            }}
+          />
+          {/* edit icon */}
+          <Pressable style={{ position: "absolute", right: 20, top: 70 }}>
+            <FontAwesomeIcon icon={faEdit} size={20} />
+          </Pressable>
+          <Text
+            style={{
+              color: Colors.veryDarkGrey,
+              fontSize: 23,
+              letterSpacing: 1,
+              // textAlign: "center",
+              // fontWeight: "700",
+            }}
+          >
+            Jeya Prakash.P
+          </Text>
+          <Text
+            style={{
+              color: Colors.mildGrey,
+              fontSize: 17,
+              letterSpacing: 1,
+              // textAlign: "center",
+            }}
+          >
+            Front End Developer | App Developer
+          </Text>
+          <View style={{ height: 5 }} />
+          <Text
+            style={{
+              color: Colors.veryDarkGrey,
+              fontSize: 15,
+              letterSpacing: 1,
+              // textAlign: "center",
+            }}
+          >
+            The MDT Hindu College
+          </Text>
+          <Text
+            style={{
+              color: Colors.mildGrey,
+              fontSize: 15,
+              letterSpacing: 1,
+              // textAlign: "center",
+            }}
+          >
+            Tirunelveli, Tamil Nadu
+          </Text>
+        </View>
       </View>
-    </View>
+      {/* following */}
+      <View
+        style={{
+          // borderWidth: 1,
+          flexDirection: "row",
+          justifyContent: "space-around",
+        }}
+      >
+        <View>
+          <Text
+            style={{
+              fontWeight: "600",
+              color: Colors.mildGrey,
+              letterSpacing: 1,
+            }}
+          >
+            Followers
+          </Text>
+          <Text
+            style={{
+              textAlign: "center",
+              color: Colors.mildGrey,
+              fontSize: 15,
+              letterSpacing: 1,
+            }}
+          >
+            203
+          </Text>
+        </View>
+        <View>
+          <Text
+            style={{
+              fontWeight: "600",
+              color: Colors.mildGrey,
+              letterSpacing: 1,
+            }}
+          >
+            Following
+          </Text>
+          <Text
+            style={{
+              textAlign: "center",
+              color: Colors.mildGrey,
+              fontSize: 15,
+              letterSpacing: 1,
+            }}
+          >
+            184
+          </Text>
+        </View>
+        <View>
+          <Text
+            style={{
+              fontWeight: "600",
+              color: Colors.mildGrey,
+              letterSpacing: 1,
+            }}
+          >
+            Posts
+          </Text>
+          <Text
+            style={{
+              textAlign: "center",
+              color: Colors.mildGrey,
+              fontSize: 15,
+              letterSpacing: 1,
+            }}
+          >
+            0
+          </Text>
+        </View>
+      </View>
+      {/* bar */}
+      <HrLine />
+      {/* options */}
+      <View
+        style={{
+          paddingHorizontal: 20,
+          marginTop: 10,
+          flexDirection: "column",
+          rowGap: 20,
+        }}
+      >
+        <TouchableOpacity
+          style={{
+            backgroundColor: Colors.veryLightGrey,
+            padding: 15,
+            borderRadius: 15,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text
+            style={{
+              color: Colors.violet,
+              fontWeight: "600",
+              letterSpacing: 1,
+              fontSize: 16,
+            }}
+          >
+            Courses
+          </Text>
+          <FontAwesomeIcon icon={faBook} size={20} color={Colors.violet} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: Colors.veryLightGrey,
+            padding: 15,
+            borderRadius: 15,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text
+            style={{
+              color: "#595959",
+              fontWeight: "600",
+              letterSpacing: 1,
+              fontSize: 16,
+            }}
+          >
+            Rewards
+          </Text>
+          <FontAwesomeIcon icon={faAward} size={20} color="#595959" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: Colors.veryLightGrey,
+            padding: 15,
+            borderRadius: 15,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text
+            style={{
+              color: "#ffaa80",
+              fontWeight: "600",
+              letterSpacing: 1,
+              fontSize: 16,
+            }}
+          >
+            Log out
+          </Text>
+          <FontAwesomeIcon icon={faSignOut} size={20} color="#ffaa80" />
+        </TouchableOpacity>
+      </View>
+      {/* posts */}
+      <HrLine />
+      <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <TopicsText text="Posts" mb={1} />
+          <TouchableOpacity>
+            <Text
+              style={{
+                color: Colors.mildGrey,
+                textDecorationLine: "underline",
+              }}
+            >
+              Show More
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <Post />
+      </View>
+    </ScrollView>
   );
 };
 

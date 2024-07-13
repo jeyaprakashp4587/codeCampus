@@ -1,0 +1,22 @@
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { Colors } from "../constants/Colors";
+
+const HrLine = () => {
+  return (
+    <View
+      style={{
+        width: "90%",
+        borderColor: Colors.veryLightGrey,
+        height: 1,
+        borderBottomWidth: 1,
+        alignSelf: "center",
+        marginVertical: 20,
+      }}
+    />
+  );
+};
+
+export default HrLine;
+
+const styles = StyleSheet.create({});
