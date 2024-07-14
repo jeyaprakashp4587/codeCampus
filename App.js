@@ -8,16 +8,12 @@ import SplashScreen from "./Splashscreen/SplashScreen";
 import { PaperProvider } from "react-native-paper";
 
 const App = () => {
+  // this load for render splash screen
   const [load, setLoad] = useState(true);
-
   const Handleduration = (data) => {
     setLoad(data);
-    // console.log(data);
   };
-  const [status, setStatus] = useState("");
-  const HandleStatus = (status) => {
-    setStatus(status);
-  };
+
   // render the components
 
   return (
@@ -25,12 +21,7 @@ const App = () => {
       <NavigationContainer>
         <ContextProvider>
           <SafeAreaView style={styles.cn}>
-            {/* {load ? (
-            <SplashScreen duration={Handleduration} status={HandleStatus} />
-          ) : (
-            <Navigation status={status} />
-          )} */}
-            <Navigation status={status} />
+            {load ? <SplashScreen duration={Handleduration} /> : <Navigation />}
           </SafeAreaView>
         </ContextProvider>
       </NavigationContainer>

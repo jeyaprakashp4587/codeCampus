@@ -6,12 +6,22 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Colors, font, pageView } from "../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "../utils/Button";
 
 const Login = ({ navigation }) => {
+  const UserEmail = useRef(null);
+  const HandleEmail = (text) => {
+    if (UserEmail) {
+      UserEmail.current = text;
+    }
+  };
+  const HandleLogin = () => {
+    console.log(UserEmail.current);
+    AsyncStorage.setItem("email", UserEmail.current);
+  };
   return (
     <View
       style={[
@@ -28,7 +38,7 @@ const Login = ({ navigation }) => {
           style={{
             textAlign: "center",
             fontSize: 21,
-            fontFamily: "PopIns-Regular",
+            // fontFamily: "PopIns-Regular",
             lineHeight: 35,
             color: Colors.veryDarkGrey,
           }}
@@ -41,7 +51,7 @@ const Login = ({ navigation }) => {
         <TextInput
           placeholder="Email"
           style={{
-            fontFamily: font.poppins,
+            // fontFamily: font.poppins,
             fontSize: 15,
             borderWidth: 1,
             padding: 10,
@@ -50,11 +60,12 @@ const Login = ({ navigation }) => {
             paddingHorizontal: 20,
           }}
           placeholderTextColor={Colors.lightGrey}
+          onChangeText={HandleEmail}
         />
         <TextInput
           placeholder="Password"
           style={{
-            fontFamily: font.poppins,
+            // fontFamily: font.poppins,
             fontSize: 15,
             padding: 10,
             borderColor: Colors.lightGrey,
@@ -64,7 +75,12 @@ const Login = ({ navigation }) => {
           }}
           placeholderTextColor={Colors.lightGrey}
         />
-        <Button bgcolor={Colors.veryLightGrey} text="Log in" />
+        <Button
+          bgcolor={Colors.veryLightGrey}
+          text="Log in"
+          function={HandleLogin}
+          width="100%"
+        />
       </View>
       {/* indicate */}
       <View
@@ -78,7 +94,7 @@ const Login = ({ navigation }) => {
           style={{
             position: "absolute",
             color: Colors.lightGrey,
-            fontFamily: font.poppins,
+            // fontFamily: font.poppins,
             backgroundColor: "white",
             top: -10,
             textAlign: "center",
@@ -122,14 +138,14 @@ const Login = ({ navigation }) => {
         style={{
           flexDirection: "row",
           alignSelf: "center",
-          fontFamily: "PopIns-Regular",
+          // fontFamily: "PopIns-Regular",
         }}
       >
         <Text style={{ fontFamily: font.poppins }}>Don't Have an account?</Text>
         <TouchableOpacity onPress={() => navigation.navigate("signup")}>
           <Text
             style={{
-              fontFamily: font.poppins,
+              // fontFamily: font.poppins,
               color: "orange",
               textDecorationLine: "underline",
               paddingHorizontal: 10,

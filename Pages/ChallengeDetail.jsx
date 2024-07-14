@@ -88,12 +88,14 @@ const ChallengeDetail = () => {
               bgcolor="#563d7c"
               textColor="white"
               fsize={18}
+              width="100%"
             />
           ) : (
             <Button
               text="Start Challenge"
               bgcolor="#6699ff"
               textColor="white"
+              width="100%"
               fsize={18}
               function={() => HandleStart()}
             />

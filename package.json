@@ -26,6 +26,7 @@
     "@react-navigation/drawer": "^6.7.0",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.10.0",
+    "axios": "^1.7.2",
     "expo": "~51.0.18",
     "expo-av": "~14.0.6",
     "expo-blur": "^13.0.2",
@@ -51,7 +52,8 @@
     "react-native-screens": "3.31.1",
     "react-native-svg": "^15.3.0",
     "react-native-web": "~0.19.10",
-    "react-native-webview": "^13.10.4"
+    "react-native-webview": "^13.10.4",
+    "socket.io-client": "^4.7.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

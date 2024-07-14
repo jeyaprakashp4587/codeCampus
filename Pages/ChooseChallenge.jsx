@@ -1,7 +1,6 @@
 import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Colors, pageView } from "../constants/Colors";
-import web from "../Json/WebChallenge.json";
 import { useData } from "../Context/Contexter";
 import HeadingText from "../utils/HeadingText";
 import TopicsText from "../utils/TopicsText";

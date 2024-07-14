@@ -22,6 +22,9 @@ import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
 import { useNavigation } from "@react-navigation/native";
 
 const Home = () => {
+  // socket
+  const socket = sc;
+  // socket
   const navigation = useNavigation();
   // initialize skeleton effect
   const [load, setLoad] = useState(false);

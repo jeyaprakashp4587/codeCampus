@@ -37,7 +37,7 @@ const SignUp = ({ navigation }) => {
         <Text
           style={{
             textAlign: "center",
-            fontFamily: font.poppins,
+            // fontFamily: font.poppins,
             fontSize: 35,
             // fontWeight: 700,
             color: "hsl(0, 0%, 50%)",
@@ -51,7 +51,7 @@ const SignUp = ({ navigation }) => {
         />
         <Text
           style={{
-            fontFamily: font.poppins,
+            // fontFamily: font.poppins,
             textAlign: "center",
             color: Colors.lightGrey,
           }}
@@ -61,11 +61,10 @@ const SignUp = ({ navigation }) => {
       </View>
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         {/* textinputs */}
-        <View style={{ flexDirection: "row", rowGap: 10 }}>
-          <FlatList
-            data={inputHolders}
-            renderItem={({ item }) => <TextInputs text={item.text} />}
-          />
+        <View style={{ flexDirection: "column", rowGap: 5 }}>
+          {inputHolders.map((item) => (
+            <TextInputs text={item.text} />
+          ))}
         </View>
         <View style={{ height: 30 }} />
         <Button
@@ -73,6 +72,7 @@ const SignUp = ({ navigation }) => {
           text="Sign Up"
           textColor="white"
           function={handleSignUp}
+          width="100%"
         />
       </ScrollView>
       <FontAwesomeIcon
@@ -86,7 +86,6 @@ const SignUp = ({ navigation }) => {
           alignSelf: "center",
         }}
       />
-    
     </View>
   );
 };

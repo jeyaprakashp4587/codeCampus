@@ -135,24 +135,12 @@ const TabNavigation = () => {
   );
 };
 // stack navigations
-const StackNavigations = (props) => {
-  const [routname, setRoutename] = useState("index");
+const StackNavigations = () => {
   const Stack = createNativeStackNavigator();
-  useEffect(() => {
-    const checkStatus = async () => {
-      const status = await props.status._j;
-      // console.log("Status from props:", status);
-      if (status === "index") {
-        setRoutename("login");
-        // console.log("Set initial route to login");
-      }
-    };
 
-    checkStatus();
-  }, [props.status]);
   return (
     <Stack.Navigator
-      initialRouteName="index"
+      initialRouteName="login"
       screenOptions={{
         headerShown: false,
       }}

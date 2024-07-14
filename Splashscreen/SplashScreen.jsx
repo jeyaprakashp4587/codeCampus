@@ -7,32 +7,20 @@ import ProgressBar from "../utils/ProgressBar";
 import { useEffect } from "react";
 import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as font from "expo-font";
 
 const splashScreen = (props) => {
-  useEffect(() => {
-    const loadFont = async () => {
-      await font.loadAsync({
-        "PopIns-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
-        "PopIns-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
-      });
-      setFontsLoaded(true);
-    };
-    // loadFont();
-  }, []);
-  //
   const [length, setLength] = useState(0);
 
   useEffect(() => {
-    AsyncStorage.setItem("status", "index");
-    // AsyncStorage.removeItem("status");
-    let st = AsyncStorage.getItem("status");
+    const email = AsyncStorage.getItem("email");
+    if (email) {
+      email.then((text) => console.log("its", text));
+    }
     for (let i = 0; i <= 320; i++) {
       setTimeout(() => {
         setLength(i);
-        if (i == 30) {
+        if (i == 300) {
           props.duration(false);
-          props.status(st);
         }
       }, 0);
     }
@@ -61,7 +49,7 @@ const splashScreen = (props) => {
 
         <Text
           style={{
-            fontFamily: "PopIns-Regular",
+            // fontFamily: "PopIns-Regular",
             fontSize: 40,
           }}
         >
