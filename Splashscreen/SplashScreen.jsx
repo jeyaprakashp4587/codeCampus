@@ -14,12 +14,12 @@ const splashScreen = (props) => {
   useEffect(() => {
     const email = AsyncStorage.getItem("email");
     if (email) {
-      email.then((text) => console.log("its", text));
+      // email.then((text) => console.log("its", text));
     }
     for (let i = 0; i <= 320; i++) {
       setTimeout(() => {
         setLength(i);
-        if (i == 300) {
+        if (i == 3) {
           props.duration(false);
         }
       }, 0);

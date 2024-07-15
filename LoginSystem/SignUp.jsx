@@ -6,12 +6,13 @@ import {
   Text,
   View,
 } from "react-native";
-import React from "react";
+import React, { useRef } from "react";
 import { Colors, font, pageView } from "../constants/Colors";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCode } from "@fortawesome/free-solid-svg-icons";
 import TextInputs from "../utils/TextInputs";
 import Button from "../utils/Button";
+import { Use } from "react-native-svg";
 const SignUp = ({ navigation }) => {
   // input place holder datas
   const inputHolders = [
@@ -28,8 +29,14 @@ const SignUp = ({ navigation }) => {
     { text: "District" },
     { text: "Nationality" },
   ];
+  // all input values
+  const userInput = useRef({});
+  const HandleInput = (name, text) => {
+    userInput.current[name] = text;
+  };
   const handleSignUp = () => {
-    navigation.navigate("index");
+    // navigation.navigate("index");
+    console.log(userInput.current);
   };
   return (
     <View style={[pageView, { paddingHorizontal: 20, paddingBottom: 20 }]}>
@@ -63,7 +70,10 @@ const SignUp = ({ navigation }) => {
         {/* textinputs */}
         <View style={{ flexDirection: "column", rowGap: 5 }}>
           {inputHolders.map((item) => (
-            <TextInputs text={item.text} />
+            <TextInputs
+              text={item.text}
+              function={(text) => HandleInput(item.text, text)}
+            />
           ))}
         </View>
         <View style={{ height: 30 }} />

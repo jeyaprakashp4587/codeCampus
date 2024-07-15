@@ -10,18 +10,26 @@ import React, { useRef, useState } from "react";
 import { Colors, font, pageView } from "../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "../utils/Button";
+import Api from "../Api";
+import axios from "axios";
 
 const Login = ({ navigation }) => {
+  // console.log(Api);
   const UserEmail = useRef(null);
   const HandleEmail = (text) => {
     if (UserEmail) {
       UserEmail.current = text;
     }
   };
-  const HandleLogin = () => {
-    console.log(UserEmail.current);
+  const HandleLogin = async () => {
+    // console.log(UserEmail.current);
     AsyncStorage.setItem("email", UserEmail.current);
+    const res = await axios.post(`${Api}/LogIn/signIn`, {
+      UserEmail: UserEmail.current,
+    });
   };
+  // send the user data to server
+
   return (
     <View
       style={[

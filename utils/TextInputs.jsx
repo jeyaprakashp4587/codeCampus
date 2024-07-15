@@ -5,6 +5,7 @@ import { Colors, font } from "../constants/Colors";
 const TextInputs = (props) => {
   return (
     <TextInput
+      onChangeText={props.function}
       placeholder={props.text}
       style={{
         fontFamily: font.poppins,
