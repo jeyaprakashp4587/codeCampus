@@ -259,11 +259,11 @@ const Home = () => {
           {/* display: calendardis ? "flex" : "none"  */}
         </View>
         {/* posts */}
+        {/* <Posts />
         <Posts />
         <Posts />
         <Posts />
-        <Posts />
-        <Posts />
+        <Posts /> */}
       </ScrollView>
     </View>
   );
