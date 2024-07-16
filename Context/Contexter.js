@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from "react";
 
 const Contexter = createContext();
 export const ContextProvider = ({ children }) => {
+  const [user, setUser] = useState();
   const [selectedCourse, setSelectedCourse] = useState();
   const [selectedTechnology, setselectedTechnology] = useState();
   const [selectedChallengeTopic, setselectedChallengeTopic] = useState();
@@ -17,6 +18,8 @@ export const ContextProvider = ({ children }) => {
         setselectedChallengeTopic,
         selectedChallenge,
         setSelectedChallenge,
+        user,
+        setUser,
       }}
     >
       {children}

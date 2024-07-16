@@ -7,24 +7,47 @@ import ProgressBar from "../utils/ProgressBar";
 import { useEffect } from "react";
 import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import Api from "../Api";
+import { useNavigation } from "@react-navigation/native";
+import { useData } from "../Context/Contexter";
 
 const splashScreen = (props) => {
+  const { user, setUser } = useData();
+  const nav = useNavigation();
   const [length, setLength] = useState(0);
+  // auto loginc
+  const validLogin = async () => {
+    try {
+      const email = await AsyncStorage.getItem("Email");
+      if (email) {
+        const response = await axios.post(`${Api}/LogIn/splash`, {
+          Email: email,
+        });
+        if (response.data.Email) {
+          setUser(response.data);
+          nav.navigate("index");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching email or logging in:", error);
+    }
+  };
 
   useEffect(() => {
-    const email = AsyncStorage.getItem("email");
-    if (email) {
-      // email.then((text) => console.log("its", text));
-    }
+    validLogin();
+  }, []);
+
+  useEffect(() => {
     for (let i = 0; i <= 320; i++) {
       setTimeout(() => {
         setLength(i);
-        if (i == 3) {
+        if (i === 300) {
           props.duration(false);
         }
       }, 0);
     }
-  }, []);
+  }, [10]);
 
   return (
     <View

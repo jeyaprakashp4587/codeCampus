@@ -20,9 +20,12 @@ import Posts from "../components/Posts";
 import { Calendar } from "react-native-calendars";
 import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useData } from "../Context/Contexter";
 
 const Home = () => {
   const navigation = useNavigation();
+  const { user } = useData();
+  // console.log(user);
   // initialize skeleton effect
   const [load, setLoad] = useState(false);
   useEffect(() => {
@@ -259,11 +262,11 @@ const Home = () => {
           {/* display: calendardis ? "flex" : "none"  */}
         </View>
         {/* posts */}
-        {/* <Posts />
         <Posts />
         <Posts />
         <Posts />
-        <Posts /> */}
+        <Posts />
+        <Posts />
       </ScrollView>
     </View>
   );

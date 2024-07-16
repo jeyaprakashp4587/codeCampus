@@ -1,32 +1,54 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useRef, useState } from "react";
 import { Colors, font, pageView } from "../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "../utils/Button";
 import Api from "../Api";
 import axios from "axios";
+import { TextInput } from "react-native-paper";
+import { Alert } from "react-native";
+import { useData } from "../Context/Contexter";
 
 const Login = ({ navigation }) => {
+  const { setUser } = useData();
   // console.log(Api);
-  const UserEmail = useRef(null);
-  const HandleEmail = (text) => {
-    if (UserEmail) {
-      UserEmail.current = text;
-    }
+  const [form, setForm] = useState({
+    Email: "",
+    Password: "",
+  });
+  const handleEmail = (name, text) => {
+    setForm({ ...form, [name]: text });
   };
-  const HandleLogin = async () => {
-    // console.log(UserEmail.current);
-    AsyncStorage.setItem("email", UserEmail.current);
-    const res = await axios.post(`${Api}/LogIn/signIn`, {
-      UserEmail: UserEmail.current,
-    });
+  const handlePassword = (name, text) => {
+    setForm({ ...form, [name]: text });
+  };
+  const Validation = () => {
+    let isValid = true;
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(form.Email)) {
+      Alert.alert("Email was Not Corrected");
+      isValid = false;
+    }
+    for (let val in form) {
+      if (!form[val]) {
+        Alert.alert("Email was Not Corrected");
+      }
+    }
+    return isValid;
+  };
+  const HandleLogin = () => {
+    if (Validation()) {
+      axios.post(`${Api}/LogIn/signIn`, form).then((data) => {
+        console.log(data.data);
+        if (data.data.firstName) {
+          AsyncStorage.setItem("Email", data.data.Email);
+          setUser(data.data);
+          navigation.navigate("index");
+        } else {
+          Alert.alert("Email or Password is Incorrect");
+        }
+      });
+    }
   };
   // send the user data to server
 
@@ -57,36 +79,29 @@ const Login = ({ navigation }) => {
       {/* login inputs wrapper */}
       <View style={{ flexDirection: "column", rowGap: 20 }}>
         <TextInput
-          placeholder="Email"
-          style={{
-            // fontFamily: font.poppins,
-            fontSize: 15,
-            borderWidth: 1,
-            padding: 10,
-            borderColor: Colors.lightGrey,
-            borderRadius: 5,
-            paddingHorizontal: 20,
-          }}
-          placeholderTextColor={Colors.lightGrey}
-          onChangeText={HandleEmail}
+          style={{ backgroundColor: "white" }}
+          mode="outlined"
+          textColor={Colors.mildGrey}
+          activeOutlineColor={Colors.mildGrey}
+          outlineColor={Colors.mildGrey}
+          outlineStyle={{ borderWidth: 1 }}
+          label="Email"
+          onChangeText={(text) => handleEmail("Email", text)}
         />
         <TextInput
-          placeholder="Password"
-          style={{
-            // fontFamily: font.poppins,
-            fontSize: 15,
-            padding: 10,
-            borderColor: Colors.lightGrey,
-            borderWidth: 1,
-            borderRadius: 5,
-            paddingHorizontal: 20,
-          }}
-          placeholderTextColor={Colors.lightGrey}
+          style={{ backgroundColor: "white" }}
+          mode="outlined"
+          textColor={Colors.mildGrey}
+          outlineStyle={{ borderWidth: 1 }}
+          activeOutlineColor={Colors.mildGrey}
+          outlineColor={Colors.mildGrey}
+          label="Password"
+          onChangeText={(text) => handlePassword("Password", text)}
         />
         <Button
           bgcolor={Colors.veryLightGrey}
           text="Log in"
-          function={HandleLogin}
+          function={() => HandleLogin()}
           width="100%"
         />
       </View>

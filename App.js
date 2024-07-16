@@ -14,8 +14,6 @@ const App = () => {
     setLoad(data);
   };
 
-  // render the components
-
   return (
     <PaperProvider>
       <NavigationContainer>

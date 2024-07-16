@@ -11,11 +11,11 @@ import React, { useRef } from "react";
 import { Colors, font, pageView } from "../constants/Colors";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCode } from "@fortawesome/free-solid-svg-icons";
-import Button from "../utils/Button";
 import { useState } from "react";
-import { TextInput } from "react-native-paper";
+import { TextInput, Button } from "react-native-paper";
 import axios from "axios";
 import Api from "../Api";
+import Ripple from "react-native-material-ripple";
 const SignUp = ({ navigation }) => {
   // all input values
   const refs = useRef({
@@ -74,6 +74,7 @@ const SignUp = ({ navigation }) => {
       refs.Confirm_Password.current.setNativeProps({
         style: { borderColor: "red", borderWidth: 1 },
       });
+      Alert.alert("Password Does't Match");
       isValid = false;
     }
 
@@ -92,7 +93,9 @@ const SignUp = ({ navigation }) => {
     // console.log(formData.First_Name);
     if (validateForm()) {
       const valid = await axios.post(`${Api}/LogIn/signUp`, formData);
-      console.log(valid);
+      if (valid.data == "SignUp Sucessfully") {
+        navigation.navigate("login");
+      }
     }
   };
   return (
@@ -148,13 +151,32 @@ const SignUp = ({ navigation }) => {
           ))}
         </View>
         <View style={{ height: 20 }} />
-        <Button
-          bgcolor="#ffa366"
-          text="Sign Up"
-          textColor="white"
-          function={handleSignUp}
-          width="100%"
-        />
+        <Ripple
+          onPress={() => handleSignUp()}
+          style={{
+            // borderWidth: 1,
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 12,
+            borderRadius: 5,
+            backgroundColor: "orange",
+            elevation: 2,
+            width: "100%",
+            alignSelf: "center",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 15,
+              color: "black",
+              fontWeight: "400",
+              letterSpacing: 1,
+            }}
+          >
+            Sign Up
+          </Text>
+        </Ripple>
       </ScrollView>
       <FontAwesomeIcon
         icon={faCode}

@@ -18,8 +18,12 @@ import { faAward, faBook, faSignOut } from "@fortawesome/free-solid-svg-icons";
 import HrLine from "../utils/HrLine";
 import Post from "../components/Posts";
 import TopicsText from "../utils/TopicsText";
+import { useData } from "../Context/Contexter";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
+  const { user } = useData();
+  console.log(user);
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: "white" }}
@@ -63,7 +67,14 @@ const Profile = () => {
             <FontAwesomeIcon icon={faEdit} size={20} color="orange" />
           </Pressable>
           <Image
-            source={require("../assets/images/jp.jpeg")}
+            // source={require("../assets/images/jp.jpeg")}
+            source={{
+              uri: user?.profile
+                ? user.profile
+                : user.Gender == "Male"
+                ? "https://i.ibb.co/3T4mNMm/man.png"
+                : "https://i.ibb.co/3mCcQp9/woman.png",
+            }}
             style={{
               width: 100,
               height: 100,
@@ -87,7 +98,7 @@ const Profile = () => {
               // fontWeight: "700",
             }}
           >
-            Jeya Prakash.P
+            {user?.firstName} {user.LastName}
           </Text>
           <Text
             style={{
@@ -97,7 +108,7 @@ const Profile = () => {
               // textAlign: "center",
             }}
           >
-            Front End Developer | App Developer
+            {user?.bio ? user.bio : "I want to become an Winner"}
           </Text>
           <View style={{ height: 5 }} />
           <Text
@@ -108,7 +119,7 @@ const Profile = () => {
               // textAlign: "center",
             }}
           >
-            The MDT Hindu College
+            {user?.InstitudeName}
           </Text>
           <Text
             style={{
@@ -118,7 +129,7 @@ const Profile = () => {
               // textAlign: "center",
             }}
           >
-            Tirunelveli, Tamil Nadu
+            {user?.District}, {user?.State}
           </Text>
         </View>
       </View>
@@ -248,6 +259,10 @@ const Profile = () => {
           <FontAwesomeIcon icon={faAward} size={20} color="#595959" />
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={() => {
+            AsyncStorage.removeItem("Email");
+            navigation.navigate("login");
+          }}
           style={{
             backgroundColor: Colors.veryLightGrey,
             padding: 15,
@@ -300,3 +315,5 @@ const Profile = () => {
 export default Profile;
 
 const styles = StyleSheet.create({});
+//
+//

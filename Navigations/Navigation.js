@@ -31,6 +31,7 @@ import YourCourses from "../Pages/YourCourses";
 import YourRewards from "../Pages/YourReward";
 import Search from "../Pages/Search";
 import Placement from "../Screens/Placement";
+import splashScreen from "../Splashscreen/SplashScreen";
 
 // ------------- //
 // Tab navigations
@@ -140,7 +141,7 @@ const StackNavigations = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName="login"
+      initialRouteName="splash"
       screenOptions={{
         headerShown: false,
       }}
