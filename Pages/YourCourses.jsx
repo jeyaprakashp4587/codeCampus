@@ -43,7 +43,7 @@ const YourCourses = () => {
             colors={[color[index].color1, color[index].color2]}
             start={[0, 1]}
             end={[1, 0]}
-            style={{ borderRadius: 10, marginBottom: 20 }}
+            style={{ borderRadius: 10, marginBottom: 20, elevation: 5 }}
           >
             <TouchableOpacity
               onLongPress={() => HandleRemoveCourse(course.Course_Name)}
@@ -68,8 +68,9 @@ const YourCourses = () => {
                 >
                   {course.Course_Name}
                 </Text>
-                {course.Technologies.map((tech) => (
+                {course.Technologies.map((tech, index) => (
                   <View
+                    key={index}
                     style={{
                       flexDirection: "row",
                       alignItems: "center",
@@ -85,7 +86,9 @@ const YourCourses = () => {
                     >
                       {tech.TechName}
                     </Text>
-                    <Text>{tech.Points} / 10</Text>
+                    <Text style={{ fontWeight: "700", letterSpacing: 1 }}>
+                      Points( {tech.Points} / 10 )
+                    </Text>
                   </View>
                 ))}
               </View>
@@ -98,6 +101,49 @@ const YourCourses = () => {
           </LinearGradient>
         ))
       )}
+      {/* tutorials */}
+      <HeadingText text="Tutorials" />
+      <Text
+        style={{
+          color: Colors.mildGrey,
+          fontSize: 16,
+          letterSpacing: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          lineHeight: 30,
+          marginBottom: 20,
+        }}
+      >
+        <Text style={{ color: "orange", fontSize: 20 }}>*</Text> Long press the
+        course wrapper to remove the course
+      </Text>
+      <Text
+        style={{
+          color: Colors.mildGrey,
+          fontSize: 16,
+          letterSpacing: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          lineHeight: 30,
+          marginBottom: 20,
+        }}
+      >
+        <Text style={{ color: "orange", fontSize: 20 }}>*</Text> For you to earn
+        10 points, you must complete these course challenges and earn points
+      </Text>
+
+      <Text
+        style={{
+          color: Colors.mildGrey,
+          fontSize: 16,
+          letterSpacing: 1,
+          lineHeight: 30,
+        }}
+      >
+        <Text style={{ color: "orange", fontSize: 20 }}>*</Text> Once You reach
+        10 points then you will receive a certification and unlock the{" "}
+        <Text style={{ color: Colors.veryDarkGrey }}>(Message System)</Text>.
+      </Text>
     </View>
   );
 };

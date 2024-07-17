@@ -4,7 +4,6 @@ import { WebView } from "react-native-webview";
 import { Colors, pageView } from "../constants/Colors";
 import HeadingText from "../utils/HeadingText";
 import { useData } from "../Context/Contexter";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import Skeleton from "../Skeletons/Skeleton";
