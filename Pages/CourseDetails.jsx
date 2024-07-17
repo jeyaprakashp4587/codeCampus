@@ -1,18 +1,46 @@
-import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  FlatList,
+} from "react-native";
 import React, { useEffect } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import { useData } from "../Context/Contexter";
-import Ripple from "react-native-material-ripple";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faStar } from "@fortawesome/free-regular-svg-icons";
 import Button from "../utils/Button";
-import { faCode } from "@fortawesome/free-solid-svg-icons";
 import HeadingText from "../utils/HeadingText";
 import TopicsText from "../utils/TopicsText";
 import PragraphText from "../utils/PragraphText";
+import axios from "axios";
+import Api from "../Api";
 
 const CourseDetails = ({ navigation }) => {
-  const { selectedCourse, setselectedTechnology } = useData();
+  const {
+    selectedCourse,
+    setselectedTechnology,
+    selectedTechnology,
+    user,
+    setUser,
+  } = useData();
+  // console.log(selectedCourse);
+  // console.log(selectedTechnology);
+  const HandleCourse = async (item) => {
+    // navigation.navigate("learn");
+    setselectedTechnology({ web: item.web, name: item.name });
+    const res = await axios.post(`${Api}/Courses/addTech`, {
+      TechName: item.name,
+      CourseName: selectedCourse.name,
+      UserId: user._id,
+    });
+    if (res.data.Email) {
+      setUser(res.data);
+      Alert.alert("Course Added Succesfully");
+    } else {
+      Alert.alert(res.data);
+    }
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: "white", paddingHorizontal: 20 }}>
@@ -28,8 +56,10 @@ const CourseDetails = ({ navigation }) => {
           alignSelf: "center",
         }}
       /> */}
-      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        {selectedCourse?.technologies.map((item, index) => (
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        data={selectedCourse?.technologies}
+        renderItem={({ item, index }) => (
           <View
             key={index}
             style={{
@@ -62,7 +92,11 @@ const CourseDetails = ({ navigation }) => {
                   }}
                 >
                   <Text
-                    style={{ color: "orange", fweight: "700", fontSize: 20 }}
+                    style={{
+                      color: "orange",
+                      fweight: "700",
+                      fontSize: 20,
+                    }}
                   >
                     {" "}
                     *{" "}
@@ -72,19 +106,17 @@ const CourseDetails = ({ navigation }) => {
               ))}
             </View>
             <Button
-              function={() => {
-                navigation.navigate("learn");
-                setselectedTechnology(item.web);
-              }}
+              function={() => HandleCourse(item)}
               bgcolor="#7575a3"
               text="Start"
               textColor="white"
               fweight="700"
               fsize={18}
+              width="100%"
             />
           </View>
-        ))}
-      </ScrollView>
+        )}
+      />
     </View>
   );
 };

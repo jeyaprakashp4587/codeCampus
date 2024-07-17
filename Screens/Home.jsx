@@ -31,7 +31,7 @@ const Home = () => {
   useEffect(() => {
     setTimeout(() => {
       setLoad(true);
-    }, 100);
+    }, 50);
   }, []);
   // calender display
   const [calendardis, setCalenderdis] = useState(false);
@@ -204,7 +204,10 @@ const Home = () => {
               Career
             </Text>
           </TouchableOpacity>
-          <View style={styles.ideaBox}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("yourcourse")}
+            style={styles.ideaBox}
+          >
             <Image
               source={require("../assets/images/learning.png")}
               style={{ width: 35, height: 35, tintColor: "orange" }}
@@ -218,7 +221,7 @@ const Home = () => {
             >
               Your Course
             </Text>
-          </View>
+          </TouchableOpacity>
           <View style={styles.ideaBox}>
             <Image
               source={require("../assets/images/reward.png")}
@@ -262,11 +265,11 @@ const Home = () => {
           {/* display: calendardis ? "flex" : "none"  */}
         </View>
         {/* posts */}
+        {/* <Posts />
         <Posts />
         <Posts />
         <Posts />
-        <Posts />
-        <Posts />
+        <Posts /> */}
       </ScrollView>
     </View>
   );

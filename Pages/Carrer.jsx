@@ -253,7 +253,7 @@ const Carrer = ({ navigation }) => {
         "Master C++ programming for performance-critical applications. Learn advanced topics like templates, STL, memory management, and multithreading.",
       technologies: [
         {
-          name: "cpp",
+          name: "C++",
           icon: (
             <MaterialCommunityIcons
               name="language-cpp"
@@ -317,8 +317,8 @@ const Carrer = ({ navigation }) => {
         {courses.map((item, index) => (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("course");
               setSelectedCourse(item);
+              navigation.navigate("course");
             }}
             key={index}
             style={{

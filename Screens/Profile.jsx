@@ -23,7 +23,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Profile = ({ navigation }) => {
   const { user } = useData();
-  console.log(user);
+  // console.log(user);
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: "white" }}

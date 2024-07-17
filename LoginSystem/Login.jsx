@@ -69,7 +69,7 @@ const Login = ({ navigation }) => {
             textAlign: "center",
             fontSize: 21,
             // fontFamily: "PopIns-Regular",
-            lineHeight: 35,
+            lineHeight: 45,
             color: Colors.veryDarkGrey,
           }}
         >

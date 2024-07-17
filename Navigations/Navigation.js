@@ -202,7 +202,7 @@ const StackNavigations = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="yourcarrer"
+        name="yourcourse"
         component={YourCourses}
         options={{ headerShown: false }}
       />

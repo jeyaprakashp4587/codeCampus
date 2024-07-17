@@ -5,6 +5,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useData } from "../Context/Contexter";
@@ -13,14 +14,30 @@ import Skeleton from "../Skeletons/Skeleton";
 import Ripple from "react-native-material-ripple";
 import TopicsText from "../utils/TopicsText";
 import PragraphText from "../utils/PragraphText";
+import Api from "../Api";
+import axios from "axios";
 
 const SelectedCourse = ({ navigation }) => {
-  const { selectedCourse } = useData();
-
+  const { selectedCourse, user, setUser } = useData();
+  // Handle Add Course
+  const HandleAddCourse = async () => {
+    // console.log(selectedCourse);
+    const res = await axios.post(`${Api}/Courses/addCourse`, {
+      courseName: selectedCourse.name,
+      userId: user._id,
+    });
+    // console.log(res.data);
+    if (res.data.Email) {
+      setUser(res.data);
+      Alert.alert("Course Added Succesfully");
+    } else {
+      Alert.alert(res.data);
+    }
+    navigation.navigate("courseDetails");
+  };
   return (
     <ScrollView style={styles.pageView} showsVerticalScrollIndicator={false}>
       <Text style={styles.courseName}>{selectedCourse?.name}</Text>
-
       {selectedCourse?.img ? (
         <Image
           source={{ uri: selectedCourse?.img }}
@@ -47,7 +64,7 @@ const SelectedCourse = ({ navigation }) => {
         rippleColor={Colors.violet}
         rippleOpacity={1}
         style={styles.button}
-        onPress={() => navigation.navigate("courseDetails")}
+        onPress={() => HandleAddCourse()}
       >
         <Text style={styles.buttonText}>Let's Begin</Text>
       </Ripple>

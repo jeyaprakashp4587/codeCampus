@@ -1,10 +1,80 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-
+import HeadingText from "../utils/HeadingText";
+import { Colors, pageView } from "../constants/Colors";
+import { useData } from "../Context/Contexter";
+import { LinearGradient } from "expo-linear-gradient";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCode } from "@fortawesome/free-solid-svg-icons";
 const YourCourses = () => {
+  const { user } = useData();
+  const color = [
+    { color1: "#ffb3b3", color2: "#ffe6e6" },
+    { color1: "#b3d9ff", color2: "#e6f2ff" },
+    { color1: "#b3e6cc", color2: "#ecf9f2" },
+    { color1: "#b3b3ff", color2: "#e6e6ff" },
+    { color1: "#ffb3ff", color2: "#ffe6ff" },
+    { color1: "#b3e6cc", color2: "#ecf9f2" },
+    { color1: "#b3e6cc", color2: "#ecf9f2" },
+    { color1: "#b3e6cc", color2: "#ecf9f2" },
+  ];
   return (
-    <View>
-      <Text>YourCourses</Text>
+    <View style={pageView}>
+      <HeadingText text="Your Courses" />
+      {/* wrappers */}
+      {user?.Courses.length <= 0 ? (
+        <Text>You Have No Courses</Text>
+      ) : (
+        user.Courses.map((course, index) => (
+          <LinearGradient
+            colors={[color[index].color1, color[index].color2]}
+            start={[0, 1]}
+            end={[1, 0]}
+            style={{ borderRadius: 10, marginBottom: 20 }}
+          >
+            <TouchableOpacity
+              key={index}
+              style={{
+                width: "100%",
+                height: "auto",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexDirection: "row",
+                padding: 30,
+              }}
+            >
+              <View>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "700",
+                    color: Colors.veryDarkGrey,
+                    letterSpacing: 1,
+                  }}
+                >
+                  {course.Course_Name}
+                </Text>
+                {course.Technologies.map((tech) => (
+                  <Text
+                    style={{
+                      textTransform: "capitalize",
+                      fontSize: 15,
+                      letterSpacing: 1,
+                    }}
+                  >
+                    {tech.TechName}
+                  </Text>
+                ))}
+              </View>
+              <FontAwesomeIcon
+                icon={faCode}
+                color={Colors.veryLightGrey}
+                size={50}
+              />
+            </TouchableOpacity>
+          </LinearGradient>
+        ))
+      )}
     </View>
   );
 };

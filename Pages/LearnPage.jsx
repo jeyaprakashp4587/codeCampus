@@ -70,7 +70,7 @@ const LearnPage = () => {
       </View>
       <View style={{ height: 20 }} />
       {selectedTechnology ? (
-        <WebView source={{ uri: selectedTechnology }} />
+        <WebView source={{ uri: selectedTechnology.web }} />
       ) : (
         <Skeleton widht={200} height={200} />
       )}
