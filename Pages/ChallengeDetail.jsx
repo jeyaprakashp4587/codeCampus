@@ -18,7 +18,7 @@ import axios from "axios";
 import Api from "../Api";
 
 const ChallengeDetail = () => {
-  const { selectedChallenge, user, serUser } = useData();
+  const { selectedChallenge, user, setUser } = useData();
   //   console.log(selectedChallenge);
   const [Buttons, setButton] = useState();
   const [uploadTut, setUploadTut] = useState();
