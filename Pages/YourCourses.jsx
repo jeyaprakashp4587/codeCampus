@@ -6,8 +6,11 @@ import { useData } from "../Context/Contexter";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCode } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import Api from "../Api";
+
 const YourCourses = () => {
-  const { user } = useData();
+  const { user, setUser } = useData();
   const color = [
     { color1: "#ffb3b3", color2: "#ffe6e6" },
     { color1: "#b3d9ff", color2: "#e6f2ff" },
@@ -18,6 +21,16 @@ const YourCourses = () => {
     { color1: "#b3e6cc", color2: "#ecf9f2" },
     { color1: "#b3e6cc", color2: "#ecf9f2" },
   ];
+  // remove the course
+  const HandleRemoveCourse = async (crName) => {
+    const res = await axios.post(`${Api}/Courses/removeCourse`, {
+      userId: user._id,
+      CourseName: crName,
+    });
+    if (res.data.Email) {
+      setUser(res.data);
+    }
+  };
   return (
     <View style={pageView}>
       <HeadingText text="Your Courses" />
@@ -33,6 +46,7 @@ const YourCourses = () => {
             style={{ borderRadius: 10, marginBottom: 20 }}
           >
             <TouchableOpacity
+              onLongPress={() => HandleRemoveCourse(course.Course_Name)}
               key={index}
               style={{
                 width: "100%",
@@ -55,15 +69,24 @@ const YourCourses = () => {
                   {course.Course_Name}
                 </Text>
                 {course.Technologies.map((tech) => (
-                  <Text
+                  <View
                     style={{
-                      textTransform: "capitalize",
-                      fontSize: 15,
-                      letterSpacing: 1,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      columnGap: 10,
                     }}
                   >
-                    {tech.TechName}
-                  </Text>
+                    <Text
+                      style={{
+                        textTransform: "capitalize",
+                        fontSize: 15,
+                        letterSpacing: 1,
+                      }}
+                    >
+                      {tech.TechName}
+                    </Text>
+                    <Text>{tech.Points} / 10</Text>
+                  </View>
                 ))}
               </View>
               <FontAwesomeIcon
