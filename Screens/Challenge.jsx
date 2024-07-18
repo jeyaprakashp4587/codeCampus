@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import HeadingText from "../utils/HeadingText";
 import PragraphText from "../utils/PragraphText";
@@ -24,15 +24,17 @@ const Challenge = ({ navigation }) => {
       img: "https://i.ibb.co/QQT3CGx/problem-solving.png",
     },
   ];
+
+  const HandleSelectChallenges = (item) => {
+    navigation.navigate("chooseChallenge");
+    setselectedChallengeTopic(item.ChallengeName);
+  };
   return (
     <View style={pageView}>
       <HeadingText text="Develop Your Skills Here" />
       {Challenges.map((item, index) => (
         <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("chooseChallenge");
-            setselectedChallengeTopic(item.ChallengeName);
-          }}
+          onPress={() => HandleSelectChallenges(item)}
           key={index}
           style={{
             width: "100%",
