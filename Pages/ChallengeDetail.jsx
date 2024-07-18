@@ -16,6 +16,7 @@ import PragraphText from "../utils/PragraphText";
 import WebView from "react-native-webview";
 import axios from "axios";
 import Api from "../Api";
+import { TextInput } from "react-native";
 
 const ChallengeDetail = () => {
   const { selectedChallenge, user, setUser } = useData();
@@ -28,7 +29,9 @@ const ChallengeDetail = () => {
     const res = await axios.post(`${Api}/Challenges/addChallenge`, {
       userId: user._id,
       ChallengeName: chName,
+      ChallengeType: selectedChallenge.technologies[0].name,
     });
+    // console.log(selectedChallenge);
   };
   return (
     <View style={pageView}>
@@ -198,6 +201,41 @@ const ChallengeDetail = () => {
             </View>
           </View>
         ) : null}
+        {/* upload challenge */}
+        <View
+          style={{
+            marginTop: 30,
+            // borderWidth: 1,
+            height: 400,
+            marginBottom: 20,
+          }}
+        >
+          <TextInput
+            placeholder="Enter Your Project Repository"
+            style={{
+              borderWidth: 1,
+              padding: 15,
+              fontSize: 17,
+              letterSpacing: 1,
+              borderColor: Colors.mildGrey,
+              borderRadius: 5,
+            }}
+            placeholderTextColor={Colors.mildGrey}
+          />
+          <TextInput
+            placeholder="Enter Your Project Repository"
+            style={{
+              borderWidth: 1,
+              padding: 15,
+              fontSize: 17,
+              letterSpacing: 1,
+              borderColor: Colors.mildGrey,
+              borderRadius: 5,
+            }}
+            placeholderTextColor={Colors.mildGrey}
+          />
+          <Button></Button>
+        </View>
       </ScrollView>
     </View>
   );
