@@ -17,6 +17,7 @@ import { faBars, faL } from "@fortawesome/free-solid-svg-icons";
 import { TouchableOpacity } from "react-native";
 import axios from "axios";
 import Api from "../Api";
+import Skeleton from "../Skeletons/Skeleton";
 
 const ChooseChallenge = ({ navigation }) => {
   // level list
@@ -39,61 +40,52 @@ const ChooseChallenge = ({ navigation }) => {
     },
   ];
   // end levels
-  const { selectedChallengeTopic, setSelectedChallenge } = useData();
+  const { selectedChallengeTopic, setSelectedChallenge } = useData([]);
   const [Challenges, setChallenges] = useState();
   // get the All challenges by their topics
-  const getChallenges = async () => {
+  const getChallenges = async (ChallengeTopic) => {
     const res = await axios.post(`${Api}/Challenges/getChallenges`, {
-      ChallengeTopic: selectedChallengeTopic,
+      ChallengeTopic: ChallengeTopic,
     });
     if (res.data) {
       setChallenges([...res.data.newbieLevel, ...res.data.expertLevel]);
       // console.log("expert", res.data.expertLevel);
     }
+    return res.data;
   };
   useEffect(() => {
-    getChallenges();
+    getChallenges(selectedChallengeTopic);
   }, [selectedChallengeTopic]);
   //
-  // console.log(res.data);
-  // }
-  // useEffect(() => {
-  //   switch (selectedChallengeTopic) {
-  //     case "Web Development":
-  //       setChallenges(juniorLevel);
-  //       break;
-  //     case "App Development":
-  //       // setselectedChallengeTopic("")
-  //       break;
-  //     case "Problem Solving":
-  //       break;
 
-  //     default:
-  //       break;
-  //   }
-  //   // console.log(selectedChallengeTopic);
-  //   setChallenges(newbieLevel);
-  // }, []);
   //  handle level
   const [difficultyInfo, setDifficultyInfo] = useState("Newbie");
   const HandleSelectLevel = (levelName) => {
     setDifficultyInfo(levelName);
+    setChallenges(false);
     setVisible(false);
     switch (levelName) {
       case "Newbie":
-        setChallenges(newbieLevel);
+        getChallenges(selectedChallengeTopic).then((data) =>
+          setChallenges([...data.newbieLevel])
+        );
         break;
       case "Junior":
-        setChallenges(juniorLevel);
+        getChallenges(selectedChallengeTopic).then((data) =>
+          setChallenges([...data.juniorLevel])
+        );
         break;
       case "Expert":
-        setChallenges(expertLevel);
+        getChallenges(selectedChallengeTopic).then((data) =>
+          setChallenges([...data.expertLevel])
+        );
         break;
       case "Legend":
-        setChallenges(legendLevel);
+        getChallenges(selectedChallengeTopic).then((data) =>
+          setChallenges([...data.legendLevel])
+        );
         break;
       default:
-        setChallenges(newbieLevel);
         break;
     }
   };
@@ -139,97 +131,108 @@ const ChooseChallenge = ({ navigation }) => {
           ))}
         </Menu>
       </View>
-      <FlatList
-        data={Challenges}
-        showsVerticalScrollIndicator={false}
-        style={{
-          alignSelf: "center",
-          borderWidth: 0,
-          width: "100%",
-        }}
-        renderItem={({ item, index }) => (
-          <View
-            style={{
-              // borderWidth: 1,
-              flexDirection: "column",
-              rowGap: 10,
-              padding: 20,
-              backgroundColor: "white",
-              borderRadius: 5,
-              elevation: 2,
-              marginTop: 15,
-              marginHorizontal: 5,
-              marginBottom: 5,
-            }}
-            key={index}
-          >
+      {/* render skeletons */}
+      {!Challenges ? (
+        Levels.map((i, index) => (
+          <View key={index}>
+            <Skeleton wight="100%" height={200} radius={10} mt={20} />
+          </View>
+        ))
+      ) : (
+        <FlatList
+          data={Challenges}
+          showsVerticalScrollIndicator={false}
+          style={{
+            alignSelf: "center",
+            borderWidth: 0,
+            width: "100%",
+          }}
+          renderItem={({ item, index }) => (
             <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
+              style={{
+                // borderWidth: 1,
+                flexDirection: "column",
+                rowGap: 10,
+                padding: 20,
+                backgroundColor: "white",
+                borderRadius: 5,
+                elevation: 2,
+                marginTop: 15,
+                marginHorizontal: 5,
+                marginBottom: 5,
+              }}
+              key={index}
             >
-              <ParagraphText
-                text={item.title}
-                fsize={18}
-                padding={5}
-                widht="70%"
-              />
-              <ParagraphText
-                text={item.level ? item.level : difficultyInfo}
-                fsize={15}
-                padding={5}
-                color="orange"
-              />
-            </View>
-            {item?.level == "newbie" ? null : (
-              <Image
-                source={{
-                  uri: item.sample_image,
-                }}
+              <View
                 style={{
-                  width: "100%",
-                  height: 250,
-                  alignSelf: "center",
-                  resizeMode: "cover",
-                  borderRadius: 20,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
                 }}
-              />
-            )}
-            <Text
-              style={{
-                color: Colors.veryDarkGrey,
-                lineHeight: 24,
-                letterSpacing: 1,
-              }}
-            >
-              {item.description}
-            </Text>
-            <View
-              style={{
-                marginVertical: 10,
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              {/* <View style={{ flexDirection: "row", columnGap: 20 }}>
+              >
+                <ParagraphText
+                  text={item.title}
+                  fsize={18}
+                  padding={5}
+                  widht="70%"
+                />
+                <ParagraphText
+                  text={item.level ? item.level : difficultyInfo}
+                  fsize={15}
+                  padding={5}
+                  color="orange"
+                />
+              </View>
+              {item?.level == "newbie" ? null : (
+                <Image
+                  source={{
+                    uri: item.sample_image,
+                  }}
+                  style={{
+                    width: "100%",
+                    height: 250,
+                    alignSelf: "center",
+                    resizeMode: "cover",
+                    borderRadius: 20,
+                  }}
+                />
+              )}
+              <Text
+                style={{
+                  color: Colors.veryDarkGrey,
+                  lineHeight: 24,
+                  letterSpacing: 1,
+                }}
+              >
+                {item.description}
+              </Text>
+              <View
+                style={{
+                  marginVertical: 10,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                {/* <View style={{ flexDirection: "row", columnGap: 20 }}>
                 {item.technologies.map((i, index) =>
                   React.cloneElement(i.icon, { size: 20, key: index })
                 )}
               </View> */}
-              <View>
-                <Feather
-                  name="check-circle"
-                  size={20}
-                  color={Colors.mildGrey}
-                />
+                <View>
+                  <Feather
+                    name="check-circle"
+                    size={20}
+                    color={Colors.mildGrey}
+                  />
+                </View>
               </View>
-            </View>
-            <LinearGradient
-              colors={["#003399", "#6699ff", "#003399"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={{ borderRadius: 10, overflow: "hidden" }}
-            >
-              {/* <Button
+              <LinearGradient
+                colors={["#003399", "#6699ff", "#003399"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={{ borderRadius: 10, overflow: "hidden" }}
+              >
+                {/* <Button
                 text="View Challenge"
                 bgcolor="transparent"
                 radius={0.2}
@@ -239,27 +242,28 @@ const ChooseChallenge = ({ navigation }) => {
                   // setSelectedChallenge(item);
                 }}
               /> */}
-              <Button
-                rippleColor="lightgrey"
-                onPress={() => {
-                  navigation.navigate("challengeDetail");
-                  setSelectedChallenge(item);
-                }}
-                style={{
-                  borderRadius: 5,
-                  height: 45,
-                  padding: 0,
-                  justifyContent: "center",
-                  width: "100%",
-                }}
-                textColor="white"
-              >
-                <Text style={{ letterSpacing: 1 }}>View Challenge</Text>
-              </Button>
-            </LinearGradient>
-          </View>
-        )}
-      />
+                <Button
+                  rippleColor="lightgrey"
+                  onPress={() => {
+                    navigation.navigate("challengeDetail");
+                    setSelectedChallenge(item);
+                  }}
+                  style={{
+                    borderRadius: 5,
+                    height: 45,
+                    padding: 0,
+                    justifyContent: "center",
+                    width: "100%",
+                  }}
+                  textColor="white"
+                >
+                  <Text style={{ letterSpacing: 1 }}>View Challenge</Text>
+                </Button>
+              </LinearGradient>
+            </View>
+          )}
+        />
+      )}
     </View>
   );
 };

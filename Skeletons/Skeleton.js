@@ -27,6 +27,7 @@ const Skeleton = (props) => {
           height: props.height,
           backgroundColor: "#E0E0E0",
           borderRadius: props.radius,
+          marginTop: props.mt ? props.mt : 1,
         }}
       />
     </View>

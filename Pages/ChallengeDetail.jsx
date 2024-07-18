@@ -20,10 +20,11 @@ import { TextInput } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faImage } from "@fortawesome/free-regular-svg-icons";
 import Ripple from "react-native-material-ripple";
+import { icon } from "@fortawesome/fontawesome-svg-core";
 
 const ChallengeDetail = () => {
   const { selectedChallenge, user, setUser } = useData();
-  //   console.log(selectedChallenge);
+  console.log(selectedChallenge);
   const [Buttons, setButton] = useState();
   const [uploadTut, setUploadTut] = useState();
   const [uploadStatus, setUploadStatus] = useState();
@@ -92,11 +93,6 @@ const ChallengeDetail = () => {
               justifyContent: "space-between",
             }}
           >
-            <View style={{ flexDirection: "row", columnGap: 17 }}>
-              {selectedChallenge?.technologies.map((item, index) =>
-                React.cloneElement(item.icon, { size: 25, key: index })
-              )}
-            </View>
             <Text
               style={{
                 fontWeight: "600",
@@ -308,6 +304,7 @@ const ChallengeDetail = () => {
         ) : null}
       </ScrollView>
     </View>
+    // <Text>vdfmk</Text>
   );
 };
 
