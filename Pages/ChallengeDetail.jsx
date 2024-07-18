@@ -103,6 +103,15 @@ const ChallengeDetail = () => {
               {selectedChallenge?.level}
             </Text>
           </View>
+          <View style={{ flexDirection: "row", columnGap: 20 }}>
+            {selectedChallenge?.technologies.map((i, index) => (
+              <Image
+                key={index}
+                source={{ uri: i.icon }}
+                style={{ width: 30, height: 30, resizeMode: "contain" }}
+              />
+            ))}
+          </View>
           <View>
             {selectedChallenge?.rules.map((rule, index) => (
               <PragraphText text={["* ", rule]} fsize={15} padding={5} />

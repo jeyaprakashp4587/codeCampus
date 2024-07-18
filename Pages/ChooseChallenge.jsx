@@ -48,7 +48,12 @@ const ChooseChallenge = ({ navigation }) => {
       ChallengeTopic: ChallengeTopic,
     });
     if (res.data) {
-      setChallenges([...res.data.newbieLevel, ...res.data.expertLevel]);
+      setChallenges([
+        ...res.data.newbieLevel,
+        ...res.data.juniorLevel,
+        ...res.data.expertLevel,
+        ...res.data.legendLevel,
+      ]);
       // console.log("expert", res.data.expertLevel);
     }
     return res.data;
@@ -213,11 +218,15 @@ const ChooseChallenge = ({ navigation }) => {
                   alignItems: "center",
                 }}
               >
-                {/* <View style={{ flexDirection: "row", columnGap: 20 }}>
-                {item.technologies.map((i, index) =>
-                  React.cloneElement(i.icon, { size: 20, key: index })
-                )}
-              </View> */}
+                <View style={{ flexDirection: "row", columnGap: 20 }}>
+                  {item.technologies.map((i, index) => (
+                    <Image
+                      key={index}
+                      source={{ uri: i.icon }}
+                      style={{ width: 30, height: 30 }}
+                    />
+                  ))}
+                </View>
                 <View>
                   <Feather
                     name="check-circle"

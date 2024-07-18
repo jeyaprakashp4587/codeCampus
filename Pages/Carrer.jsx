@@ -242,7 +242,7 @@ const Carrer = ({ navigation }) => {
         "Java Collections Framework",
         "Exception Handling",
       ],
-      img: "https://i.ibb.co/qFbgSNf/java.jpg",
+      img: "https://i.ibb.co/2h2hz0h/icons8-java-480.png",
       guidance:
         '<iframe width="100%" height="100%"src="https://www.youtube.com/embed/vgm6AJLu6F4?si=1Oxz5wM2q8RNw7a5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
       bgColor: "#b3b3ff",
@@ -278,7 +278,7 @@ const Carrer = ({ navigation }) => {
         "Multithreading",
         "Advanced Data Structures",
       ],
-      img: "https://i.ibb.co/JRXrmhX/7441053-3657405.jpg",
+      img: "https://i.ibb.co/fQ7bqp8/icons8-c-240.png",
       guidance:
         '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/x0xjvTIvmT4?si=D5w0dGGvYHI0k8fS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
       bgColor: "#ff6666",
