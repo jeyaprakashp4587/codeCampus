@@ -17,12 +17,16 @@ import WebView from "react-native-webview";
 import axios from "axios";
 import Api from "../Api";
 import { TextInput } from "react-native";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faImage } from "@fortawesome/free-regular-svg-icons";
+import Ripple from "react-native-material-ripple";
 
 const ChallengeDetail = () => {
   const { selectedChallenge, user, setUser } = useData();
   //   console.log(selectedChallenge);
   const [Buttons, setButton] = useState();
   const [uploadTut, setUploadTut] = useState();
+  const [uploadStatus, setUploadStatus] = useState();
   // Handle start challenge
   const HandleStart = async (chName) => {
     setButton(true);
@@ -32,6 +36,21 @@ const ChallengeDetail = () => {
       ChallengeType: selectedChallenge.technologies[0].name,
     });
     // console.log(selectedChallenge);
+  };
+  // upload
+  const [uploadForm, setUploadForm] = useState({
+    GitRepo: "",
+    LiveLink: "",
+  });
+  const HandleText = (name, text) => {
+    setUploadForm({ ...uploadForm, [name]: text });
+  };
+  const HandleUpload = async (e) => {
+    setUploadStatus("Uploaded");
+    const res = await axios.post(`${Api}/Challenges/uploadChallenge`, {
+      GiteRepo: uploadForm.GitRepo,
+      LiveLink: uploadForm.LiveLink,
+    });
   };
   return (
     <View style={pageView}>
@@ -98,11 +117,18 @@ const ChallengeDetail = () => {
           {/* end */}
           {Buttons ? (
             <Button
-              text="Upload"
+              text={
+                uploadStatus == "open"
+                  ? "Wait..."
+                  : uploadStatus == "Uploaded"
+                  ? "Uploaded"
+                  : "Upload"
+              }
               bgcolor="#563d7c"
               textColor="white"
               fsize={18}
               width="100%"
+              function={() => setUploadStatus("open")}
             />
           ) : (
             <Button
@@ -202,40 +228,84 @@ const ChallengeDetail = () => {
           </View>
         ) : null}
         {/* upload challenge */}
-        <View
-          style={{
-            marginTop: 30,
-            // borderWidth: 1,
-            height: 400,
-            marginBottom: 20,
-          }}
-        >
-          <TextInput
-            placeholder="Enter Your Project Repository"
+        {uploadStatus == "open" ? (
+          <View
             style={{
-              borderWidth: 1,
-              padding: 15,
-              fontSize: 17,
-              letterSpacing: 1,
-              borderColor: Colors.mildGrey,
-              borderRadius: 5,
+              marginTop: 30,
+              // borderWidth: 1,
+              height: 400,
+              marginBottom: 20,
+              rowGap: 20,
             }}
-            placeholderTextColor={Colors.mildGrey}
-          />
-          <TextInput
-            placeholder="Enter Your Project Repository"
-            style={{
-              borderWidth: 1,
-              padding: 15,
-              fontSize: 17,
-              letterSpacing: 1,
-              borderColor: Colors.mildGrey,
-              borderRadius: 5,
-            }}
-            placeholderTextColor={Colors.mildGrey}
-          />
-          <Button></Button>
-        </View>
+          >
+            <TextInput
+              placeholder="Enter Your Project Repository"
+              style={{
+                borderWidth: 1,
+                padding: 15,
+                fontSize: 17,
+                letterSpacing: 1,
+                borderColor: Colors.mildGrey,
+                borderRadius: 5,
+              }}
+              placeholderTextColor={Colors.mildGrey}
+              onChangeText={(text) => HandleText("GitRepo", text)}
+            />
+            <TextInput
+              onChangeText={(text) => HandleText("LiveLink", text)}
+              placeholder="Enter Your Project Repository"
+              style={{
+                borderWidth: 1,
+                padding: 15,
+                fontSize: 17,
+                letterSpacing: 1,
+                borderColor: Colors.mildGrey,
+                borderRadius: 5,
+              }}
+              placeholderTextColor={Colors.mildGrey}
+            />
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                columnGap: 5,
+                justifyContent: "center",
+                borderWidth: 1,
+                borderColor: Colors.mildGrey,
+                borderRadius: 5,
+                padding: 15,
+              }}
+            >
+              <FontAwesomeIcon
+                icon={faImage}
+                size={20}
+                color={Colors.mildGrey}
+              />
+              <PragraphText text="Upload Snapshot" padding={1} />
+            </TouchableOpacity>
+
+            <Ripple
+              onPress={HandleUpload}
+              style={{
+                width: "100%",
+                backgroundColor: "#563d7c",
+                padding: 12,
+                borderRadius: 5,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: "white",
+                  letterSpacing: 1,
+                  textAlign: "center",
+                }}
+              >
+                Upload
+              </Text>
+            </Ripple>
+          </View>
+        ) : null}
       </ScrollView>
     </View>
   );
