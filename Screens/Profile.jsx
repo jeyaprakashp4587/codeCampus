@@ -5,8 +5,10 @@ import {
   StyleSheet,
   Text,
   View,
+  TextInput,
+  ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import HeadingText from "../utils/HeadingText";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -28,6 +30,7 @@ import {
 import axios from "axios";
 import Api from "../Api";
 import Skeleton from "../Skeletons/Skeleton";
+import { Button } from "react-native-paper";
 
 const Profile = ({ navigation }) => {
   const { user, setUser } = useData();
@@ -72,8 +75,6 @@ const Profile = ({ navigation }) => {
       hostImage(result.assets[0].uri, imageType).then((imageuri) => {
         upload(imageuri, imageType);
       });
-
-      // console.log(result.assets[0].uri);
     }
   };
   // upload to server
@@ -86,6 +87,30 @@ const Profile = ({ navigation }) => {
     if (res.data.Email) {
       setUser(res.data);
       setUploadIndicator(false);
+    }
+  };
+  // update user names and bio
+  const [aboutUpdate, setAboutUpdate] = useState(false);
+  const [uploadActivityIndi, setUploadActivityIndi] = useState(false);
+  const about = useRef({
+    FirstName: "",
+    LastName: "",
+    Bio: "",
+  }).current;
+  const HandleAboutInput = (name, text) => {
+    about[name] = text;
+    // console.log(about.Bio);
+  };
+  const HandleUpdate = async () => {
+    setUploadActivityIndi(!uploadActivityIndi);
+    const res = await axios.post(
+      `${Api}/Profile/updateProfileData/${user._id}`,
+      { FirstName: about.FirstName, LastName: about.LastName, Bio: about.Bio }
+    );
+    if (res.data.Email) {
+      setUser(res.data);
+      setAboutUpdate(!aboutUpdate);
+      setUploadActivityIndi(false);
     }
   };
   return (
@@ -117,7 +142,6 @@ const Profile = ({ navigation }) => {
             style={{ width: "100%", height: 240, objectFit: "fill" }}
           />
         )}
-
         <View
           style={{
             // borderWidth: 1,
@@ -159,12 +183,14 @@ const Profile = ({ navigation }) => {
               }}
             />
           )}
-          {/* edit icon */}
+          {/* about edit icon */}
           <TouchableOpacity
+            onPress={() => setAboutUpdate(!aboutUpdate)}
             style={{ position: "absolute", right: 20, top: 70 }}
           >
             <FontAwesomeIcon icon={faEdit} size={20} />
           </TouchableOpacity>
+          {/* user names and bio */}
           <Text
             style={{
               color: Colors.veryDarkGrey,
@@ -184,8 +210,94 @@ const Profile = ({ navigation }) => {
               // textAlign: "center",
             }}
           >
-            {user?.bio ? user.bio : "I want to become an Winner"}
+            {user?.Bio ? user.Bio : "I want to become an Winner"}
           </Text>
+          {/* update user name model */}
+          <View
+            style={{
+              borderWidth: 1,
+              borderColor: Colors.mildGrey,
+              width: "100%",
+              height: 300,
+              position: "absolute",
+              alignSelf: "center",
+              backgroundColor: "white",
+              zIndex: 10,
+              top: 180,
+              borderRadius: 10,
+              padding: 20,
+              flexDirection: "column",
+              justifyContent: "space-between",
+              display: aboutUpdate ? "flex" : "none",
+            }}
+          >
+            <ActivityIndicator
+              size={60}
+              color={Colors.violet}
+              style={{
+                position: "absolute",
+                zIndex: 90,
+                alignSelf: "center",
+                top: "50%",
+                bottom: "50%",
+                display: uploadActivityIndi ? "flex" : "none",
+              }}
+            />
+            <TextInput
+              placeholder="First Name"
+              style={{
+                borderRadius: 3,
+                borderWidth: 1,
+                padding: 10,
+                borderColor: Colors.veryLightGrey,
+                color: Colors.mildGrey,
+                letterSpacing: 1,
+                opacity: uploadActivityIndi ? 0.3 : 1,
+                paddingHorizontal: 15,
+              }}
+              onChangeText={(text) => HandleAboutInput("FirstName", text)}
+            />
+            <TextInput
+              placeholder="Last Name"
+              style={{
+                borderRadius: 3,
+                borderWidth: 1,
+                padding: 10,
+                borderColor: Colors.veryLightGrey,
+                color: Colors.mildGrey,
+                letterSpacing: 1,
+                opacity: uploadActivityIndi ? 0.3 : 1,
+                paddingHorizontal: 15,
+              }}
+              onChangeText={(text) => HandleAboutInput("LastName", text)}
+            />
+            <TextInput
+              placeholder="Bio"
+              style={{
+                borderRadius: 3,
+                borderWidth: 1,
+                padding: 10,
+                paddingHorizontal: 15,
+                borderColor: Colors.veryLightGrey,
+                color: Colors.mildGrey,
+                letterSpacing: 1,
+                opacity: uploadActivityIndi ? 0.3 : 1,
+              }}
+              onChangeText={(text) => HandleAboutInput("Bio", text)}
+            />
+            <Button
+              onPress={() => HandleUpdate()}
+              style={{
+                backgroundColor: Colors.violet,
+                borderRadius: 5,
+                padding: 8,
+              }}
+              textColor="white"
+            >
+              Update
+            </Button>
+          </View>
+          {/* instirur names and native  */}
           <View style={{ height: 5 }} />
           <Text
             style={{
