@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import HeadingText from "../utils/HeadingText";
 import PragraphText from "../utils/PragraphText";
@@ -20,10 +20,20 @@ import Post from "../components/Posts";
 import TopicsText from "../utils/TopicsText";
 import { useData } from "../Context/Contexter";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Imagepicker from "expo-image-picker";
 
 const Profile = ({ navigation }) => {
   const { user } = useData();
-  // console.log(user);
+
+  // get permission for image picker
+  const ImagePermission = async () => {
+    const permission = await Imagepicker.requestMediaLibraryPermissionsAsync();
+    const grand = await Imagepicker.getMediaLibraryPermissionsAsync();
+    console.log(grand);
+  };
+  useEffect(() => {
+    ImagePermission();
+  }, []);
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: "white" }}
