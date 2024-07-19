@@ -1,19 +1,16 @@
 import {
   Image,
-  Pressable,
+  TouchableOpacity,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import HeadingText from "../utils/HeadingText";
-import PragraphText from "../utils/PragraphText";
-import Button from "../utils/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faEdit } from "@fortawesome/free-regular-svg-icons";
-import { TouchableOpacity } from "react-native";
 import { faAward, faBook, faSignOut } from "@fortawesome/free-solid-svg-icons";
 import HrLine from "../utils/HrLine";
 import Post from "../components/Posts";
@@ -21,19 +18,76 @@ import TopicsText from "../utils/TopicsText";
 import { useData } from "../Context/Contexter";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Imagepicker from "expo-image-picker";
+import { storage } from "../Firebase/Firebase";
+import {
+  getDownloadURL,
+  ref,
+  updateMetadata,
+  uploadBytes,
+} from "firebase/storage";
+import axios from "axios";
+import Api from "../Api";
+import Skeleton from "../Skeletons/Skeleton";
 
 const Profile = ({ navigation }) => {
-  const { user } = useData();
+  const { user, setUser } = useData();
 
   // get permission for image picker
   const ImagePermission = async () => {
     const permission = await Imagepicker.requestMediaLibraryPermissionsAsync();
     const grand = await Imagepicker.getMediaLibraryPermissionsAsync();
-    console.log(grand);
   };
   useEffect(() => {
     ImagePermission();
   }, []);
+  // host the image to firebase storage bucket
+  const [uploadIndicator, setUploadIndicator] = useState(false);
+  const hostImage = async (imageUri, imageType) => {
+    try {
+      setUploadIndicator(imageType);
+      const storageRef = ref(storage, "Image/" + Date.now() + ".jpeg");
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
+      await uploadBytes(storageRef, blob);
+      await updateMetadata(storageRef, {
+        contentType: "image/jpeg",
+        cacheControl: "public,max-age=31536000",
+      });
+      const downloadURL = await getDownloadURL(storageRef);
+      return downloadURL;
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      throw error;
+    }
+  };
+  // change profile picture
+  const HandleChangeProfile = async (imageType) => {
+    const result = await Imagepicker.launchImageLibraryAsync({
+      mediaTypes: Imagepicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: imageType == "profile" ? [4, 4] : [9, 6],
+      quality: 1,
+    });
+    if (result.assets[0].uri) {
+      hostImage(result.assets[0].uri, imageType).then((imageuri) => {
+        upload(imageuri, imageType);
+      });
+
+      // console.log(result.assets[0].uri);
+    }
+  };
+  // upload to server
+  const upload = async (ImageUrl, ImageType) => {
+    const res = await axios.post(`${Api}/Profile/updateProfileImages`, {
+      ImageUri: ImageUrl,
+      ImageType: ImageType,
+      userId: user._id,
+    });
+    if (res.data.Email) {
+      setUser(res.data);
+      setUploadIndicator(false);
+    }
+  };
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: "white" }}
@@ -47,17 +101,23 @@ const Profile = ({ navigation }) => {
       {/* about*/}
       <View style={{ borderWidth: 0 }}>
         {/* this icon for cover */}
-        <Pressable
+        <TouchableOpacity
+          onPress={() => HandleChangeProfile("cover")}
           style={{ position: "absolute", right: 20, top: 10, zIndex: 10 }}
         >
           <FontAwesomeIcon icon={faEdit} size={20} color="orange" />
-        </Pressable>
-        <Image
-          source={{
-            uri: "https://i.ibb.co/YBfJxF3/60750.jpg",
-          }}
-          style={{ width: "100%", height: 200, objectFit: "fill" }}
-        />
+        </TouchableOpacity>
+        {uploadIndicator === "cover" ? (
+          <Skeleton width="100%" height={240} radius={10} mt={1} />
+        ) : (
+          <Image
+            source={{
+              uri: user?.Images.coverImg,
+            }}
+            style={{ width: "100%", height: 240, objectFit: "fill" }}
+          />
+        )}
+
         <View
           style={{
             // borderWidth: 1,
@@ -71,34 +131,40 @@ const Profile = ({ navigation }) => {
           }}
         >
           {/* this icon for profile */}
-          <Pressable
+          <TouchableOpacity
+            onPress={() => HandleChangeProfile("profile")}
             style={{ position: "absolute", left: 100, top: 70, zIndex: 10 }}
           >
             <FontAwesomeIcon icon={faEdit} size={20} color="orange" />
-          </Pressable>
-          <Image
-            // source={require("../assets/images/jp.jpeg")}
-            source={{
-              uri: user?.profile
-                ? user.profile
-                : user.Gender == "Male"
-                ? "https://i.ibb.co/3T4mNMm/man.png"
-                : "https://i.ibb.co/3mCcQp9/woman.png",
-            }}
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: 50,
-              // alignSelf: "center",
-              borderColor: "white",
-              borderWidth: 5,
-              objectFit: "cover",
-            }}
-          />
+          </TouchableOpacity>
+          {uploadIndicator === "profileLoad" ? (
+            <Skeleton width={100} height={100} radius={50} mt={1} />
+          ) : (
+            <Image
+              source={{
+                uri: user?.Images.profile
+                  ? user?.Images.profile
+                  : user.Gender == "Male"
+                  ? "https://i.ibb.co/3T4mNMm/man.png"
+                  : "https://i.ibb.co/3mCcQp9/woman.png",
+              }}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 50,
+                // alignSelf: "center",
+                borderColor: "white",
+                borderWidth: 5,
+                objectFit: "cover",
+              }}
+            />
+          )}
           {/* edit icon */}
-          <Pressable style={{ position: "absolute", right: 20, top: 70 }}>
+          <TouchableOpacity
+            style={{ position: "absolute", right: 20, top: 70 }}
+          >
             <FontAwesomeIcon icon={faEdit} size={20} />
-          </Pressable>
+          </TouchableOpacity>
           <Text
             style={{
               color: Colors.veryDarkGrey,
