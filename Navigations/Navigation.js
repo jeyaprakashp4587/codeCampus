@@ -74,7 +74,7 @@ const TabNavigation = () => {
         options={{
           headerShadow: false,
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faHome} color={color} size={24} />
+            <FontAwesomeIcon icon={faHome} color={color} size={width * 0.06} />
           ),
         }}
       />
@@ -86,7 +86,7 @@ const TabNavigation = () => {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="sword-cross"
-              size={24}
+              size={width * 0.06}
               color={color}
             />
           ),
@@ -98,7 +98,11 @@ const TabNavigation = () => {
         options={{
           headerShadow: false,
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faPlus} color={Colors.white} size={24} />
+            <FontAwesomeIcon
+              icon={faPlus}
+              color={Colors.white}
+              size={width * 0.06}
+            />
           ),
           tabBarIconStyle: {
             backgroundColor: "#3385ff",
@@ -120,7 +124,11 @@ const TabNavigation = () => {
         options={{
           headerShadow: false,
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faSuitcase} color={color} size={24} />
+            <FontAwesomeIcon
+              icon={faSuitcase}
+              color={color}
+              size={width * 0.06}
+            />
           ),
         }}
       />
@@ -130,7 +138,11 @@ const TabNavigation = () => {
         options={{
           headerShadow: false,
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faUserGroup} color={color} size={24} />
+            <FontAwesomeIcon
+              icon={faUserGroup}
+              color={color}
+              size={width * 0.06}
+            />
           ),
         }}
       />

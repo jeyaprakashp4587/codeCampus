@@ -29,22 +29,22 @@ const HomeSkeleton = () => {
         <View style={[styles.row, styles.marginVertical]}>
           <Skeleton
             width={width * 0.2}
-            height={width * 0.15}
+            height={height * 0.1}
             radius={width * 0.025}
           />
           <Skeleton
             width={width * 0.2}
-            height={width * 0.15}
+            height={height * 0.1}
             radius={width * 0.025}
           />
           <Skeleton
             width={width * 0.2}
-            height={width * 0.15}
+            height={height * 0.1}
             radius={width * 0.025}
           />
           <Skeleton
             width={width * 0.2}
-            height={width * 0.15}
+            height={height * 0.1}
             radius={width * 0.025}
           />
         </View>
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   marginVertical: {
-    marginVertical: height * 0.025,
+    marginVertical: height * 0.05,
   },
   column: {
     flexDirection: "column",

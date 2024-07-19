@@ -19,10 +19,11 @@ import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useData } from "../Context/Contexter";
 import { Dimensions } from "react-native";
-
+import Post from "../components/Posts";
+const { width, height } = Dimensions.get("window");
 const Home = () => {
   const navigation = useNavigation();
-  const { width, height } = Dimensions.get("window");
+
   const { user } = useData();
   const [load, setLoad] = useState(false);
 
@@ -83,40 +84,45 @@ const Home = () => {
 
   return (
     <View style={[styles.pageView, { paddingHorizontal: width * 0.05 }]}>
-      <Calendar
-        style={[
-          styles.calendar,
-          {
-            top: height * 0.25,
-            width: width * 0.6,
-            left: width * 0.2,
-            display: calendardis ? "flex" : "none",
-          },
-        ]}
-        markedDates={act}
-        markingType={"multi-dot"}
-        onDayPress={(day) => {
-          setActivitiesDis(!activitiesdis);
-          setActivitiesList(act[day.dateString]?.course || []);
-        }}
-      />
-      <View
-        style={[
-          styles.activityList,
-          {
-            width: width * 0.4,
-            height: height * 0.25,
-            top: height * 0.3,
-            display: activitiesdis ? "flex" : "none",
-          },
-        ]}
-      >
-        <FlatList
-          data={activitieslist}
-          renderItem={({ item }) => <Text>{item}</Text>}
-          keyExtractor={(item, index) => index.toString()}
+      {/* calender */}
+      <View>
+        <Calendar
+          style={[
+            styles.calendar,
+            {
+              top: height * 0.25,
+              width: width * 0.6,
+              left: width * 0.2,
+              display: calendardis ? "flex" : "none",
+            },
+          ]}
+          markedDates={act}
+          markingType={"multi-dot"}
+          onDayPress={(day) => {
+            setActivitiesDis(!activitiesdis);
+            setActivitiesList(act[day.dateString]?.course || []);
+          }}
         />
+        <View
+          style={[
+            styles.activityList,
+            {
+              width: width * 0.4,
+              height: height * 0.25,
+              top: height * 0.3,
+              display: activitiesdis ? "flex" : "none",
+            },
+          ]}
+        >
+          <FlatList
+            data={activitieslist}
+            renderItem={({ item }) => <Text>{item}</Text>}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </View>
       </View>
+      {/* calender */}
+      {/* header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate("profile")}>
           <Image
@@ -127,6 +133,7 @@ const Home = () => {
                 width: width * 0.12,
                 height: width * 0.12,
                 borderRadius: (width * 0.12) / 2,
+                borderWidth: 1,
               },
             ]}
           />
@@ -146,6 +153,7 @@ const Home = () => {
           <AntDesign name="message1" size={24} color={Colors.lightGrey} />
         </TouchableOpacity>
       </View>
+      {/*  header*/}
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.ideasWrapper}>
           <TouchableOpacity
@@ -210,6 +218,8 @@ const Home = () => {
             </Text>
           </TouchableOpacity>
         </View>
+        {/* post */}
+        <Post />
       </ScrollView>
     </View>
   );
@@ -268,8 +278,8 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
   },
   ideaBox: {
-    width: 70,
-    height: 70,
+    width: width * 0.2,
+    height: height * 0.1,
     borderRadius: 10,
     elevation: 2,
     backgroundColor: "white",
@@ -285,5 +295,7 @@ const styles = StyleSheet.create({
   },
   ideaText: {
     color: Colors.veryDarkGrey,
+    letterSpacing: 0.5,
+    // fontSize: 20,
   },
 });

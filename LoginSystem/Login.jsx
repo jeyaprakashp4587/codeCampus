@@ -9,13 +9,14 @@ import {
 import React, { useRef, useState } from "react";
 import { Colors, font, pageView } from "../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Button from "../utils/Button";
+import { Button } from "react-native-paper";
 import Api from "../Api";
 import axios from "axios";
 import { TextInput } from "react-native-paper";
 import { Alert } from "react-native";
 import { useData } from "../Context/Contexter";
 import { ScrollView } from "react-native";
+import Ripple from "react-native-material-ripple";
 const { width, height } = Dimensions.get("window");
 
 const Login = ({ navigation }) => {
@@ -95,12 +96,32 @@ const Login = ({ navigation }) => {
             label="Password"
             onChangeText={(text) => handlePassword("Password", text)}
           />
-          <Button
+          <Ripple
+            onPress={HandleLogin}
+            style={{
+              backgroundColor: Colors.veryLightGrey,
+              padding: 15,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 10,
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: "700",
+                letterSpacing: 1,
+                fontSize: width * 0.03,
+              }}
+            >
+              Log In
+            </Text>
+          </Ripple>
+          {/* <Button
             bgcolor={styles.buttonColor}
             text="Log in"
             function={() => HandleLogin()}
             width="100%"
-          />
+          /> */}
         </View>
         {/* indicate */}
         <View style={styles.indicator}>

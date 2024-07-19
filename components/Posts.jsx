@@ -29,6 +29,7 @@ const Posts = () => {
         elevation: 3,
         backgroundColor: "white",
         marginBottom: 10,
+        marginHorizontal: 5,
         // margin: 10,
       }}
     >

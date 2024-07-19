@@ -165,8 +165,8 @@ const Profile = ({ navigation }) => {
             onPress={() => HandleChangeProfile("profile")}
             style={{
               position: "absolute",
-              left: width * 0.15,
-              top: height * 0.08,
+              left: width * 0.23,
+              top: height * 0.07,
               zIndex: 10,
             }}
           >
@@ -339,6 +339,7 @@ const Profile = ({ navigation }) => {
           flexDirection: "row",
           justifyContent: "space-around",
           marginVertical: height * -0.02,
+          marginBottom: 5,
         }}
       >
         <View>
@@ -413,7 +414,8 @@ const Profile = ({ navigation }) => {
           justifyContent: "center",
           alignItems: "center",
           rowGap: 10,
-          marginBottom: 10,
+          marginVertical: 10,
+          marginBottom: 50,
         }}
       >
         <TouchableOpacity
