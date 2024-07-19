@@ -46,8 +46,8 @@ const Profile = ({ navigation }) => {
   // host the image to firebase storage bucket
   const [uploadIndicator, setUploadIndicator] = useState(false);
   const hostImage = async (imageUri, imageType) => {
+    setUploadIndicator(imageType);
     try {
-      setUploadIndicator(imageType);
       const storageRef = ref(storage, "Image/" + Date.now() + ".jpeg");
       const response = await fetch(imageUri);
       const blob = await response.blob();
@@ -161,7 +161,7 @@ const Profile = ({ navigation }) => {
           >
             <FontAwesomeIcon icon={faEdit} size={20} color="orange" />
           </TouchableOpacity>
-          {uploadIndicator === "profileLoad" ? (
+          {uploadIndicator === "profile" ? (
             <Skeleton width={100} height={100} radius={50} mt={1} />
           ) : (
             <Image
@@ -405,6 +405,7 @@ const Profile = ({ navigation }) => {
         }}
       >
         <TouchableOpacity
+          onPress={() => navigation.navigate("yourcourse")}
           style={{
             backgroundColor: Colors.veryLightGrey,
             padding: 15,
