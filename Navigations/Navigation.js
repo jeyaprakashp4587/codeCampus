@@ -32,9 +32,11 @@ import YourRewards from "../Pages/YourReward";
 import Search from "../Pages/Search";
 import Placement from "../Screens/Placement";
 import splashScreen from "../Splashscreen/SplashScreen";
+import { Dimensions } from "react-native";
 
 // ------------- //
 // Tab navigations
+const { width, height } = Dimensions.get("window");
 
 const Tab = createBottomTabNavigator();
 const TabNavigation = () => {
@@ -50,14 +52,14 @@ const TabNavigation = () => {
         tabBarActiveTintColor: "#3385ff",
         tabBarInactiveTintColor: Colors.lightGrey,
         tabBarStyle: {
-          height: 85,
+          height: height * 0.1,
           paddingBottom: 10,
           borderTopWidth: 0,
           backgroundColor: "white",
         },
         tabBarLabelStyle: {
           fontSize: 11,
-          marginTop: -25,
+          marginTop: -15,
           marginBottom: 5,
           fontFamily: font.poppins,
           color: Colors.veryDarkGrey,

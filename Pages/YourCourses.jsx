@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Dimensions,
+} from "react-native";
 import React from "react";
 import HeadingText from "../utils/HeadingText";
 import { Colors, pageView } from "../constants/Colors";
@@ -8,6 +14,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCode } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Api from "../Api";
+
+const { width, height } = Dimensions.get("window");
 
 const YourCourses = () => {
   const { user, setUser } = useData();
@@ -21,7 +29,7 @@ const YourCourses = () => {
     { color1: "#b3e6cc", color2: "#ecf9f2" },
     { color1: "#b3e6cc", color2: "#ecf9f2" },
   ];
-  // remove the course
+
   const HandleRemoveCourse = async (crName) => {
     const res = await axios.post(`${Api}/Courses/removeCourse`, {
       userId: user._id,
@@ -31,62 +39,35 @@ const YourCourses = () => {
       setUser(res.data);
     }
   };
+
   return (
     <View style={pageView}>
       <HeadingText text="Your Courses" />
       {/* wrappers */}
       {user?.Courses.length <= 0 ? (
-        <Text>You Have No Courses</Text>
+        <Text style={styles.noCoursesText}>You Have No Courses</Text>
       ) : (
         user.Courses.map((course, index) => (
           <LinearGradient
-            colors={[color[index].color1, color[index].color2]}
+            key={index}
+            colors={[
+              color[index % color.length].color1,
+              color[index % color.length].color2,
+            ]}
             start={[0, 1]}
             end={[1, 0]}
-            style={{ borderRadius: 10, marginBottom: 20, elevation: 5 }}
+            style={styles.courseWrapper}
           >
             <TouchableOpacity
               onLongPress={() => HandleRemoveCourse(course.Course_Name)}
-              key={index}
-              style={{
-                width: "100%",
-                height: "auto",
-                justifyContent: "space-between",
-                alignItems: "center",
-                flexDirection: "row",
-                padding: 30,
-              }}
+              style={styles.courseContainer}
             >
-              <View>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: "700",
-                    color: Colors.veryDarkGrey,
-                    letterSpacing: 1,
-                  }}
-                >
-                  {course.Course_Name}
-                </Text>
+              <View style={{ flexDirection: "column", rowGap: 5 }}>
+                <Text style={styles.courseName}>{course.Course_Name}</Text>
                 {course.Technologies.map((tech, index) => (
-                  <View
-                    key={index}
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      columnGap: 10,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        textTransform: "capitalize",
-                        fontSize: 15,
-                        letterSpacing: 1,
-                      }}
-                    >
-                      {tech.TechName}
-                    </Text>
-                    <Text style={{ fontWeight: "700", letterSpacing: 1 }}>
+                  <View key={index} style={styles.techWrapper}>
+                    <Text style={styles.techName}>{tech.TechName}</Text>
+                    <Text style={styles.techPoints}>
                       Points( {tech.Points} / 10 )
                     </Text>
                   </View>
@@ -103,46 +84,18 @@ const YourCourses = () => {
       )}
       {/* tutorials */}
       <HeadingText text="Tutorials" />
-      <Text
-        style={{
-          color: Colors.mildGrey,
-          fontSize: 16,
-          letterSpacing: 1,
-          alignItems: "center",
-          justifyContent: "center",
-          lineHeight: 30,
-          marginBottom: 20,
-        }}
-      >
-        <Text style={{ color: "orange", fontSize: 20 }}>*</Text> Long press the
-        course wrapper to remove the course
+      <Text style={styles.infoText}>
+        <Text style={styles.infoHighlight}>*</Text> Long press the course
+        wrapper to remove the course
       </Text>
-      <Text
-        style={{
-          color: Colors.mildGrey,
-          fontSize: 16,
-          letterSpacing: 1,
-          alignItems: "center",
-          justifyContent: "center",
-          lineHeight: 30,
-          marginBottom: 20,
-        }}
-      >
-        <Text style={{ color: "orange", fontSize: 20 }}>*</Text> For you to earn
-        10 points, you must complete these course challenges and earn points
+      <Text style={styles.infoText}>
+        <Text style={styles.infoHighlight}>*</Text> For you to earn 10 points,
+        you must complete these course challenges and earn points
       </Text>
-
-      <Text
-        style={{
-          color: Colors.mildGrey,
-          fontSize: 16,
-          letterSpacing: 1,
-          lineHeight: 30,
-        }}
-      >
-        <Text style={{ color: "orange", fontSize: 20 }}>*</Text> Once You reach
-        10 points then you will receive a certification and unlock the{" "}
-        <Text style={{ color: Colors.veryDarkGrey }}>(Message System)</Text>.
+      <Text style={styles.infoText}>
+        <Text style={styles.infoHighlight}>*</Text> Once You reach 10 points
+        then you will receive a certification and unlock the{" "}
+        <Text style={styles.messageSystem}>(Message System)</Text>.
       </Text>
     </View>
   );
@@ -150,4 +103,57 @@ const YourCourses = () => {
 
 export default YourCourses;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  courseWrapper: {
+    borderRadius: 10,
+    marginBottom: 20,
+    elevation: 5,
+    padding: width * 0.05, // 5% of screen width
+  },
+  courseContainer: {
+    width: "100%",
+    height: "auto",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  courseName: {
+    fontSize: width * 0.04, // 5% of screen width
+    fontWeight: "700",
+    color: Colors.veryDarkGrey,
+    letterSpacing: 1,
+  },
+  techWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    columnGap: 10,
+  },
+  techName: {
+    textTransform: "capitalize",
+    fontSize: width * 0.04, // 4% of screen width
+    letterSpacing: 1,
+  },
+  techPoints: {
+    fontWeight: "700",
+    letterSpacing: 1,
+  },
+  noCoursesText: {
+    fontSize: width * 0.04, // 4% of screen width
+  },
+  infoText: {
+    color: Colors.mildGrey,
+    fontSize: width * 0.04, // 4% of screen width
+    letterSpacing: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    lineHeight: 30,
+    marginBottom: 20,
+  },
+  infoHighlight: {
+    color: "orange",
+    fontSize: width * 0.05, // 5% of screen width
+  },
+  messageSystem: {
+    color: Colors.veryDarkGrey,
+  },
+});

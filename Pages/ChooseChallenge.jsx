@@ -1,48 +1,42 @@
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import { useData } from "../Context/Contexter";
 import HeadingText from "../utils/HeadingText";
 import TopicsText from "../utils/TopicsText";
 import ParagraphText from "../utils/PragraphText";
-import Ripple from "react-native-material-ripple";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
-// import Button from "../utils/Button";
-import { Button } from "react-native-paper";
-import { LinearGradient } from "expo-linear-gradient";
 import { Feather } from "@expo/vector-icons";
-import { Divider, Menu, SegmentedButtons } from "react-native-paper";
-import { faBars, faL } from "@fortawesome/free-solid-svg-icons";
-import { TouchableOpacity } from "react-native";
+import { Button, Menu } from "react-native-paper";
+import { LinearGradient } from "expo-linear-gradient";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Api from "../Api";
 import Skeleton from "../Skeletons/Skeleton";
 
+const { width, height } = Dimensions.get("window");
+
 const ChooseChallenge = ({ navigation }) => {
-  // level list
   const Levels = [
-    {
-      name: "Newbie",
-      bgcolor: "#009900",
-    },
-    {
-      name: "Junior",
-      bgcolor: "#cca300",
-    },
-    {
-      name: "Expert",
-      bgcolor: "#cc6600",
-    },
-    {
-      name: "Legend",
-      bgcolor: "#990000",
-    },
+    { name: "Newbie", bgcolor: "#009900" },
+    { name: "Junior", bgcolor: "#cca300" },
+    { name: "Expert", bgcolor: "#cc6600" },
+    { name: "Legend", bgcolor: "#990000" },
   ];
-  // end levels
+
   const { selectedChallengeTopic, setSelectedChallenge } = useData([]);
   const [Challenges, setChallenges] = useState();
-  // get the All challenges by their topics
+  const [difficultyInfo, setDifficultyInfo] = useState("Newbie");
+  const [visible, setVisible] = useState(false);
+
   const getChallenges = async (ChallengeTopic) => {
     const res = await axios.post(`${Api}/Challenges/getChallenges`, {
       ChallengeTopic: ChallengeTopic,
@@ -54,17 +48,14 @@ const ChooseChallenge = ({ navigation }) => {
         ...res.data.expertLevel,
         ...res.data.legendLevel,
       ]);
-      // console.log("expert", res.data.expertLevel);
     }
     return res.data;
   };
+
   useEffect(() => {
     getChallenges(selectedChallengeTopic);
   }, [selectedChallengeTopic]);
-  //
 
-  //  handle level
-  const [difficultyInfo, setDifficultyInfo] = useState("Newbie");
   const HandleSelectLevel = (levelName) => {
     setDifficultyInfo(levelName);
     setChallenges(false);
@@ -94,23 +85,15 @@ const ChooseChallenge = ({ navigation }) => {
         break;
     }
   };
-  //
-  // for show levels
-  const [visible, setVisible] = React.useState(false);
+
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
-  //
+
   return (
-    <View style={pageView}>
+    <View style={styles.pageView}>
       <HeadingText text={selectedChallengeTopic} />
-      <View style={{ height: 10 }} />
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+      <View style={styles.spacing} />
+      <View style={styles.header}>
         <TopicsText text="Choose Difficulty Level" fszie={20} mb={1} />
         <Menu
           visible={visible}
@@ -136,7 +119,6 @@ const ChooseChallenge = ({ navigation }) => {
           ))}
         </Menu>
       </View>
-      {/* render skeletons */}
       {!Challenges ? (
         Levels.map((i, index) => (
           <View key={index}>
@@ -147,33 +129,10 @@ const ChooseChallenge = ({ navigation }) => {
         <FlatList
           data={Challenges}
           showsVerticalScrollIndicator={false}
-          style={{
-            alignSelf: "center",
-            borderWidth: 0,
-            width: "100%",
-          }}
+          style={styles.flatList}
           renderItem={({ item, index }) => (
-            <View
-              style={{
-                // borderWidth: 1,
-                flexDirection: "column",
-                rowGap: 10,
-                padding: 20,
-                backgroundColor: "white",
-                borderRadius: 5,
-                elevation: 2,
-                marginTop: 15,
-                marginHorizontal: 5,
-                marginBottom: 5,
-              }}
-              key={index}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
+            <View style={styles.challengeContainer} key={index}>
+              <View style={styles.challengeHeader}>
                 <ParagraphText
                   text={item.title}
                   fsize={18}
@@ -187,86 +146,49 @@ const ChooseChallenge = ({ navigation }) => {
                   color="orange"
                 />
               </View>
-              {item?.level == "newbie" ? null : (
+              {item?.level !== "newbie" && (
                 <Image
-                  source={{
-                    uri: item.sample_image,
-                  }}
-                  style={{
-                    width: "100%",
-                    height: 250,
-                    alignSelf: "center",
-                    resizeMode: "cover",
-                    borderRadius: 20,
-                  }}
+                  source={{ uri: item.sample_image }}
+                  style={styles.challengeImage}
                 />
               )}
-              <Text
-                style={{
-                  color: Colors.veryDarkGrey,
-                  lineHeight: 24,
-                  letterSpacing: 1,
-                }}
-              >
+              <Text style={styles.challengeDescription}>
                 {item.description}
               </Text>
-              <View
-                style={{
-                  marginVertical: 10,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <View style={{ flexDirection: "row", columnGap: 20 }}>
+              <View style={styles.technologiesContainer}>
+                <View style={styles.technologies}>
                   {item.technologies.map((i, index) => (
                     <Image
                       key={index}
                       source={{ uri: i.icon }}
-                      style={{ width: 30, height: 30 }}
+                      style={styles.technologyIcon}
                     />
                   ))}
                 </View>
-                <View>
-                  <Feather
-                    name="check-circle"
-                    size={20}
-                    color={Colors.mildGrey}
-                  />
-                </View>
+                <Feather
+                  name="check-circle"
+                  size={20}
+                  color={Colors.mildGrey}
+                />
               </View>
               <LinearGradient
                 colors={["#003399", "#6699ff", "#003399"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
-                style={{ borderRadius: 10, overflow: "hidden" }}
+                style={styles.linearGradient}
               >
-                {/* <Button
-                text="View Challenge"
-                bgcolor="transparent"
-                radius={0.2}
-                elevation={0.1}
-                textColor="white"
-                function={() => {
-                  // setSelectedChallenge(item);
-                }}
-              /> */}
                 <Button
                   rippleColor="lightgrey"
                   onPress={() => {
                     navigation.navigate("challengeDetail");
                     setSelectedChallenge(item);
                   }}
-                  style={{
-                    borderRadius: 5,
-                    height: 45,
-                    padding: 0,
-                    justifyContent: "center",
-                    width: "100%",
-                  }}
+                  style={styles.viewChallengeButton}
                   textColor="white"
                 >
-                  <Text style={{ letterSpacing: 1 }}>View Challenge</Text>
+                  <Text style={styles.viewChallengeButtonText}>
+                    View Challenge
+                  </Text>
                 </Button>
               </LinearGradient>
             </View>
@@ -279,4 +201,76 @@ const ChooseChallenge = ({ navigation }) => {
 
 export default ChooseChallenge;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  pageView: {
+    ...pageView,
+  },
+  spacing: {
+    height: 10,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  flatList: {
+    alignSelf: "center",
+    borderWidth: 0,
+    width: "100%",
+  },
+  challengeContainer: {
+    flexDirection: "column",
+    rowGap: 10,
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 5,
+    elevation: 2,
+    marginTop: 15,
+    marginHorizontal: 5,
+    marginBottom: 5,
+  },
+  challengeHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  challengeImage: {
+    width: "100%",
+    height: height * 0.35, // Responsive height
+    alignSelf: "center",
+    resizeMode: "cover",
+    borderRadius: 20,
+  },
+  challengeDescription: {
+    color: Colors.veryDarkGrey,
+    lineHeight: 24,
+    letterSpacing: 1,
+  },
+  technologiesContainer: {
+    marginVertical: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  technologies: {
+    flexDirection: "row",
+    columnGap: 20,
+  },
+  technologyIcon: {
+    width: width * 0.08, // Responsive width
+    height: width * 0.08, // Responsive height
+  },
+  linearGradient: {
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  viewChallengeButton: {
+    borderRadius: 5,
+    height: 45,
+    padding: 0,
+    justifyContent: "center",
+    width: "100%",
+  },
+  viewChallengeButtonText: {
+    letterSpacing: 1,
+  },
+});

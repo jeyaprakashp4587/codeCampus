@@ -1,32 +1,69 @@
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
 import React from "react";
 import { Colors, pageView } from "../constants/Colors";
 import Skeleton from "../Skeletons/Skeleton";
 
+const { width, height } = Dimensions.get("window");
+
 const HomeSkeleton = () => {
   return (
-    <View style={pageView}>
+    <View style={[pageView, styles.container]}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Skeleton width={60} height={60} radius={40} />
-          <Skeleton width={250} height={60} radius={10} />
-          <Skeleton width={50} height={60} radius={10} />
+        <View style={styles.row}>
+          <Skeleton
+            width={width * 0.15}
+            height={width * 0.15}
+            radius={width * 0.075}
+          />
+          <Skeleton
+            width={width * 0.5}
+            height={width * 0.15}
+            radius={width * 0.025}
+          />
+          <Skeleton
+            width={width * 0.15}
+            height={width * 0.15}
+            radius={width * 0.025}
+          />
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            marginVertical: 20,
-            justifyContent: "space-between",
-          }}
-        >
-          <Skeleton width={120} height={60} radius={10} />
-          <Skeleton width={120} height={60} radius={10} />
-          <Skeleton width={120} height={60} radius={10} />
+        <View style={[styles.row, styles.marginVertical]}>
+          <Skeleton
+            width={width * 0.2}
+            height={width * 0.15}
+            radius={width * 0.025}
+          />
+          <Skeleton
+            width={width * 0.2}
+            height={width * 0.15}
+            radius={width * 0.025}
+          />
+          <Skeleton
+            width={width * 0.2}
+            height={width * 0.15}
+            radius={width * 0.025}
+          />
+          <Skeleton
+            width={width * 0.2}
+            height={width * 0.15}
+            radius={width * 0.025}
+          />
         </View>
-        <View style={{ flexDirection: "column", rowGap: 20, marginBottom: 20 }}>
-          <Skeleton width="100%" height={260} radius={10} />
-          <Skeleton width="100%" height={260} radius={10} />
-          <Skeleton width="100%" height={260} radius={10} />
+        <View style={styles.column}>
+          <Skeleton
+            width={width * 0.9}
+            height={height * 0.3}
+            radius={width * 0.025}
+          />
+          <Skeleton
+            width={width * 0.9}
+            height={height * 0.3}
+            radius={width * 0.025}
+          />
+          <Skeleton
+            width={width * 0.9}
+            height={height * 0.3}
+            radius={width * 0.025}
+          />
         </View>
       </ScrollView>
     </View>
@@ -35,4 +72,20 @@ const HomeSkeleton = () => {
 
 export default HomeSkeleton;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: width * 0.05,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  marginVertical: {
+    marginVertical: height * 0.025,
+  },
+  column: {
+    flexDirection: "column",
+    rowGap: height * 0.025,
+    marginBottom: height * 0.025,
+  },
+});

@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   Alert,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useData } from "../Context/Contexter";
@@ -17,24 +18,25 @@ import PragraphText from "../utils/PragraphText";
 import Api from "../Api";
 import axios from "axios";
 
+const { width, height } = Dimensions.get("window");
+
 const SelectedCourse = ({ navigation }) => {
   const { selectedCourse, user, setUser } = useData();
-  // Handle Add Course
+
   const HandleAddCourse = async () => {
-    // console.log(selectedCourse);
     const res = await axios.post(`${Api}/Courses/addCourse`, {
       courseName: selectedCourse.name,
       userId: user._id,
     });
-    // console.log(res.data);
     if (res.data.Email) {
       setUser(res.data);
-      Alert.alert("Course Added Succesfully");
+      Alert.alert("Course Added Successfully");
     } else {
       Alert.alert(res.data);
     }
     navigation.navigate("courseDetails");
   };
+
   return (
     <ScrollView style={styles.pageView} showsVerticalScrollIndicator={false}>
       <Text style={styles.courseName}>{selectedCourse?.name}</Text>
@@ -44,27 +46,25 @@ const SelectedCourse = ({ navigation }) => {
           style={styles.courseImage}
         />
       ) : (
-        <Skeleton widht={200} height={250} />
+        <Skeleton width={width * 0.9} height={250} />
       )}
       <View style={styles.section}>
-        <TopicsText text="Course Intro" />
+        <TopicsText text="Course Intro" mb={2} />
         <PragraphText text={selectedCourse?.introduction} />
       </View>
       <View style={styles.section}>
-        <TopicsText text="Technologies" />
+        <TopicsText text="Technologies" mb={20} />
         <View style={styles.technologiesContainer}>
           {selectedCourse?.technologies.map((icon, index) => (
             <TouchableOpacity key={index}>{icon.icon}</TouchableOpacity>
           ))}
         </View>
       </View>
-      {/* learing platforms */}
-
       <Ripple
         rippleColor={Colors.violet}
         rippleOpacity={1}
         style={styles.button}
-        onPress={() => HandleAddCourse()}
+        onPress={HandleAddCourse}
       >
         <Text style={styles.buttonText}>Let's Begin</Text>
       </Ripple>
@@ -77,51 +77,48 @@ export default SelectedCourse;
 const styles = StyleSheet.create({
   pageView: {
     flex: 1,
-    paddingHorizontal: 16,
-    backgroundColor: "#fff", // Adjust as necessary
+    paddingHorizontal: width * 0.05,
+    backgroundColor: "#fff",
   },
   courseName: {
-    fontSize: 25,
+    fontSize: width * 0.065,
     color: Colors.mildGrey,
     fontFamily: font.poppins,
-    marginBottom: 20,
+    marginBottom: height * 0.02,
   },
   courseImage: {
     width: "90%",
     height: 250,
     alignSelf: "center",
     resizeMode: "contain",
-    marginBottom: 20,
+    marginBottom: height * 0.02,
   },
   section: {
-    marginVertical: 10,
+    marginVertical: height * 0.015,
   },
   sectionTitle: {
     color: Colors.mildGrey,
-    fontSize: 23,
-    paddingVertical: 10,
+    fontSize: width * 0.06,
+    paddingVertical: height * 0.01,
   },
   sectionText: {
     color: Colors.lightGrey,
-    fontSize: 15,
+    fontSize: width * 0.04,
     letterSpacing: 0.8,
-    lineHeight: 30,
+    lineHeight: height * 0.04,
   },
   technologiesContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "flex-start",
-    columnGap: 30,
-    // borderWidth: 1,
+    columnGap: width * 0.08,
   },
-
   webviewContainer: {
     height: 250,
-    // borderWidth: 1,
     borderColor: Colors.lightGrey,
     borderRadius: 10,
     overflow: "hidden",
-    marginBottom: 30,
+    marginBottom: height * 0.03,
     alignSelf: "center",
     width: "100%",
   },
@@ -129,16 +126,16 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    padding: 10,
+    padding: height * 0.015,
     borderRadius: 5,
     borderColor: "#004080",
     elevation: 2,
-    width: 200,
+    width: width * 0.5,
     alignSelf: "center",
     backgroundColor: "white",
     borderWidth: 1,
-    marginTop: 30,
-    marginBottom: 30,
+    marginTop: height * 0.03,
+    marginBottom: height * 0.03,
   },
   buttonText: {
     color: Colors.mildGrey,

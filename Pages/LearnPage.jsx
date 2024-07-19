@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import { WebView } from "react-native-webview";
 import { Colors, pageView } from "../constants/Colors";
@@ -7,6 +7,9 @@ import { useData } from "../Context/Contexter";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import Skeleton from "../Skeletons/Skeleton";
+
+const { width, height } = Dimensions.get("window");
+
 const LearnPage = () => {
   const { selectedTechnology } = useData();
   // time
@@ -34,44 +37,38 @@ const LearnPage = () => {
 
     return () => clearInterval(interval);
   }, [hours, minutes, seconds]);
+
   return (
-    <View style={[pageView]}>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+    <View style={[pageView, styles.container]}>
+      <View style={styles.header}>
         <HeadingText text="Study Area" />
-        <View style={{ flexDirection: "row", columnGap: 10 }}>
-          <SimpleLineIcons name="note" size={22} color={Colors.mildGrey} />
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={styles.headerRight}>
+          <SimpleLineIcons
+            name="note"
+            size={width * 0.06}
+            color={Colors.mildGrey}
+          />
+          <View style={styles.timerContainer}>
             <MaterialCommunityIcons
               name="timer-outline"
-              size={24}
+              size={width * 0.06}
               color={Colors.mildGrey}
             />
-            <Text
-              style={{
-                borderWidth: 0,
-                minWidth: 70,
-                textAlign: "left",
-                color: "orange",
-              }}
-            >
-              {" "}
+            <Text style={styles.timerText}>
               {hours}:{minutes < 10 ? `0${minutes}` : minutes}:
               {seconds < 10 ? `0${seconds}` : seconds}
             </Text>
           </View>
         </View>
       </View>
-      <View style={{ height: 20 }} />
+      <View style={{ height: height * 0.02 }} />
       {selectedTechnology ? (
-        <WebView source={{ uri: selectedTechnology.web }} />
+        <WebView
+          source={{ uri: selectedTechnology.web }}
+          style={styles.webview}
+        />
       ) : (
-        <Skeleton widht={200} height={200} />
+        <Skeleton width={width * 0.5} height={height * 0.25} />
       )}
     </View>
   );
@@ -79,4 +76,31 @@ const LearnPage = () => {
 
 export default LearnPage;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: width * 0.05,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  headerRight: {
+    flexDirection: "row",
+    columnGap: width * 0.025,
+  },
+  timerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  timerText: {
+    borderWidth: 0,
+    minWidth: width * 0.2,
+    textAlign: "left",
+    color: "orange",
+    fontSize: width * 0.045,
+  },
+  webview: {
+    height: height * 0.75,
+  },
+});

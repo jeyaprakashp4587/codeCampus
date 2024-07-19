@@ -1,10 +1,12 @@
 import {
+  Dimensions,
   Image,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  TextInput,
 } from "react-native";
 import React, { useState } from "react";
 import { Colors, pageView } from "../constants/Colors";
@@ -16,19 +18,18 @@ import PragraphText from "../utils/PragraphText";
 import WebView from "react-native-webview";
 import axios from "axios";
 import Api from "../Api";
-import { TextInput } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faImage } from "@fortawesome/free-regular-svg-icons";
 import Ripple from "react-native-material-ripple";
-import { icon } from "@fortawesome/fontawesome-svg-core";
+
+const { width, height } = Dimensions.get("window");
 
 const ChallengeDetail = () => {
   const { selectedChallenge, user, setUser } = useData();
-  console.log(selectedChallenge);
   const [Buttons, setButton] = useState();
   const [uploadTut, setUploadTut] = useState();
   const [uploadStatus, setUploadStatus] = useState();
-  // Handle start challenge
+
   const HandleStart = async (chName) => {
     setButton(true);
     const res = await axios.post(`${Api}/Challenges/addChallenge`, {
@@ -36,9 +37,8 @@ const ChallengeDetail = () => {
       ChallengeName: chName,
       ChallengeType: selectedChallenge.technologies[0].name,
     });
-    // console.log(selectedChallenge);
   };
-  // upload
+
   const [uploadForm, setUploadForm] = useState({
     GitRepo: "",
     LiveLink: "",
@@ -53,8 +53,9 @@ const ChallengeDetail = () => {
       LiveLink: uploadForm.LiveLink,
     });
   };
+
   return (
-    <View style={pageView}>
+    <View style={[styles.pageView, { paddingVertical: 20 }]}>
       <HeadingText text="Challenge Details" />
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         <View style={{ flexDirection: "column", rowGap: 30, marginTop: 25 }}>
@@ -78,8 +79,8 @@ const ChallengeDetail = () => {
                 uri: selectedChallenge?.sample_image,
               }}
               style={{
-                width: "100%",
-                height: 250,
+                width: width * 0.9,
+                height: height * 0.3,
                 alignSelf: "center",
                 resizeMode: "cover",
                 borderRadius: 20,
@@ -108,18 +109,25 @@ const ChallengeDetail = () => {
               <Image
                 key={index}
                 source={{ uri: i.icon }}
-                style={{ width: 30, height: 30, resizeMode: "contain" }}
+                style={{
+                  width: width * 0.1,
+                  height: width * 0.1,
+                  resizeMode: "contain",
+                }}
               />
             ))}
           </View>
           <View>
             {selectedChallenge?.rules.map((rule, index) => (
-              <PragraphText text={["* ", rule]} fsize={15} padding={5} />
+              <PragraphText
+                key={index}
+                text={["* ", rule]}
+                fsize={15}
+                padding={5}
+              />
             ))}
           </View>
-          {/* project image, its only show after upload this project */}
           <Image />
-          {/* end */}
           {Buttons ? (
             <Button
               text={
@@ -166,7 +174,6 @@ const ChallengeDetail = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        {/* upload  projects steps */}
         {uploadTut ? (
           <View
             style={{
@@ -192,12 +199,10 @@ const ChallengeDetail = () => {
                 </Text>
               </TouchableOpacity>
             </View>
-            {/* step 1 */}
             <View>
               <TopicsText text="Step 1" mb={2} />
               <PragraphText text="* Create the account in GitHub" padding={4} />
             </View>
-            {/* step 2 */}
             <View>
               <TopicsText text="Step 2" mb={2} />
               <PragraphText
@@ -205,24 +210,22 @@ const ChallengeDetail = () => {
                 text="* Create the repository and Upload the project files into repository"
               />
               <WebView
-                style={{ height: 200, width: "100%" }}
+                style={{ height: height * 0.25, width: "100%" }}
                 source={{
                   html: `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/IUhzs7egibA?si=7o-bBQacxlyyDtyB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`,
                 }}
               />
             </View>
-            {/* step 3 */}
             <View>
               <TopicsText text="Step 3" mb={2} />
               <PragraphText text="* Host the project in github" padding={4} />
               <WebView
-                style={{ width: "100%", height: 200 }}
+                style={{ width: "100%", height: height * 0.25 }}
                 source={{
                   html: `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/vaRxVb60cAk?si=5knicccJqCK42UUJ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`,
                 }}
               />
             </View>
-            {/* Step 4 */}
             <View>
               <TopicsText text="Step 4" mb={2} />
               <PragraphText
@@ -232,13 +235,11 @@ const ChallengeDetail = () => {
             </View>
           </View>
         ) : null}
-        {/* upload challenge */}
         {uploadStatus == "open" ? (
           <View
             style={{
               marginTop: 30,
-              // borderWidth: 1,
-              height: 400,
+              height: height * 0.5,
               marginBottom: 20,
               rowGap: 20,
             }}
@@ -283,7 +284,7 @@ const ChallengeDetail = () => {
             >
               <FontAwesomeIcon
                 icon={faImage}
-                size={20}
+                size={width * 0.05}
                 color={Colors.mildGrey}
               />
               <PragraphText text="Upload Snapshot" padding={1} />
@@ -313,10 +314,13 @@ const ChallengeDetail = () => {
         ) : null}
       </ScrollView>
     </View>
-    // <Text>vdfmk</Text>
   );
 };
 
-export default ChallengeDetail;
+const styles = StyleSheet.create({
+  pageView: {
+    ...pageView,
+  },
+});
 
-const styles = StyleSheet.create({});
+export default ChallengeDetail;

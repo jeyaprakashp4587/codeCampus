@@ -1,4 +1,11 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Dimensions,
+} from "react-native";
 import React, { useRef, useState } from "react";
 import { Colors, font, pageView } from "../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -8,6 +15,8 @@ import axios from "axios";
 import { TextInput } from "react-native-paper";
 import { Alert } from "react-native";
 import { useData } from "../Context/Contexter";
+import { ScrollView } from "react-native";
+const { width, height } = Dimensions.get("window");
 
 const Login = ({ navigation }) => {
   const { setUser } = useData();
@@ -53,135 +62,158 @@ const Login = ({ navigation }) => {
   // send the user data to server
 
   return (
-    <View
-      style={[
-        pageView,
-        { paddingHorizontal: 30, flexDirection: "column", rowGap: 35 },
-      ]}
-    >
-      <View>
-        <Image
-          source={require("../assets/images/loginbg.png")}
-          style={{ width: 300, height: 300, alignSelf: "center" }}
-        />
-        <Text
-          style={{
-            textAlign: "center",
-            fontSize: 21,
-            // fontFamily: "PopIns-Regular",
-            lineHeight: 45,
-            color: Colors.veryDarkGrey,
-          }}
-        >
-          Welcome To Code Campus, Growth Your Career From Here
-        </Text>
-      </View>
-      {/* login inputs wrapper */}
-      <View style={{ flexDirection: "column", rowGap: 20 }}>
-        <TextInput
-          style={{ backgroundColor: "white" }}
-          mode="outlined"
-          textColor={Colors.mildGrey}
-          activeOutlineColor={Colors.mildGrey}
-          outlineColor={Colors.mildGrey}
-          outlineStyle={{ borderWidth: 1 }}
-          label="Email"
-          onChangeText={(text) => handleEmail("Email", text)}
-        />
-        <TextInput
-          style={{ backgroundColor: "white" }}
-          mode="outlined"
-          textColor={Colors.mildGrey}
-          outlineStyle={{ borderWidth: 1 }}
-          activeOutlineColor={Colors.mildGrey}
-          outlineColor={Colors.mildGrey}
-          label="Password"
-          onChangeText={(text) => handlePassword("Password", text)}
-        />
-        <Button
-          bgcolor={Colors.veryLightGrey}
-          text="Log in"
-          function={() => HandleLogin()}
-          width="100%"
-        />
-      </View>
-      {/* indicate */}
-      <View
-        style={{
-          width: "100%",
-          height: 1,
-          backgroundColor: Colors.veryLightGrey,
-        }}
-      >
-        <Text
-          style={{
-            position: "absolute",
-            color: Colors.lightGrey,
-            // fontFamily: font.poppins,
-            backgroundColor: "white",
-            top: -10,
-            textAlign: "center",
-            alignSelf: "center",
-          }}
-        >
-          OR
-        </Text>
-      </View>
-      {/* login options */}
-      <View
-        style={{
-          // borderWidth: 1,
-          // height: 100,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          columnGap: 20,
-        }}
-      >
-        <TouchableOpacity>
+    <ScrollView style={styles.pageView}>
+      <View style={styles.container}>
+        <View style={styles.imageContainer}>
           <Image
-            source={require("../assets/images/search.png")}
-            style={{ width: 40, height: 40 }}
+            source={require("../assets/images/loginbg.png")}
+            style={styles.image}
           />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Image
-            source={require("../assets/images/facebook.png")}
-            style={{ width: 40, height: 40 }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Image
-            source={require("../assets/images/github.png")}
-            style={{ width: 40, height: 40 }}
-          />
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          alignSelf: "center",
-          // fontFamily: "PopIns-Regular",
-        }}
-      >
-        <Text style={{ fontFamily: font.poppins }}>Don't Have an account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("signup")}>
-          <Text
-            style={{
-              // fontFamily: font.poppins,
-              color: "orange",
-              textDecorationLine: "underline",
-              paddingHorizontal: 10,
-            }}
-          >
-            Sign up
+          <Text style={styles.welcomeText}>
+            Welcome To Code Campus, Growth Your Career From Here
           </Text>
-        </TouchableOpacity>
+        </View>
+        {/* login inputs wrapper */}
+        <View style={styles.inputsWrapper}>
+          <TextInput
+            style={styles.textInput}
+            mode="outlined"
+            textColor={styles.textColor}
+            activeOutlineColor={styles.activeOutlineColor}
+            outlineColor={styles.outlineColor}
+            outlineStyle={styles.outlineStyle}
+            label="Email"
+            onChangeText={(text) => handleEmail("Email", text)}
+          />
+          <TextInput
+            style={styles.textInput}
+            mode="outlined"
+            textColor={styles.textColor}
+            outlineStyle={styles.outlineStyle}
+            activeOutlineColor={styles.activeOutlineColor}
+            outlineColor={styles.outlineColor}
+            label="Password"
+            onChangeText={(text) => handlePassword("Password", text)}
+          />
+          <Button
+            bgcolor={styles.buttonColor}
+            text="Log in"
+            function={() => HandleLogin()}
+            width="100%"
+          />
+        </View>
+        {/* indicate */}
+        <View style={styles.indicator}>
+          <Text style={styles.indicatorText}>OR</Text>
+        </View>
+        {/* login options */}
+        <View style={styles.loginOptions}>
+          <TouchableOpacity>
+            <Image
+              source={require("../assets/images/search.png")}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Image
+              source={require("../assets/images/facebook.png")}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Image
+              source={require("../assets/images/github.png")}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.signUpContainer}>
+          <Text style={styles.signUpText}>Don't Have an account?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("signup")}>
+            <Text style={styles.signUpLink}>Sign up</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
-export default Login;
+const styles = StyleSheet.create({
+  pageView: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  container: {
+    paddingHorizontal: "8%",
+    flexDirection: "column",
+    justifyContent: "space-around",
+    overflow: "scroll",
+  },
+  imageContainer: {
+    alignItems: "center",
+  },
+  image: {
+    width: width * 0.75,
+    height: width * 0.75,
+    alignSelf: "center",
+  },
+  welcomeText: {
+    textAlign: "center",
+    fontSize: width * 0.045,
+    lineHeight: height * 0.04,
+    color: Colors.veryDarkGrey, // Adjust to your Colors.veryDarkGrey
+  },
+  inputsWrapper: {
+    flexDirection: "column",
+    rowGap: 10,
+    marginVertical: 20,
+  },
+  textInput: {
+    backgroundColor: "white",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    borderColor: Colors.veryLightGrey,
+  },
+  textColor: Colors.mildGrey, // Adjust to your Colors.mildGrey
+  activeOutlineColor: Colors.mildGrey, // Adjust to your Colors.mildGrey
+  outlineColor: Colors.mildGrey, // Adjust to your Colors.mildGrey
+  outlineStyle: { borderWidth: 1 },
+  buttonColor: Colors.veryLightGrey, // Adjust to your Colors.veryLightGrey
+  indicator: {
+    width: "100%",
+    height: 1,
+    backgroundColor: Colors.veryLightGrey, // Adjust to your Colors.veryLightGrey
+    marginVertical: 20,
+    position: "relative",
+  },
+  indicatorText: {
+    position: "absolute",
+    color: Colors.lightGrey, // Adjust to your Colors.lightGrey
+    backgroundColor: "white",
+    top: -10,
+    textAlign: "center",
+    alignSelf: "center",
+  },
+  loginOptions: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    columnGap: 20,
+  },
+  icon: {
+    width: 40,
+    height: 40,
+  },
+  signUpContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
+    marginVertical: 20,
+  },
+  signUpLink: {
+    color: "orange",
+    textDecorationLine: "underline",
+    paddingHorizontal: 10,
+  },
+});
 
-const styles = StyleSheet.create({});
+export default Login;

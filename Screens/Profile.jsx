@@ -31,9 +31,11 @@ import axios from "axios";
 import Api from "../Api";
 import Skeleton from "../Skeletons/Skeleton";
 import { Button } from "react-native-paper";
+import { Dimensions } from "react-native";
 
 const Profile = ({ navigation }) => {
   const { user, setUser } = useData();
+  const { width, height } = Dimensions.get("screen");
 
   // get permission for image picker
   const ImagePermission = async () => {
@@ -118,46 +120,55 @@ const Profile = ({ navigation }) => {
       style={{ flex: 1, backgroundColor: "white" }}
       showsVerticalScrollIndicator={false}
     >
-      {/* header */}
-      <View style={{ paddingHorizontal: 20 }}>
+      {/* Header */}
+      <View style={{ paddingHorizontal: width * 0.05 }}>
         <HeadingText text="Profile" />
       </View>
-      {/* header */}
-      {/* about*/}
+
+      {/* About Section */}
       <View style={{ borderWidth: 0 }}>
-        {/* this icon for cover */}
+        {/* Cover Photo Edit Icon */}
         <TouchableOpacity
           onPress={() => HandleChangeProfile("cover")}
-          style={{ position: "absolute", right: 20, top: 10, zIndex: 10 }}
+          style={{
+            position: "absolute",
+            right: width * 0.05,
+            top: height * 0.03,
+            zIndex: 10,
+          }}
         >
           <FontAwesomeIcon icon={faEdit} size={20} color="orange" />
         </TouchableOpacity>
         {uploadIndicator === "cover" ? (
-          <Skeleton width="100%" height={240} radius={10} mt={1} />
+          <Skeleton width="100%" height={200} radius={10} mt={1} />
         ) : (
           <Image
             source={{
               uri: user?.Images.coverImg,
             }}
-            style={{ width: "100%", height: 240, objectFit: "fill" }}
+            style={{ width: "100%", height: 220, resizeMode: "cover" }}
           />
         )}
+
         <View
           style={{
-            // borderWidth: 1,
-            // position: "absolute",
             top: -50,
             width: "100%",
             flexDirection: "column",
             rowGap: 5,
             justifyContent: "flex-start",
-            paddingHorizontal: 20,
+            paddingHorizontal: width * 0.05,
           }}
         >
-          {/* this icon for profile */}
+          {/* Profile Photo Edit Icon */}
           <TouchableOpacity
             onPress={() => HandleChangeProfile("profile")}
-            style={{ position: "absolute", left: 100, top: 70, zIndex: 10 }}
+            style={{
+              position: "absolute",
+              left: width * 0.15,
+              top: height * 0.08,
+              zIndex: 10,
+            }}
           >
             <FontAwesomeIcon icon={faEdit} size={20} color="orange" />
           </TouchableOpacity>
@@ -168,7 +179,7 @@ const Profile = ({ navigation }) => {
               source={{
                 uri: user?.Images.profile
                   ? user?.Images.profile
-                  : user.Gender == "Male"
+                  : user.Gender === "Male"
                   ? "https://i.ibb.co/3T4mNMm/man.png"
                   : "https://i.ibb.co/3mCcQp9/woman.png",
               }}
@@ -176,28 +187,30 @@ const Profile = ({ navigation }) => {
                 width: 100,
                 height: 100,
                 borderRadius: 50,
-                // alignSelf: "center",
                 borderColor: "white",
                 borderWidth: 5,
-                objectFit: "cover",
+                resizeMode: "cover",
               }}
             />
           )}
-          {/* about edit icon */}
+          {/* About Edit Icon */}
           <TouchableOpacity
             onPress={() => setAboutUpdate(!aboutUpdate)}
-            style={{ position: "absolute", right: 20, top: 70 }}
+            style={{
+              position: "absolute",
+              right: width * 0.05,
+              top: height * 0.08,
+            }}
           >
             <FontAwesomeIcon icon={faEdit} size={20} />
           </TouchableOpacity>
-          {/* user names and bio */}
+
+          {/* User Name and Bio */}
           <Text
             style={{
               color: Colors.veryDarkGrey,
-              fontSize: 23,
+              fontSize: width * 0.06,
               letterSpacing: 1,
-              // textAlign: "center",
-              // fontWeight: "700",
             }}
           >
             {user?.firstName} {user.LastName}
@@ -205,106 +218,105 @@ const Profile = ({ navigation }) => {
           <Text
             style={{
               color: Colors.mildGrey,
-              fontSize: 17,
+              fontSize: width * 0.04,
               letterSpacing: 1,
-              // textAlign: "center",
             }}
           >
-            {user?.Bio ? user.Bio : "I want to become an Winner"}
+            {user?.Bio ? user.Bio : "I want to become a Winner"}
           </Text>
-          {/* update user name model */}
-          <View
-            style={{
-              borderWidth: 1,
-              borderColor: Colors.mildGrey,
-              width: "100%",
-              height: 300,
-              position: "absolute",
-              alignSelf: "center",
-              backgroundColor: "white",
-              zIndex: 10,
-              top: 180,
-              borderRadius: 10,
-              padding: 20,
-              flexDirection: "column",
-              justifyContent: "space-between",
-              display: aboutUpdate ? "flex" : "none",
-            }}
-          >
-            <ActivityIndicator
-              size={60}
-              color={Colors.violet}
+          {/* Update User Info Modal */}
+          {aboutUpdate && (
+            <View
               style={{
+                borderWidth: 1,
+                borderColor: Colors.mildGrey,
+                width: "100%",
+                height: 300,
                 position: "absolute",
-                zIndex: 90,
                 alignSelf: "center",
-                top: "50%",
-                bottom: "50%",
-                display: uploadActivityIndi ? "flex" : "none",
+                backgroundColor: "white",
+                zIndex: 10,
+                top: height * 0.2,
+                borderRadius: 10,
+                padding: 20,
+                flexDirection: "column",
+                justifyContent: "space-between",
               }}
-            />
-            <TextInput
-              placeholder="First Name"
-              style={{
-                borderRadius: 3,
-                borderWidth: 1,
-                padding: 10,
-                borderColor: Colors.veryLightGrey,
-                color: Colors.mildGrey,
-                letterSpacing: 1,
-                opacity: uploadActivityIndi ? 0.3 : 1,
-                paddingHorizontal: 15,
-              }}
-              onChangeText={(text) => HandleAboutInput("FirstName", text)}
-            />
-            <TextInput
-              placeholder="Last Name"
-              style={{
-                borderRadius: 3,
-                borderWidth: 1,
-                padding: 10,
-                borderColor: Colors.veryLightGrey,
-                color: Colors.mildGrey,
-                letterSpacing: 1,
-                opacity: uploadActivityIndi ? 0.3 : 1,
-                paddingHorizontal: 15,
-              }}
-              onChangeText={(text) => HandleAboutInput("LastName", text)}
-            />
-            <TextInput
-              placeholder="Bio"
-              style={{
-                borderRadius: 3,
-                borderWidth: 1,
-                padding: 10,
-                paddingHorizontal: 15,
-                borderColor: Colors.veryLightGrey,
-                color: Colors.mildGrey,
-                letterSpacing: 1,
-                opacity: uploadActivityIndi ? 0.3 : 1,
-              }}
-              onChangeText={(text) => HandleAboutInput("Bio", text)}
-            />
-            <Button
-              onPress={() => HandleUpdate()}
-              style={{
-                backgroundColor: Colors.violet,
-                borderRadius: 5,
-                padding: 8,
-              }}
-              textColor="white"
             >
-              Update
-            </Button>
-          </View>
-          {/* instirur names and native  */}
+              <ActivityIndicator
+                size={60}
+                color={Colors.violet}
+                style={{
+                  position: "absolute",
+                  zIndex: 90,
+                  alignSelf: "center",
+                  top: "50%",
+                  display: uploadActivityIndi ? "flex" : "none",
+                }}
+              />
+              <TextInput
+                placeholder="First Name"
+                style={{
+                  borderRadius: 3,
+                  borderWidth: 1,
+                  padding: 10,
+                  borderColor: Colors.veryLightGrey,
+                  color: Colors.mildGrey,
+                  letterSpacing: 1,
+                  opacity: uploadActivityIndi ? 0.3 : 1,
+                  paddingHorizontal: 15,
+                }}
+                onChangeText={(text) => HandleAboutInput("FirstName", text)}
+              />
+              <TextInput
+                placeholder="Last Name"
+                style={{
+                  borderRadius: 3,
+                  borderWidth: 1,
+                  padding: 10,
+                  borderColor: Colors.veryLightGrey,
+                  color: Colors.mildGrey,
+                  letterSpacing: 1,
+                  opacity: uploadActivityIndi ? 0.3 : 1,
+                  paddingHorizontal: 15,
+                }}
+                onChangeText={(text) => HandleAboutInput("LastName", text)}
+              />
+              <TextInput
+                placeholder="Bio"
+                style={{
+                  borderRadius: 3,
+                  borderWidth: 1,
+                  padding: 10,
+                  paddingHorizontal: 15,
+                  borderColor: Colors.veryLightGrey,
+                  color: Colors.mildGrey,
+                  letterSpacing: 1,
+                  opacity: uploadActivityIndi ? 0.3 : 1,
+                }}
+                onChangeText={(text) => HandleAboutInput("Bio", text)}
+              />
+              <Button
+                onPress={() => HandleUpdate()}
+                style={{
+                  backgroundColor: Colors.violet,
+                  borderRadius: 5,
+                  padding: 8,
+                }}
+                textColor="white"
+              >
+                Update
+              </Button>
+            </View>
+          )}
+
+          {/* Institute Name and Location */}
           <View style={{ height: 5 }} />
           <Text
             style={{
               color: Colors.veryDarkGrey,
-              fontSize: 15,
+              fontSize: width * 0.04,
               letterSpacing: 1,
-              // textAlign: "center",
             }}
           >
             {user?.InstitudeName}
@@ -312,21 +324,21 @@ const Profile = ({ navigation }) => {
           <Text
             style={{
               color: Colors.mildGrey,
-              fontSize: 15,
+              fontSize: width * 0.04,
               letterSpacing: 1,
-              // textAlign: "center",
             }}
           >
             {user?.District}, {user?.State}
           </Text>
         </View>
       </View>
-      {/* following */}
+
+      {/* Following Info */}
       <View
         style={{
-          // borderWidth: 1,
           flexDirection: "row",
           justifyContent: "space-around",
+          marginVertical: height * -0.02,
         }}
       >
         <View>
@@ -343,7 +355,7 @@ const Profile = ({ navigation }) => {
             style={{
               textAlign: "center",
               color: Colors.mildGrey,
-              fontSize: 15,
+              fontSize: width * 0.04,
               letterSpacing: 1,
             }}
           >
@@ -364,7 +376,7 @@ const Profile = ({ navigation }) => {
             style={{
               textAlign: "center",
               color: Colors.mildGrey,
-              fontSize: 15,
+              fontSize: width * 0.04,
               letterSpacing: 1,
             }}
           >
@@ -385,23 +397,23 @@ const Profile = ({ navigation }) => {
             style={{
               textAlign: "center",
               color: Colors.mildGrey,
-              fontSize: 15,
+              fontSize: width * 0.04,
               letterSpacing: 1,
             }}
           >
-            0
+            63
           </Text>
         </View>
       </View>
-      {/* bar */}
       <HrLine />
-      {/* options */}
+      {/* Category Cards */}
       <View
         style={{
-          paddingHorizontal: 20,
-          marginTop: 10,
           flexDirection: "column",
-          rowGap: 20,
+          justifyContent: "center",
+          alignItems: "center",
+          rowGap: 10,
+          marginBottom: 10,
         }}
       >
         <TouchableOpacity
@@ -412,6 +424,7 @@ const Profile = ({ navigation }) => {
             borderRadius: 15,
             flexDirection: "row",
             justifyContent: "space-between",
+            width: width * 0.9,
           }}
         >
           <Text
@@ -433,6 +446,7 @@ const Profile = ({ navigation }) => {
             borderRadius: 15,
             flexDirection: "row",
             justifyContent: "space-between",
+            width: width * 0.9,
           }}
         >
           <Text
@@ -458,6 +472,7 @@ const Profile = ({ navigation }) => {
             borderRadius: 15,
             flexDirection: "row",
             justifyContent: "space-between",
+            width: width * 0.9,
           }}
         >
           <Text
@@ -472,30 +487,6 @@ const Profile = ({ navigation }) => {
           </Text>
           <FontAwesomeIcon icon={faSignOut} size={20} color="#ffaa80" />
         </TouchableOpacity>
-      </View>
-      {/* posts */}
-      <HrLine />
-      <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <TopicsText text="Posts" mb={1} />
-          <TouchableOpacity>
-            <Text
-              style={{
-                color: Colors.mildGrey,
-                textDecorationLine: "underline",
-              }}
-            >
-              Show More
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <Post />
       </View>
     </ScrollView>
   );

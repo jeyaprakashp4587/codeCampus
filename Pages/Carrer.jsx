@@ -15,10 +15,12 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
+import { Dimensions } from "react-native";
 
 const Carrer = ({ navigation }) => {
   // courses list
   const { setSelectedCourse } = useData();
+  const { width, height } = Dimensions.get("window");
   const courses = [
     {
       name: "Front End Development",
@@ -286,84 +288,89 @@ const Carrer = ({ navigation }) => {
   ];
 
   return (
-    <View style={pageView}>
-      <Text
-        style={{
-          fontFamily: font.poppins,
-          color: Colors.mildGrey,
-          fontSize: 25,
-          padding: 20,
-        }}
-      >
-        Choose Your Learning Carrer
-      </Text>
-      {/* <ScrollView style={{ borderWidth: 0, flex: 1 }}> */}
-      <Image
-        source={require("../assets/images/carrer.jpeg")}
-        style={{ width: 250, height: 250, alignSelf: "center" }}
-      />
-      <View
-        style={{
-          //   borderWidth: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "row",
-          flexWrap: "wrap",
-          padding: 10,
-          gap: 35,
-          marginTop: 20,
-        }}
-      >
-        {courses.map((item, index) => (
-          <TouchableOpacity
-            onPress={() => {
-              setSelectedCourse(item);
-              navigation.navigate("course");
-            }}
-            key={index}
-            style={{
-              width: 170,
-              height: 120,
-              // borderWidth: 1,
-              backgroundColor: item.bgColor,
-              elevation: 7,
-              justifyContent: "center",
-              alignItems: "center",
-              padding: 20,
-              borderRadius: 6,
-            }}
-          >
-            <Text
+    <ScrollView>
+      <View style={styles.pageView}>
+        <Text style={styles.titleText}>Choose Your Learning Carrer</Text>
+        <Image
+          source={require("../assets/images/carrer.jpeg")}
+          style={{
+            ...styles.careerImage,
+            width: width * 0.7,
+            height: width * 0.7,
+          }}
+        />
+        <View style={styles.courseContainer}>
+          {courses.map((item, index) => (
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedCourse(item);
+                navigation.navigate("course");
+              }}
+              key={index}
               style={{
-                fontFamily: font.poppins,
-                color: "white",
-                textAlign: "center",
-                fontSize: 16,
-                letterSpacing: 0.9,
+                ...styles.courseButton,
+                width: width * 0.9,
+                backgroundColor: item.bgColor,
               }}
             >
-              {item.name}
-            </Text>
-          </TouchableOpacity>
-        ))}
+              <Text style={styles.courseButtonText}>{item.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <Text style={styles.footerText}>Other Courses will be added soon!</Text>
       </View>
-      {/* </ScrollView> */}
-      <Text
-        style={{
-          textAlign: "center",
-          padding: 20,
-          fontSize: 15,
-          //   textDecorationLine: "underline",
-          color: Colors.lightGrey,
-          fontFamily: font.poppins,
-        }}
-      >
-        Other Courses will be added soon!
-      </Text>
-    </View>
+    </ScrollView>
   );
 };
 
 export default Carrer;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  pageView: {
+    flex: 1,
+    backgroundColor: Colors.white,
+    padding: 20,
+  },
+  titleText: {
+    fontFamily: font.poppins,
+    color: Colors.mildGrey,
+    fontSize: 25,
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  careerImage: {
+    alignSelf: "center",
+    marginBottom: 20,
+  },
+  courseContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    padding: 10,
+    gap: 35,
+    marginTop: 20,
+  },
+  courseButton: {
+    height: 120,
+    elevation: 7,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    borderRadius: 6,
+  },
+  courseButtonText: {
+    fontFamily: font.poppins,
+    color: "white",
+    textAlign: "center",
+    fontSize: 16,
+    letterSpacing: 0.9,
+  },
+  footerText: {
+    textAlign: "center",
+    padding: 20,
+    fontSize: 15,
+    color: Colors.lightGrey,
+    fontFamily: font.poppins,
+  },
+});
