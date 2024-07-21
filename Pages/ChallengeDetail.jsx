@@ -8,7 +8,7 @@ import {
   View,
   TextInput,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import { useData } from "../Context/Contexter";
 import HeadingText from "../utils/HeadingText";
@@ -21,6 +21,15 @@ import Api from "../Api";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faImage } from "@fortawesome/free-regular-svg-icons";
 import Ripple from "react-native-material-ripple";
+import {
+  getDownloadURL,
+  ref,
+  updateMetadata,
+  uploadBytes,
+} from "firebase/storage";
+import * as ImagePicker from "expo-image-picker";
+import { storage } from "../Firebase/Firebase";
+import { ActivityIndicator } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -47,15 +56,70 @@ const ChallengeDetail = () => {
   });
   const HandleText = (name, text) => {
     setUploadForm({ ...uploadForm, [name]: text });
+    // console.log(uploadForm.GitRepo);
   };
-  const HandleUpload = async (e) => {
-    setUploadStatus("Uploaded");
-    const res = await axios.post(`${Api}/Challenges/uploadChallenge`, {
-      GiteRepo: uploadForm.GitRepo,
-      LiveLink: uploadForm.LiveLink,
+  // upload challenge steps
+  const [snapImage, setSnapImage] = useState();
+  const [imgLoad, setImageLoad] = useState();
+  const selectSnapImage = async () => {
+    // get permission
+    await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const result = await ImagePicker.launchImageLibraryAsync();
+    uploadSnap(result.assets[0].uri);
+  };
+  // upload snap image to firebase
+  const uploadSnap = async (imguri) => {
+    setImageLoad(true);
+    const storageRef = ref(storage, "Image/" + Date.now + ".jpeg");
+    const response = await fetch(imguri);
+    const blob = await response.blob();
+    await uploadBytes(storageRef, blob);
+    await updateMetadata(storageRef, {
+      contentType: "image/jpeg",
+      cacheControl: "public,max-age=31536000",
     });
+    const downloadURL = await getDownloadURL(storageRef);
+    setSnapImage(downloadURL);
+    if (downloadURL) {
+      setImageLoad(false);
+    }
+    return downloadURL;
   };
-
+  // upload challenge
+  const HandleUpload = async () => {
+    if (uploadForm.GitRepo && uploadForm.LiveLink && snapImage) {
+      const res = await axios.post(
+        `${Api}/Challenges/uploadChallenge/${user._id}`,
+        {
+          GitRepo: uploadForm.GitRepo,
+          LiveLink: uploadForm.LiveLink,
+          SnapImage: snapImage,
+          ChallengeName: selectedChallenge.title,
+        }
+      );
+      if (res.data == "Uploaded") {
+        setUploadStatus("Uploaded");
+        console.log(res.data);
+      }
+    }
+  };
+  // check challenge status
+  const checkChallengeStatus = async () => {
+    const res = await axios.post(
+      `${Api}/Challenges/checkChallengeStatus/${user._id}`,
+      {
+        ChallengeName: selectedChallenge?.title,
+      }
+    );
+    if (res.data) {
+      setButton(true);
+      setUploadStatus(res.data);
+    }
+  };
+  // check the status initially
+  useEffect(() => {
+    checkChallengeStatus();
+  }, []);
   return (
     <View style={[styles.pageView, { paddingVertical: 20 }]}>
       <HeadingText text="Challenge Details" />
@@ -137,7 +201,7 @@ const ChallengeDetail = () => {
                   ? "Wait..."
                   : uploadStatus == "Uploaded"
                   ? "Uploaded"
-                  : null
+                  : "Pending"
               }
               bgcolor="#563d7c"
               textColor="white"
@@ -241,7 +305,6 @@ const ChallengeDetail = () => {
           <View
             style={{
               marginTop: 30,
-              height: height * 0.5,
               marginBottom: 20,
               rowGap: 20,
             }}
@@ -251,7 +314,7 @@ const ChallengeDetail = () => {
               style={{
                 borderWidth: 1,
                 padding: 15,
-                fontSize: 17,
+                fontSize: 15,
                 letterSpacing: 1,
                 borderColor: Colors.mildGrey,
                 borderRadius: 5,
@@ -265,7 +328,7 @@ const ChallengeDetail = () => {
               style={{
                 borderWidth: 1,
                 padding: 15,
-                fontSize: 17,
+                fontSize: 15,
                 letterSpacing: 1,
                 borderColor: Colors.mildGrey,
                 borderRadius: 5,
@@ -273,6 +336,7 @@ const ChallengeDetail = () => {
               placeholderTextColor={Colors.mildGrey}
             />
             <TouchableOpacity
+              onPress={selectSnapImage}
               style={{
                 flexDirection: "row",
                 alignItems: "center",
@@ -284,13 +348,34 @@ const ChallengeDetail = () => {
                 padding: 15,
               }}
             >
-              <FontAwesomeIcon
-                icon={faImage}
-                size={width * 0.05}
-                color={Colors.mildGrey}
-              />
-              <PragraphText text="Upload Snapshot" padding={1} />
+              {imgLoad ? (
+                <ActivityIndicator
+                  size={width * 0.05}
+                  color={Colors.mildGrey}
+                />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faImage}
+                  size={width * 0.05}
+                  color={Colors.mildGrey}
+                />
+              )}
+              <PragraphText text="Upload Snapshot" padding={1} fsize={15} />
             </TouchableOpacity>
+            {/* show oupload image */}
+            {snapImage ? (
+              <Image
+                source={{ uri: snapImage }}
+                style={{
+                  width: "100%",
+                  height: height * 0.3,
+                  resizeMode: "contain",
+                }}
+              />
+            ) : (
+              <Text></Text>
+            )}
+            {/*  */}
 
             <Ripple
               onPress={HandleUpload}
