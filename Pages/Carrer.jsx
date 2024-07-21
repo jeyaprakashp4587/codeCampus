@@ -180,7 +180,7 @@ const Carrer = ({ navigation }) => {
           ],
         },
         {
-          name: "react",
+          name: "react Native",
           icon: <FontAwesome5 name="react" size={35} color="#4CC1E0" />,
           details:
             "React Native is a framework for building native apps using React. It enables developers to use the same codebase for both iOS and Android applications.",

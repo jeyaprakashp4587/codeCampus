@@ -2,11 +2,11 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Colors } from "../constants/Colors";
 
-const HrLine = () => {
+const HrLine = (props) => {
   return (
     <View
       style={{
-        width: "90%",
+        width: props.width ? props.width : "90%",
         borderColor: Colors.veryLightGrey,
         height: 1,
         borderBottomWidth: 1,

@@ -36,6 +36,8 @@ const ChallengeDetail = () => {
       userId: user._id,
       ChallengeName: chName,
       ChallengeType: selectedChallenge.technologies[0].name,
+      ChallengeImage: selectedChallenge.sample_image,
+      ChallengeLevel: selectedChallenge.level,
     });
   };
 
@@ -135,7 +137,7 @@ const ChallengeDetail = () => {
                   ? "Wait..."
                   : uploadStatus == "Uploaded"
                   ? "Uploaded"
-                  : "Upload"
+                  : null
               }
               bgcolor="#563d7c"
               textColor="white"

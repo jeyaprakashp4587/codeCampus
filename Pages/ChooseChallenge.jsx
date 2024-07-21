@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: height * 0.35, // Responsive height
     alignSelf: "center",
-    resizeMode: "cover",
+    resizeMode: "contain",
     borderRadius: 20,
   },
   challengeDescription: {

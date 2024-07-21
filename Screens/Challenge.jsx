@@ -10,6 +10,7 @@ import { Paragraph } from "react-native-paper";
 import Ripple from "react-native-material-ripple";
 import { ScrollView } from "react-native";
 import { Dimensions } from "react-native";
+import YourChallenges from "../Pages/YourChallenges";
 
 const Challenge = ({ navigation }) => {
   const { width, height } = Dimensions.get("window");
@@ -39,9 +40,9 @@ const Challenge = ({ navigation }) => {
   //
   const [chToggle, setChaToggle] = useState();
   return (
-    <ScrollView>
-      <View style={pageView}>
-        <HeadingText text="Develop Your Skills Here" />
+    <ScrollView style={pageView}>
+      <HeadingText text="Develop Your Skills Here" />
+      <View style={{ borderWidth: 0, paddingVertical: 20 }}>
         {Challenges.map((item, index) => (
           <TouchableOpacity
             onPress={() => HandleSelectChallenges(item)}
@@ -54,7 +55,7 @@ const Challenge = ({ navigation }) => {
               alignItems: "center",
               borderRadius: 10,
               marginTop: 30,
-              elevation: 7,
+              elevation: 5,
               flexDirection: "row",
               columnGap: 20,
             }}
@@ -72,6 +73,10 @@ const Challenge = ({ navigation }) => {
         ))}
         {/* user challenges list */}
         <TouchableOpacity
+          onPress={() => {
+            setChaToggle(!chToggle);
+            navigation.navigate("yourchallenges");
+          }}
           style={{
             width: "100%",
             backgroundColor: "#adc2eb",
@@ -80,7 +85,7 @@ const Challenge = ({ navigation }) => {
             alignItems: "center",
             borderRadius: 10,
             marginTop: 30,
-            elevation: 7,
+            elevation: 5,
             flexDirection: "row",
             columnGap: 20,
           }}
@@ -92,45 +97,6 @@ const Challenge = ({ navigation }) => {
             color={Colors.veryLightGrey}
           />
         </TouchableOpacity>
-        {/* show option */}
-        <View style={{ borderWidth: 1, marginTop: 20 }}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <Ripple>
-              <Text
-                style={{
-                  fontWeight: "700",
-                  fontSize: width * 0.03,
-                  letterSpacing: 1,
-                }}
-              >
-                Completed
-              </Text>
-            </Ripple>
-            <Ripple>
-              <Text
-                style={{
-                  fontWeight: "700",
-                  fontSize: width * 0.03,
-                  letterSpacing: 1,
-                }}
-              >
-                In Progress
-              </Text>
-            </Ripple>
-          </View>
-        </View>
-        {/* {chToggle ? (
-        <View>
-          <View>
-            <Ripple></Ripple>
-            <Ripple></Ripple>
-          </View>
-        </View>
-      ) : (
-        <View></View>
-      )} */}
       </View>
     </ScrollView>
   );
