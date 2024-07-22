@@ -31,6 +31,7 @@ import * as ImagePicker from "expo-image-picker";
 import { storage } from "../Firebase/Firebase";
 import { ActivityIndicator } from "react-native";
 import Skeleton from "../Skeletons/Skeleton";
+import { LinearGradient } from "expo-linear-gradient";
 
 const { width, height } = Dimensions.get("window");
 
@@ -147,7 +148,17 @@ const ChallengeDetail = () => {
   };
 
   return (
-    <View style={[styles.pageView, { paddingVertical: 20 }]}>
+    // <View style={[styles.pageView, { paddingVertical: 20 }]}>
+    <LinearGradient
+      colors={["#ffe6f0", "white", "#e6f7ff"]}
+      style={{
+        backgroundColor: "white",
+        flex: 1,
+        paddingHorizontal: width * 0.03,
+      }}
+      start={[0, 1]}
+      end={[1, 0]}
+    >
       <HeadingText text="Challenge Details" />
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         {selectedChallenge?.sample_image || selectedChallenge?.level ? (
@@ -296,7 +307,10 @@ const ChallengeDetail = () => {
               <TopicsText text="Tutorials" mb={2} />
               <TouchableOpacity onPress={() => setUploadTut(!uploadTut)}>
                 <Text
-                  style={{ textDecorationLine: "underline", letterSpacing: 1 }}
+                  style={{
+                    textDecorationLine: "underline",
+                    letterSpacing: 1,
+                  }}
                 >
                   Close
                 </Text>
@@ -437,7 +451,8 @@ const ChallengeDetail = () => {
           </View>
         ) : null}
       </ScrollView>
-    </View>
+    </LinearGradient>
+    // </View>
   );
 };
 

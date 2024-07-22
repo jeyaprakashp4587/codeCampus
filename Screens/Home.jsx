@@ -7,9 +7,10 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  StatusBar,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { Colors } from "../constants/Colors";
+import { Colors, pageView } from "../constants/Colors";
 import { AntDesign } from "@expo/vector-icons";
 import HomeSkeleton from "../Skeletons/HomeSkeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -20,6 +21,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useData } from "../Context/Contexter";
 import { Dimensions } from "react-native";
 import Post from "../components/Posts";
+import { LinearGradient } from "expo-linear-gradient";
 const { width, height } = Dimensions.get("window");
 const Home = () => {
   const navigation = useNavigation();
@@ -83,7 +85,7 @@ const Home = () => {
   }
 
   return (
-    <View style={[styles.pageView, { paddingHorizontal: width * 0.05 }]}>
+    <View style={[pageView, { paddingHorizontal: 15 }]}>
       {/* calender */}
       <View>
         <Calendar
@@ -140,7 +142,7 @@ const Home = () => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => navigation.navigate("search")}
-          style={[styles.searchButton, { width: width * 0.6 }]}
+          style={[styles.searchButton, { width: width * 0.66 }]}
         >
           <EvilIcons name="search" size={30} color={Colors.lightGrey} />
           <TextInput
@@ -220,7 +222,10 @@ const Home = () => {
         </View>
         {/* post */}
         <Post />
+        <Post />
+        <Post />
       </ScrollView>
+      {/* <StatusBar barStyle="dark-content" /> */}
     </View>
   );
 };
@@ -259,7 +264,7 @@ const styles = StyleSheet.create({
   searchButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.veryLightGrey,
+    backgroundColor: Colors.white,
     paddingHorizontal: 10,
     borderRadius: 13,
   },
@@ -269,6 +274,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     flex: 1,
     padding: 10,
+    backgroundColor: "white",
   },
   ideasWrapper: {
     flexDirection: "row",

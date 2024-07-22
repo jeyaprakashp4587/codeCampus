@@ -6,6 +6,7 @@ import Navigation from "./Navigations/Navigation";
 import { ContextProvider } from "./Context/Contexter";
 import SplashScreen from "./Splashscreen/SplashScreen";
 import { PaperProvider } from "react-native-paper";
+import { StatusBar } from "react-native";
 
 const App = () => {
   // this load for render splash screen
@@ -21,6 +22,7 @@ const App = () => {
           <SafeAreaView style={styles.cn}>
             {load ? <SplashScreen duration={Handleduration} /> : <Navigation />}
           </SafeAreaView>
+          <StatusBar barStyle="dark-content" backgroundColor="white" />
         </ContextProvider>
       </NavigationContainer>
     </PaperProvider>

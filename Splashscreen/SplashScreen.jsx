@@ -47,7 +47,7 @@ const splashScreen = (props) => {
         }
       }, 0);
     }
-  }, [10]);
+  }, []);
 
   return (
     <View
