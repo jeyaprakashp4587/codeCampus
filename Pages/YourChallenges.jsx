@@ -41,6 +41,7 @@ const YourChallenges = (props) => {
   };
   // console.log("challenges", challenges);
   useEffect(() => {
+    setSkLoad(false);
     getChallenges("All");
   }, []);
   // handle operations

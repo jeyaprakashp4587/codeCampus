@@ -30,12 +30,13 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { storage } from "../Firebase/Firebase";
 import { ActivityIndicator } from "react-native";
+import Skeleton from "../Skeletons/Skeleton";
 
 const { width, height } = Dimensions.get("window");
 
 const ChallengeDetail = () => {
   const { selectedChallenge, user, setUser, setSelectedChallenge } = useData();
-  console.log(selectedChallenge);
+  // console.log(selectedChallenge);
   const [Buttons, setButton] = useState();
   const [uploadTut, setUploadTut] = useState();
   const [uploadStatus, setUploadStatus] = useState();
@@ -118,13 +119,12 @@ const ChallengeDetail = () => {
     }
   };
   // check the status initially
-  // useEffect(() => {
-
-  //   checkChallengeStatus();
-  // }, []);
+  useEffect(() => {
+    checkChallengeStatus();
+    getParticularChallenge();
+  }, []);
   // fetch the particular challlenge
   const getParticularChallenge = async () => {
-    console.log("logginf");
     const res = await axios.post(
       `${Api}/Challenges/getParticularChallenge/${user._id}`,
       {
@@ -142,132 +142,141 @@ const ChallengeDetail = () => {
     if (res.data) {
       // console.log(res.data);
       setSelectedChallenge(res.data);
+      checkChallengeStatus();
     }
   };
-  //
-  useEffect(() => {
-    getParticularChallenge();
-  }, []);
+
   return (
     <View style={[styles.pageView, { paddingVertical: 20 }]}>
       <HeadingText text="Challenge Details" />
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        <View style={{ flexDirection: "column", rowGap: 30, marginTop: 25 }}>
-          {selectedChallenge?.level === "newbie" ? (
-            <Text>
-              We Don't have assets for{" "}
+        {selectedChallenge?.sample_image || selectedChallenge?.level ? (
+          <View style={{ flexDirection: "column", rowGap: 30, marginTop: 25 }}>
+            {selectedChallenge?.level === "newbie" ? (
+              <Text>
+                We Don't have assets for{" "}
+                <Text
+                  style={{
+                    color: "orange",
+                    fontWeight: "600",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  {selectedChallenge?.level}
+                </Text>{" "}
+                Level Challenges
+              </Text>
+            ) : (
+              <Image
+                source={{
+                  uri: selectedChallenge?.sample_image,
+                }}
+                style={{
+                  width: width * 0.9,
+                  height: height * 0.3,
+                  alignSelf: "center",
+                  resizeMode: "cover",
+                  borderRadius: 20,
+                }}
+              />
+            )}
+            <TopicsText text={selectedChallenge?.title} fszie={20} mb={5} />
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
               <Text
                 style={{
-                  color: "orange",
                   fontWeight: "600",
+                  color: "orange",
                   textTransform: "capitalize",
                 }}
               >
                 {selectedChallenge?.level}
-              </Text>{" "}
-              Level Challenges
-            </Text>
-          ) : (
-            <Image
-              source={{
-                uri: selectedChallenge?.sample_image,
-              }}
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row", columnGap: 20 }}>
+              {selectedChallenge?.technologies?.map((i, index) => (
+                <Image
+                  key={index}
+                  source={{ uri: i.icon }}
+                  style={{
+                    width: width * 0.1,
+                    height: width * 0.1,
+                    resizeMode: "contain",
+                  }}
+                />
+              ))}
+            </View>
+            <View>
+              {selectedChallenge?.rules?.map((rule, index) => (
+                <PragraphText
+                  key={index}
+                  text={["* ", rule]}
+                  fsize={15}
+                  padding={5}
+                />
+              ))}
+            </View>
+            <Image />
+            {Buttons ? (
+              <Button
+                text={
+                  uploadStatus == "open"
+                    ? "Wait..."
+                    : uploadStatus == "Uploaded"
+                    ? "Uploaded"
+                    : "Pending"
+                }
+                bgcolor="#563d7c"
+                textColor="white"
+                fsize={18}
+                width="100%"
+                function={() => setUploadStatus("open")}
+              />
+            ) : (
+              <Button
+                text="Start Challenge"
+                bgcolor="#6699ff"
+                textColor="white"
+                width="100%"
+                fsize={18}
+                function={() => HandleStart(selectedChallenge.title)}
+              />
+            )}
+            <TouchableOpacity
+              onPress={() => setUploadTut(!uploadTut)}
               style={{
-                width: width * 0.9,
-                height: height * 0.3,
-                alignSelf: "center",
-                resizeMode: "cover",
-                borderRadius: 20,
-              }}
-            />
-          )}
-          <TopicsText text={selectedChallenge?.title} fszie={20} mb={5} />
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text
-              style={{
-                fontWeight: "600",
-                color: "orange",
-                textTransform: "capitalize",
+                borderWidth: 1,
+                padding: 10,
+                borderRadius: 5,
+                alignItems: "center",
+                borderColor: Colors.mildGrey,
+                display: uploadTut ? "none" : "flex",
               }}
             >
-              {selectedChallenge?.level}
-            </Text>
-          </View>
-          <View style={{ flexDirection: "row", columnGap: 20 }}>
-            {selectedChallenge?.technologies?.map((i, index) => (
-              <Image
-                key={index}
-                source={{ uri: i.icon }}
+              <Text
                 style={{
-                  width: width * 0.1,
-                  height: width * 0.1,
-                  resizeMode: "contain",
+                  color: Colors.mildGrey,
+                  fontSize: 17,
                 }}
-              />
-            ))}
+              >
+                How To Upload
+              </Text>
+            </TouchableOpacity>
           </View>
-          <View>
-            {selectedChallenge?.rules?.map((rule, index) => (
-              <PragraphText
-                key={index}
-                text={["* ", rule]}
-                fsize={15}
-                padding={5}
-              />
-            ))}
+        ) : (
+          <View style={{ rowGap: 20 }}>
+            <Skeleton width="100%" height={height * 0.3} radius={10} />
+            <Skeleton width="100%" height={height * 0.1} radius={10} />
+            <Skeleton width="100%" height={height * 0.02} radius={10} />
+            <Skeleton width="100%" height={height * 0.02} radius={10} />
+            <Skeleton width="100%" height={height * 0.1} radius={10} />
+            <Skeleton width="100%" height={height * 0.08} radius={10} />
           </View>
-          <Image />
-          {Buttons ? (
-            <Button
-              text={
-                uploadStatus == "open"
-                  ? "Wait..."
-                  : uploadStatus == "Uploaded"
-                  ? "Uploaded"
-                  : "Pending"
-              }
-              bgcolor="#563d7c"
-              textColor="white"
-              fsize={18}
-              width="100%"
-              function={() => setUploadStatus("open")}
-            />
-          ) : (
-            <Button
-              text="Start Challenge"
-              bgcolor="#6699ff"
-              textColor="white"
-              width="100%"
-              fsize={18}
-              function={() => HandleStart(selectedChallenge.title)}
-            />
-          )}
-          <TouchableOpacity
-            onPress={() => setUploadTut(!uploadTut)}
-            style={{
-              borderWidth: 1,
-              padding: 10,
-              borderRadius: 5,
-              alignItems: "center",
-              borderColor: Colors.mildGrey,
-              display: uploadTut ? "none" : "flex",
-            }}
-          >
-            <Text
-              style={{
-                color: Colors.mildGrey,
-                fontSize: 17,
-              }}
-            >
-              How To Upload
-            </Text>
-          </TouchableOpacity>
-        </View>
+        )}
         {uploadTut ? (
           <View
             style={{
