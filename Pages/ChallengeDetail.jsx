@@ -34,7 +34,8 @@ import { ActivityIndicator } from "react-native";
 const { width, height } = Dimensions.get("window");
 
 const ChallengeDetail = () => {
-  const { selectedChallenge, user, setUser } = useData();
+  const { selectedChallenge, user, setUser, setSelectedChallenge } = useData();
+  console.log(selectedChallenge);
   const [Buttons, setButton] = useState();
   const [uploadTut, setUploadTut] = useState();
   const [uploadStatus, setUploadStatus] = useState();
@@ -99,7 +100,7 @@ const ChallengeDetail = () => {
       );
       if (res.data == "Uploaded") {
         setUploadStatus("Uploaded");
-        console.log(res.data);
+        // console.log(res.data);
       }
     }
   };
@@ -117,8 +118,35 @@ const ChallengeDetail = () => {
     }
   };
   // check the status initially
+  // useEffect(() => {
+
+  //   checkChallengeStatus();
+  // }, []);
+  // fetch the particular challlenge
+  const getParticularChallenge = async () => {
+    console.log("logginf");
+    const res = await axios.post(
+      `${Api}/Challenges/getParticularChallenge/${user._id}`,
+      {
+        ChallengeName: selectedChallenge.ChallengeName
+          ? selectedChallenge.ChallengeName
+          : null,
+        ChallengeType: selectedChallenge.ChallengeType
+          ? selectedChallenge.ChallengeType
+          : null,
+        ChallengeLevel: selectedChallenge.ChallengeLevel
+          ? selectedChallenge.ChallengeLevel
+          : null,
+      }
+    );
+    if (res.data) {
+      // console.log(res.data);
+      setSelectedChallenge(res.data);
+    }
+  };
+  //
   useEffect(() => {
-    checkChallengeStatus();
+    getParticularChallenge();
   }, []);
   return (
     <View style={[styles.pageView, { paddingVertical: 20 }]}>
@@ -171,7 +199,7 @@ const ChallengeDetail = () => {
             </Text>
           </View>
           <View style={{ flexDirection: "row", columnGap: 20 }}>
-            {selectedChallenge?.technologies.map((i, index) => (
+            {selectedChallenge?.technologies?.map((i, index) => (
               <Image
                 key={index}
                 source={{ uri: i.icon }}
@@ -184,7 +212,7 @@ const ChallengeDetail = () => {
             ))}
           </View>
           <View>
-            {selectedChallenge?.rules.map((rule, index) => (
+            {selectedChallenge?.rules?.map((rule, index) => (
               <PragraphText
                 key={index}
                 text={["* ", rule]}

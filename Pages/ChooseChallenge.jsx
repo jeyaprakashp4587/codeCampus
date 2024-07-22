@@ -32,7 +32,7 @@ const ChooseChallenge = ({ navigation }) => {
     { name: "Legend", bgcolor: "#990000" },
   ];
 
-  const { selectedChallengeTopic, setSelectedChallenge } = useData([]);
+  const { selectedChallengeTopic, setSelectedChallenge } = useData();
   const [Challenges, setChallenges] = useState();
   const [difficultyInfo, setDifficultyInfo] = useState("Newbie");
   const [visible, setVisible] = useState(false);

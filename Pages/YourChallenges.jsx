@@ -15,8 +15,12 @@ import { Feather } from "@expo/vector-icons";
 import { Button } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import Skeleton from "../Skeletons/Skeleton";
+import { TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const YourChallenges = (props) => {
+  const navigation = useNavigation();
+  const { setSelectedChallenge } = useData();
   const { width, height } = Dimensions.get("window");
   const { user } = useData();
   const [challenges, setChallenges] = useState();
@@ -52,7 +56,7 @@ const YourChallenges = (props) => {
         style={{
           marginTop: 10,
           flexDirection: "row",
-          justifyContent: "flex-end",
+          justifyContent: "space-between",
           //   borderWidth: 1,
           height: height * 0.05,
           marginBottom: 5,
@@ -60,6 +64,26 @@ const YourChallenges = (props) => {
           columnGap: 20,
         }}
       >
+        <Ripple
+          onPress={() => HandleOption("All")}
+          style={{
+            padding: 10,
+            elevation: 3,
+            // borderWidth: 1,
+            backgroundColor: "white",
+            borderRadius: 5,
+          }}
+        >
+          <Text
+            style={{
+              fontWeight: "700",
+              fontSize: width * 0.03,
+              letterSpacing: 1,
+            }}
+          >
+            All Challenges
+          </Text>
+        </Ripple>
         <Ripple
           onPress={() => HandleOption("Complete")}
           style={{
@@ -124,7 +148,14 @@ const YourChallenges = (props) => {
           data={challenges}
           style={{ borderWidth: 0 }}
           renderItem={({ item, index }) => (
-            <View style={styles.challengeContainer} key={index}>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedChallenge(item);
+                navigation.navigate("challengeDetail");
+              }}
+              style={styles.challengeContainer}
+              key={index}
+            >
               <View style={styles.challengeHeader}>
                 <ParagraphText
                   text={item?.ChallengeName}
@@ -174,7 +205,7 @@ const YourChallenges = (props) => {
                   {item?.status}
                 </Text>
               </View>
-            </View>
+            </TouchableOpacity>
           )}
         />
       )}
