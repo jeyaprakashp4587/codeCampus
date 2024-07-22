@@ -5,7 +5,7 @@ import {
   View,
   Dimensions,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import HeadingText from "../utils/HeadingText";
 import { Colors, pageView } from "../constants/Colors";
 import { useData } from "../Context/Contexter";
@@ -14,6 +14,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCode } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Api from "../Api";
+import { ScrollView } from "react-native";
+import { RefreshControl } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -39,64 +41,78 @@ const YourCourses = () => {
       setUser(res.data);
     }
   };
+  // set refreshing effect
+  const [refresh, setRefresh] = useState(false);
+  const HandleRefresh = () => {
+    setRefresh(true);
+    setTimeout(() => {
+      setRefresh(false);
+    }, 2000);
+  };
 
   return (
     <View style={pageView}>
       <HeadingText text="Your Courses" />
       {/* wrappers */}
-      {user?.Courses.length <= 0 ? (
-        <Text style={styles.noCoursesText}>You Have No Courses</Text>
-      ) : (
-        user.Courses.map((course, index) => (
-          <LinearGradient
-            key={index}
-            colors={[
-              color[index % color.length].color1,
-              color[index % color.length].color2,
-            ]}
-            start={[0, 1]}
-            end={[1, 0]}
-            style={styles.courseWrapper}
-          >
-            <TouchableOpacity
-              onLongPress={() => HandleRemoveCourse(course.Course_Name)}
-              style={styles.courseContainer}
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refresh} onRefresh={HandleRefresh} />
+        }
+      >
+        {user?.Courses.length <= 0 ? (
+          <Text style={styles.noCoursesText}>You Have No Courses</Text>
+        ) : (
+          user.Courses.map((course, index) => (
+            <LinearGradient
+              key={index}
+              colors={[
+                color[index % color.length].color1,
+                color[index % color.length].color2,
+              ]}
+              start={[0, 1]}
+              end={[1, 0]}
+              style={styles.courseWrapper}
             >
-              <View style={{ flexDirection: "column", rowGap: 5 }}>
-                <Text style={styles.courseName}>{course.Course_Name}</Text>
-                {course.Technologies.map((tech, index) => (
-                  <View key={index} style={styles.techWrapper}>
-                    <Text style={styles.techName}>{tech.TechName}</Text>
-                    <Text style={styles.techPoints}>
-                      Points( {tech.Points} / 10 )
-                    </Text>
-                  </View>
-                ))}
-              </View>
-              <FontAwesomeIcon
-                icon={faCode}
-                color={Colors.veryLightGrey}
-                size={50}
-              />
-            </TouchableOpacity>
-          </LinearGradient>
-        ))
-      )}
-      {/* tutorials */}
-      <HeadingText text="Tutorials" />
-      <Text style={styles.infoText}>
-        <Text style={styles.infoHighlight}>*</Text> Long press the course
-        wrapper to remove the course
-      </Text>
-      <Text style={styles.infoText}>
-        <Text style={styles.infoHighlight}>*</Text> For you to earn 10 points,
-        you must complete these course challenges and earn points
-      </Text>
-      <Text style={styles.infoText}>
-        <Text style={styles.infoHighlight}>*</Text> Once You reach 10 points
-        then you will receive a certification and unlock the{" "}
-        <Text style={styles.messageSystem}>(Message System)</Text>.
-      </Text>
+              <TouchableOpacity
+                onLongPress={() => HandleRemoveCourse(course.Course_Name)}
+                style={styles.courseContainer}
+              >
+                <View style={{ flexDirection: "column", rowGap: 5 }}>
+                  <Text style={styles.courseName}>{course.Course_Name}</Text>
+                  {course.Technologies.map((tech, index) => (
+                    <View key={index} style={styles.techWrapper}>
+                      <Text style={styles.techName}>{tech.TechName}</Text>
+                      <Text style={styles.techPoints}>
+                        Points( {tech.Points} / 10 )
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+                <FontAwesomeIcon
+                  icon={faCode}
+                  color={Colors.veryLightGrey}
+                  size={50}
+                />
+              </TouchableOpacity>
+            </LinearGradient>
+          ))
+        )}
+        {/* tutorials */}
+        <HeadingText text="Tutorials" />
+        <Text style={styles.infoText}>
+          <Text style={styles.infoHighlight}>*</Text> Long press the course
+          wrapper to remove the course
+        </Text>
+        <Text style={styles.infoText}>
+          <Text style={styles.infoHighlight}>*</Text> For you to earn 10 points,
+          you must complete these course challenges and earn points
+        </Text>
+        <Text style={styles.infoText}>
+          <Text style={styles.infoHighlight}>*</Text> Once You reach 10 points
+          then you will receive a certification and unlock the{" "}
+          <Text style={styles.messageSystem}>(Message System)</Text>.
+        </Text>
+      </ScrollView>
     </View>
   );
 };
