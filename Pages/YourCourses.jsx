@@ -105,7 +105,7 @@ const YourCourses = () => {
         </Text>
         <Text style={styles.infoText}>
           <Text style={styles.infoHighlight}>*</Text> For you to earn 10 points,
-          you must complete these course challenges and earn points
+          you must complete Assesments and earn points
         </Text>
         <Text style={styles.infoText}>
           <Text style={styles.infoHighlight}>*</Text> Once You reach 10 points
