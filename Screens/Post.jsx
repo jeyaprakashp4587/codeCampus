@@ -44,10 +44,11 @@ const Post = () => {
       aspect: [4, 3],
     });
     if (result) {
-      const selectedAssets = result.assets.map((asset) => {
-        asset.uri, hostImage(asset.uri);
+      result.assets.map((asset) => {
+        hostImage(asset.uri);
       });
-      setImages(selectedAssets);
+      const selectedImages = result.assets.map((img) => img.uri);
+      setImages(selectedImages);
     }
   };
   // upload Image
