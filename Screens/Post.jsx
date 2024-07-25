@@ -27,6 +27,8 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import { storage } from "../Firebase/Firebase";
+import axios from "axios";
+import Api from "../Api";
 
 const Post = () => {
   const { user } = useData();
@@ -37,6 +39,7 @@ const Post = () => {
   }, []);
   // select images
   const [Images, setImages] = useState();
+  const [hostImageIndi, setHostImageIndi] = useState(false);
   const selectImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       selectionLimit: 4,
@@ -44,11 +47,12 @@ const Post = () => {
       aspect: [4, 3],
     });
     if (result) {
-      result.assets.map((asset) => {
-        hostImage(asset.uri);
-      });
       const selectedImages = result.assets.map((img) => img.uri);
       setImages(selectedImages);
+      result.assets.map((asset) => {
+        hostImage(asset.uri);
+        setHostImageIndi(true);
+      });
     }
   };
   // upload Image
@@ -69,6 +73,13 @@ const Post = () => {
       console.error("Error uploading file:", error);
       throw error;
     }
+  };
+  // upload post
+  const HandleUpload = async () => {
+    const res = await axios.post(`${Api}/Post/UploadPost`, {
+      userId: user._id,
+    });
+    console.log("upload");
   };
   return (
     <View style={[pageView, { rowGap: 10 }]}>
@@ -190,6 +201,7 @@ const Post = () => {
                 {/* layer */}
                 <View
                   style={{
+                    display: hostImageIndi ? "none" : "flex",
                     backgroundColor: "white",
                     width: "100%",
                     height: "100%",
@@ -208,6 +220,7 @@ const Post = () => {
         </ScrollView>
         {/* post Button */}
         <Ripple
+          onPress={HandleUpload}
           style={{
             flexDirection: "row",
             alignItems: "center",
