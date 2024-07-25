@@ -1,22 +1,82 @@
 import {
   Dimensions,
   Image,
+  ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import HeadingText from "../utils/HeadingText";
 import { useData } from "../Context/Contexter";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faImage } from "@fortawesome/free-regular-svg-icons";
+import * as ImagePicker from "expo-image-picker";
+import { FlatList } from "react-native";
+import Ripple from "react-native-material-ripple";
+import { faL } from "@fortawesome/free-solid-svg-icons";
+import { ActivityIndicator } from "react-native";
+import {
+  getDownloadURL,
+  ref,
+  updateMetadata,
+  uploadBytes,
+} from "firebase/storage";
+import { storage } from "../Firebase/Firebase";
 
 const Post = () => {
   const { user } = useData();
   const { width, height } = Dimensions.get("window");
+  // pick images
+  useEffect(() => {
+    const permission = ImagePicker.requestMediaLibraryPermissionsAsync();
+  }, []);
+  // select images
+  const [Images, setImages] = useState();
+  const selectImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      selectionLimit: 4,
+      allowsMultipleSelection: true,
+      aspect: [4, 3],
+    });
+    if (result) {
+      const selectedAssets = result.assets.map((asset) => asset.uri);
+      setImages(selectedAssets);
+    }
+    if (!result) console.log(result.canceled);
+    if (Images?.length > 0) {
+      hostImage(Images).then((d) => console.log(d));
+    }
+  };
+  // upload Image
+  const hostImage = async (images) => {
+    // console.log("log from host", images);
+    for (let i = 0; i < images.length; i++) {
+      try {
+        console.log("log from host", images[i]);
+        const storageRef = ref(storage, "Image/" + Date.now() + ".jpeg");
+        const response = await fetch(images[i]);
+        const blob = await response.blob();
+        await uploadBytes(storageRef, blob);
+        await updateMetadata(storageRef, {
+          contentType: "image/jpeg",
+          cacheControl: "public,max-age=31536000",
+        });
+        const downloadURL = await getDownloadURL(storageRef);
+        console.log("url");
+        return downloadURL;
+      } catch (error) {
+        console.error("Error uploading file:", error);
+        throw error;
+      }
+    }
+  };
   return (
-    <View style={pageView}>
+    <View style={[pageView, { rowGap: 10 }]}>
       {/* heading Text */}
       <HeadingText text="Post" />
       {/* profile */}
@@ -49,6 +109,134 @@ const Post = () => {
       >
         ShowCase your Achivement to the World
       </Text>
+      {/* inputs wrapper */}
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={{ rowGap: 30 }}>
+          <TextInput
+            placeholder="Type Something..."
+            style={{
+              color: Colors.mildGrey,
+              borderBottomWidth: 1,
+              padding: 10,
+              borderColor: Colors.lightGrey,
+              letterSpacing: 1,
+            }}
+          />
+          <TextInput
+            placeholder="Share Links"
+            style={{
+              color: Colors.mildGrey,
+              borderBottomWidth: 1,
+              letterSpacing: 1,
+              padding: 10,
+              borderColor: Colors.lightGrey,
+            }}
+          />
+          <TouchableOpacity
+            onPress={selectImage}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              columnGap: 10,
+              backgroundColor: Colors.violet,
+              justifyContent: "center",
+              height: height * 0.06,
+              borderRadius: 10,
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faImage}
+              size={width * 0.05}
+              color={Colors.white}
+            />
+            <Text
+              style={{
+                fontSize: width * 0.035,
+                color: Colors.white,
+                letterSpacing: 1,
+                fontWeight: "700",
+              }}
+            >
+              Select Image or Video
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {/* show selected images  */}
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+          style={{
+            // borderWidth: 1,
+            height: "auto",
+            marginTop: 20,
+          }}
+        >
+          {Images?.length > 0 &&
+            Images.map((img, index) => (
+              <View
+                style={{
+                  width: width * 0.5,
+                  height: height * 0.3,
+                  marginLeft: 10,
+                }}
+                key={index}
+              >
+                <Image
+                  source={{ uri: img }}
+                  style={{
+                    width: width * 0.5,
+                    height: height * 0.3,
+                    borderRadius: 10,
+                  }}
+                />
+                {/* layer */}
+                <View
+                  style={{
+                    backgroundColor: "white",
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                    // borderWidth: 1,
+                    opacity: 0.5,
+                    borderRadius: 10,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <ActivityIndicator size={50} color={Colors.mildGrey} />
+                </View>
+              </View>
+            ))}
+        </ScrollView>
+        {/* post Button */}
+        <Ripple
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            columnGap: 10,
+            backgroundColor: Colors.violet,
+            justifyContent: "center",
+            height: height * 0.06,
+            borderRadius: 10,
+            marginTop: 20,
+            marginBottom: 50,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: width * 0.035,
+              color: Colors.white,
+              letterSpacing: 1,
+              fontWeight: "700",
+            }}
+          >
+            Upload
+          </Text>
+        </Ripple>
+      </ScrollView>
     </View>
   );
 };
