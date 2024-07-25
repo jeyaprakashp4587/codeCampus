@@ -44,35 +44,29 @@ const Post = () => {
       aspect: [4, 3],
     });
     if (result) {
-      const selectedAssets = result.assets.map((asset) => asset.uri);
+      const selectedAssets = result.assets.map((asset) => {
+        asset.uri, hostImage(asset.uri);
+      });
       setImages(selectedAssets);
-    }
-    if (!result) console.log(result.canceled);
-    if (Images?.length > 0) {
-      hostImage(Images).then((d) => console.log(d));
     }
   };
   // upload Image
   const hostImage = async (images) => {
-    // console.log("log from host", images);
-    for (let i = 0; i < images.length; i++) {
-      try {
-        console.log("log from host", images[i]);
-        const storageRef = ref(storage, "Image/" + Date.now() + ".jpeg");
-        const response = await fetch(images[i]);
-        const blob = await response.blob();
-        await uploadBytes(storageRef, blob);
-        await updateMetadata(storageRef, {
-          contentType: "image/jpeg",
-          cacheControl: "public,max-age=31536000",
-        });
-        const downloadURL = await getDownloadURL(storageRef);
-        console.log("url");
-        return downloadURL;
-      } catch (error) {
-        console.error("Error uploading file:", error);
-        throw error;
-      }
+    try {
+      const storageRef = ref(storage, "Image/" + Date.now() + ".jpeg");
+      const response = await fetch(images);
+      const blob = await response.blob();
+      await uploadBytes(storageRef, blob);
+      await updateMetadata(storageRef, {
+        contentType: "image/jpeg",
+        cacheControl: "public,max-age=31536000",
+      });
+      const downloadURL = await getDownloadURL(storageRef);
+      console.log("url", downloadURL);
+      return downloadURL;
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      throw error;
     }
   };
   return (
