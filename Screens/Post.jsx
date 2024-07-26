@@ -29,29 +29,38 @@ import {
 import { storage } from "../Firebase/Firebase";
 import axios from "axios";
 import Api from "../Api";
+import { useRef } from "react";
 
 const Post = () => {
   const { user } = useData();
   const { width, height } = Dimensions.get("window");
+  const postText = useRef(null);
+  const postLink = useRef(null);
+  const handlePostText = (text) => {
+    postText.current = text;
+  };
+  const handlePostLink = (text) => {
+    postLink.current = text;
+  };
   // pick images
   useEffect(() => {
     const permission = ImagePicker.requestMediaLibraryPermissionsAsync();
   }, []);
   // select images
-  const [Images, setImages] = useState();
+  const [Images, setImages] = useState([]);
   const [hostImageIndi, setHostImageIndi] = useState(false);
   const selectImage = async () => {
+    setHostImageIndi(false);
     const result = await ImagePicker.launchImageLibraryAsync({
       selectionLimit: 4,
       allowsMultipleSelection: true,
       aspect: [4, 3],
     });
     if (result) {
-      const selectedImages = result.assets.map((img) => img.uri);
-      setImages(selectedImages);
       result.assets.map((asset) => {
-        hostImage(asset.uri);
-        setHostImageIndi(true);
+        hostImage(asset.uri).then((d) => {
+          setHostImageIndi(true), setImages((prev) => [...prev, d]);
+        });
       });
     }
   };
@@ -67,7 +76,7 @@ const Post = () => {
         cacheControl: "public,max-age=31536000",
       });
       const downloadURL = await getDownloadURL(storageRef);
-      console.log("url", downloadURL);
+      // console.log("url", downloadURL);
       return downloadURL;
     } catch (error) {
       console.error("Error uploading file:", error);
@@ -75,11 +84,26 @@ const Post = () => {
     }
   };
   // upload post
+  const [uploadText, setUploadText] = useState("Upload");
+  const [uploadIndi, setUploadIndi] = useState(false);
   const HandleUpload = async () => {
+    setUploadIndi(true);
+    console.log(postLink.current, postText.current);
     const res = await axios.post(`${Api}/Post/UploadPost`, {
       userId: user._id,
+      Images: Images,
+      postText: postText.current,
+      postLink: postLink.current,
     });
-    console.log("upload");
+
+    console.log(res.data);
+    if (res.data == "Uploaded") {
+      setUploadText("Uploaded");
+      setUploadIndi(false);
+      setImages([]);
+      postLink.current = "";
+      postText.current = "";
+    }
   };
   return (
     <View style={[pageView, { rowGap: 10 }]}>
@@ -130,9 +154,11 @@ const Post = () => {
               borderColor: Colors.lightGrey,
               letterSpacing: 1,
             }}
+            onChangeText={handlePostText}
           />
           <TextInput
             placeholder="Share Links"
+            onChangeText={handlePostLink}
             style={{
               color: Colors.mildGrey,
               borderBottomWidth: 1,
@@ -180,8 +206,8 @@ const Post = () => {
             marginTop: 20,
           }}
         >
-          {Images?.length > 0 &&
-            Images.map((img, index) => (
+          {Images?.length > 0 ? (
+            Images?.map((img, index) => (
               <View
                 style={{
                   width: width * 0.5,
@@ -199,24 +225,26 @@ const Post = () => {
                   }}
                 />
                 {/* layer */}
-                <View
-                  style={{
-                    display: hostImageIndi ? "none" : "flex",
-                    backgroundColor: "white",
-                    width: "100%",
-                    height: "100%",
-                    position: "absolute",
-                    // borderWidth: 1,
-                    opacity: 0.5,
-                    borderRadius: 10,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <ActivityIndicator size={50} color={Colors.mildGrey} />
-                </View>
               </View>
-            ))}
+            ))
+          ) : (
+            <View
+              style={{
+                display: hostImageIndi ? "none" : "flex",
+                backgroundColor: "white",
+                width: "100%",
+                height: "100%",
+                position: "absolute",
+                // borderWidth: 1,
+                opacity: 0.5,
+                borderRadius: 10,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ActivityIndicator size={50} color={Colors.mildGrey} />
+            </View>
+          )}
         </ScrollView>
         {/* post Button */}
         <Ripple
@@ -233,6 +261,11 @@ const Post = () => {
             marginBottom: 50,
           }}
         >
+          <ActivityIndicator
+            size={30}
+            color={Colors.white}
+            style={{ display: uploadIndi ? "flex" : "none" }}
+          />
           <Text
             style={{
               fontSize: width * 0.035,
@@ -241,7 +274,7 @@ const Post = () => {
               fontWeight: "700",
             }}
           >
-            Upload
+            {uploadText}
           </Text>
         </Ripple>
       </ScrollView>
