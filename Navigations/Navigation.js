@@ -34,6 +34,7 @@ import Placement from "../Screens/Placement";
 import splashScreen from "../Splashscreen/SplashScreen";
 import { Dimensions } from "react-native";
 import YourChallenges from "../Pages/YourChallenges";
+import YourActivity from "../Pages/YourActivity";
 
 // ------------- //
 // Tab navigations
@@ -239,6 +240,11 @@ const StackNavigations = () => {
       <Stack.Screen
         name="yourchallenges"
         component={YourChallenges}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="youractivities"
+        component={YourActivity}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

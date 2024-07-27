@@ -15,18 +15,20 @@ import { AntDesign } from "@expo/vector-icons";
 import HomeSkeleton from "../Skeletons/HomeSkeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { EvilIcons } from "@expo/vector-icons";
-import { Calendar } from "react-native-calendars";
 import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useData } from "../Context/Contexter";
 import { Dimensions } from "react-native";
 import Post from "../components/Posts";
 import { LinearGradient } from "expo-linear-gradient";
+import { RefreshControl } from "react-native";
+import axios from "axios";
+import Api from "../Api";
 const { width, height } = Dimensions.get("window");
 const Home = () => {
   const navigation = useNavigation();
 
-  const { user } = useData();
+  const { user, setUser } = useData();
   const [load, setLoad] = useState(false);
 
   useEffect(() => {
@@ -35,95 +37,23 @@ const Home = () => {
     }, 100);
   }, []);
 
-  const [calendardis, setCalenderdis] = useState(false);
-  const [act, setActdate] = useState();
-  const [activitiesdis, setActivitiesDis] = useState(false);
-  const [activitieslist, setActivitiesList] = useState();
-
-  const activityobg = [
-    {
-      timestamp: "2024-07-05T12:34:56Z",
-      course: ["react", "css", "html"],
-    },
-    {
-      timestamp: "2024-07-09T12:34:56Z",
-      course: ["java script"],
-    },
-  ];
-
-  useEffect(() => {
-    const fot = formatActivitiesForCalendar(activityobg);
-    setActdate(fot);
-  }, []);
-
-  const formatActivitiesForCalendar = (activities) => {
-    const formatted = {};
-    activities.forEach((activity) => {
-      const date = activity.timestamp.split("T")[0];
-      if (!formatted[date]) {
-        formatted[date] = {
-          customStyles: {
-            container: {
-              backgroundColor: "yellow",
-            },
-            text: {
-              color: "black",
-              fontWeight: "bold",
-            },
-          },
-        };
-        formatted[date] = { marked: true, dots: [], course: [] };
-      }
-      formatted[date].dots.push({ color: "red" });
-      formatted[date].course.push(...activity.course);
-    });
-    return formatted;
+  // refresh page
+  const [refControl, setRefControl] = useState(false);
+  const refreshUser = async () => {
+    setRefControl(true);
+    const res = await axios.post(`${Api}/Login/getUser`, { userId: user._id });
+    if (res.data) {
+      setUser(res.data);
+      setRefControl(false);
+    }
   };
-
+  // load the skeleton
   if (!load) {
     return <HomeSkeleton />;
   }
 
   return (
     <View style={[pageView, { paddingHorizontal: 15 }]}>
-      {/* calender */}
-      <View>
-        <Calendar
-          style={[
-            styles.calendar,
-            {
-              top: height * 0.25,
-              width: width * 0.6,
-              left: width * 0.2,
-              display: calendardis ? "flex" : "none",
-            },
-          ]}
-          markedDates={act}
-          markingType={"multi-dot"}
-          onDayPress={(day) => {
-            setActivitiesDis(!activitiesdis);
-            setActivitiesList(act[day.dateString]?.course || []);
-          }}
-        />
-        <View
-          style={[
-            styles.activityList,
-            {
-              width: width * 0.4,
-              height: height * 0.25,
-              top: height * 0.3,
-              display: activitiesdis ? "flex" : "none",
-            },
-          ]}
-        >
-          <FlatList
-            data={activitieslist}
-            renderItem={({ item }) => <Text>{item}</Text>}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View>
-      </View>
-      {/* calender */}
       {/* header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate("profile")}>
@@ -156,7 +86,12 @@ const Home = () => {
         </TouchableOpacity>
       </View>
       {/*  header*/}
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refControl} onRefresh={refreshUser} />
+        }
+      >
         <View style={styles.ideasWrapper}>
           <TouchableOpacity
             style={styles.ideaBox}
@@ -202,16 +137,12 @@ const Home = () => {
           </View>
           <TouchableOpacity
             style={styles.ideaBox}
-            onPress={() => setCalenderdis(!calendardis)}
+            onPress={() => navigation.navigate("youractivities")}
           >
-            {calendardis ? (
-              <FontAwesomeIcon icon={faTimesCircle} size={30} color="#006666" />
-            ) : (
-              <Image
-                source={require("../assets/images/calendar.png")}
-                style={[styles.icon, { tintColor: "#006666" }]}
-              />
-            )}
+            <Image
+              source={require("../assets/images/calendar.png")}
+              style={[styles.icon, { tintColor: "#006666" }]}
+            />
             <Text
               style={[styles.ideaText, { fontSize: width * 0.02 }]}
               numberOfLines={1}
@@ -267,6 +198,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     paddingHorizontal: 10,
     borderRadius: 13,
+    borderWidth: 1,
+    borderColor: Colors.veryLightGrey,
   },
   searchInput: {
     color: Colors.lightGrey,

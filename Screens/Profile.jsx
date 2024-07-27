@@ -32,6 +32,7 @@ import Api from "../Api";
 import Skeleton from "../Skeletons/Skeleton";
 import { Button } from "react-native-paper";
 import { Dimensions } from "react-native";
+import { RefreshControl } from "react-native";
 
 const Profile = ({ navigation }) => {
   const { user, setUser } = useData();
@@ -115,10 +116,23 @@ const Profile = ({ navigation }) => {
       setUploadActivityIndi(false);
     }
   };
+  // refresh page
+  const [refControl, setRefControl] = useState(false);
+  const refreshUser = async () => {
+    setRefControl(true);
+    const res = await axios.post(`${Api}/Login/getUser`, { userId: user._id });
+    if (res.data) {
+      setUser(res.data);
+      setRefControl(false);
+    }
+  };
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: "white" }}
       showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl refreshing={refControl} onRefresh={refreshUser} />
+      }
     >
       {/* Header */}
       <View style={{ paddingHorizontal: width * 0.05 }}>
@@ -360,7 +374,7 @@ const Profile = ({ navigation }) => {
               letterSpacing: 1,
             }}
           >
-            203
+            {user?.Followers?.length}
           </Text>
         </View>
         <View>
@@ -381,7 +395,7 @@ const Profile = ({ navigation }) => {
               letterSpacing: 1,
             }}
           >
-            184
+            {user?.Following?.length}
           </Text>
         </View>
         <View>
@@ -402,7 +416,7 @@ const Profile = ({ navigation }) => {
               letterSpacing: 1,
             }}
           >
-            63
+            {user?.Posts?.length}
           </Text>
         </View>
       </View>
