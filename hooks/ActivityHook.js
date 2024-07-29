@@ -1,9 +1,13 @@
 import axios from "axios";
 import moment from "moment";
+import Api from "../Api";
 
-const Actitivity = (props) => {
-  // const res = await axios.post(`${Api}/`)
-  console.log(moment().format("YYYY-MM-DD"));
-  return props.a + props.b;
+const Actitivity = async (userId, ActivityName) => {
+  const date = moment().format("YYYY-MM-DD");
+  const res = await axios.post(`${Api}/Activity/setActitvity/${userId}`, {
+    ActivityName: ActivityName,
+    Date: date,
+  });
 };
-module.exports;
+
+export default Actitivity;
