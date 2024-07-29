@@ -13,12 +13,7 @@ const YourActivity = () => {
       {/* calender preview */}
       <Calendar
         style={{ borderWidth: 0 }}
-        markedDates={{
-          "2024-07-16": { selected: true, marked: true },
-          "2024-07-17": { marked: true },
-          "2024-07-18": { marked: true, dotColor: "red", activeOpacity: 0 },
-          "2024-07-19": {},
-        }}
+        markedDates={{ "2024-07-10": { marked: true } }}
       />
       {/* list Activities */}
       <HrLine width="100%" />
