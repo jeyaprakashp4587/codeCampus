@@ -37,7 +37,7 @@ const YourActivity = () => {
       `${Api}/Activity/getParticularDateActitvities/${user._id}`,
       { Date: date.dateString }
     );
-    console.log(res.data);
+    console.log(res.data.activities);
   };
 
   return (
@@ -52,6 +52,7 @@ const YourActivity = () => {
       />
       {/* list Activities */}
       <HrLine width="100%" />
+      <View></View>
     </View>
   );
 };
