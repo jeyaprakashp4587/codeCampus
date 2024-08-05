@@ -24,6 +24,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { RefreshControl } from "react-native";
 import axios from "axios";
 import Api from "../Api";
+import ActivityHook from "../hooks/ActivityHook";
+
 const { width, height } = Dimensions.get("window");
 const Home = () => {
   const navigation = useNavigation();
@@ -35,6 +37,7 @@ const Home = () => {
     setTimeout(() => {
       setLoad(true);
     }, 100);
+    ActivityHook(user._id, "sign in");
   }, []);
 
   // refresh page

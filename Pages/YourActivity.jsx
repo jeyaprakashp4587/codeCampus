@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { pageView } from "../constants/Colors";
+import { Colors, pageView } from "../constants/Colors";
 import HeadingText from "../utils/HeadingText";
 import HrLine from "../utils/HrLine";
 import { Calendar } from "react-native-calendars";
@@ -8,8 +8,10 @@ import Actitivity from "../hooks/ActivityHook";
 import { useData } from "../Context/Contexter";
 import Api from "../Api";
 import axios from "axios";
+import { Dimensions } from "react-native";
 
 const YourActivity = () => {
+  const { width } = Dimensions.get("window");
   const { user } = useData();
   useEffect(() => {
     // console.log(user._id);
@@ -18,6 +20,7 @@ const YourActivity = () => {
   }, []);
   // get the activity dates
   const [dates, setDates] = useState([]);
+  const [activitiesList, setActivitiesList] = useState([]);
   const getAllActivityDates = async () => {
     const res = await axios.post(
       `${Api}/Activity/getAllActitvityDates/${user._id}`
@@ -37,7 +40,10 @@ const YourActivity = () => {
       `${Api}/Activity/getParticularDateActitvities/${user._id}`,
       { Date: date.dateString }
     );
-    console.log(res.data.activities);
+    if (res.data) {
+      setActivitiesList(res.data);
+      console.log(res.data);
+    }
   };
 
   return (
@@ -46,13 +52,31 @@ const YourActivity = () => {
       <HeadingText text="Your Activities" />
       {/* calender preview */}
       <Calendar
-        style={{ borderWidth: 0 }}
+        style={{ borderWidth: 0, width: "100%" }}
         markedDates={dates}
         onDayPress={getParticularDateActivities}
       />
       {/* list Activities */}
       <HrLine width="100%" />
-      <View></View>
+      <ScrollView>
+        {activitiesList.map((item, index) => (
+          <Text
+            style={{
+              // borderWidth: 1,
+              padding: width * 0.03,
+              fontSize: width * 0.04,
+              color: Colors.white,
+              marginBottom: 20,
+              borderRadius: 5,
+              backgroundColor: Colors.violet,
+              letterSpacing: 1,
+            }}
+            key={index}
+          >
+            {item.activityName}
+          </Text>
+        ))}
+      </ScrollView>
     </View>
   );
 };
