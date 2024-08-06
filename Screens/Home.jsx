@@ -154,9 +154,7 @@ const Home = () => {
           </TouchableOpacity>
         </View>
         {/* post */}
-        <Post />
-        <Post />
-        <Post />
+        <View></View>
       </ScrollView>
       {/* <StatusBar barStyle="dark-content" /> */}
     </View>

@@ -1,4 +1,5 @@
 import {
+  Alert,
   Dimensions,
   Image,
   ScrollView,
@@ -89,7 +90,7 @@ const Post = () => {
   const [uploadIndi, setUploadIndi] = useState(false);
   const HandleUpload = async () => {
     setUploadIndi(true);
-    console.log(postLink.current, postText.current);
+    // console.log(postLink.current, postText.current);
     const res = await axios.post(`${Api}/Post/UploadPost`, {
       userId: user._id,
       Images: Images,
@@ -97,7 +98,7 @@ const Post = () => {
       postLink: postLink.current,
     });
 
-    console.log(res.data);
+    // console.log(res.data);
     if (res.data == "Uploaded") {
       setUploadText("Uploaded");
       setUploadIndi(false);
@@ -105,6 +106,7 @@ const Post = () => {
       setImages([]);
       postLink.current = "";
       postText.current = "";
+      Alert.alert("Uploaded Sucessfully");
     }
   };
   return (

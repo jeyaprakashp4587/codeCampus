@@ -1,11 +1,24 @@
-import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  FlatList,
+} from "react-native";
 import React, { useState } from "react";
 import { Colors, font } from "../constants/Colors";
 import { faComment } from "@fortawesome/free-regular-svg-icons";
+import { Dimensions } from "react-native";
 
-const Posts = () => {
-  const initialText =
-    "Your long paragraph goes here with more than 20 words. You can test this by adding some lorem ipsum text or any long text to see how it behaves...";
+const Posts = ({ post }) => {
+  const { width, height } = Dimensions.get("window");
+  console.log(post);
+  // console.log(post);
+  let initialText = post.PostText;
+  // initialText =
+  //   "Your long paragraph goes here with more than 20 words. You can test this by adding some lorem ipsum text or any long text to see how it behaves...";
   const wordThreshold = 20;
 
   const [expanded, setExpanded] = useState(false);
@@ -73,7 +86,14 @@ const Posts = () => {
         </TouchableOpacity>
       </View>
       {/* post about */}
-      <Text style={{ fontFamily: font.poppins, fontSize: 13, marginTop: 10 }}>
+      <Text
+        style={{
+          fontFamily: font.poppins,
+          fontSize: width * 0.04,
+          marginTop: 10,
+          color: Colors.mildGrey,
+        }}
+      >
         {expanded
           ? initialText
           : `${initialText.split(" ").slice(0, wordThreshold).join(" ")}...`}
@@ -85,15 +105,28 @@ const Posts = () => {
           </Text>
         </TouchableOpacity>
       )}
+      <Text style={{ color: Colors.violet }}>{post.PostLink}</Text>
       {/* post image */}
-      <Image
-        source={require("../assets/images/post.jpg")}
-        style={{
-          width: "100%",
-          height: 300,
-          resizeMode: "center",
-        }}
-      />
+      {post.Images && (
+        <FlatList
+          data={post.Images}
+          style={{ borderWidth: 0 }}
+          horizontal={true}
+          renderItem={({ item }) => (
+            <Image
+              source={{ uri: item }}
+              style={{
+                width: post.Images.length == 1 ? width * 0.84 : width * 0.8, // Adjust width as needed
+                height: height * 0.3,
+                objectFit: "contain",
+                borderWidth: 1,
+              }}
+            />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      )}
+      {/* </ScrollView> */}
       {/* post details */}
       <View
         style={{

@@ -33,6 +33,7 @@ import Skeleton from "../Skeletons/Skeleton";
 import { Button } from "react-native-paper";
 import { Dimensions } from "react-native";
 import { RefreshControl } from "react-native";
+import Posts from "../components/Posts";
 
 const Profile = ({ navigation }) => {
   const { user, setUser } = useData();
@@ -503,6 +504,12 @@ const Profile = ({ navigation }) => {
           </Text>
           <FontAwesomeIcon icon={faSignOut} size={20} color="#ffaa80" />
         </TouchableOpacity>
+      </View>
+      {/* posts */}
+      <View>
+        {user.Posts.map((post) => (
+          <Posts post={post} />
+        ))}
       </View>
     </ScrollView>
   );
