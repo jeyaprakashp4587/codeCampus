@@ -32,6 +32,7 @@ import { storage } from "../Firebase/Firebase";
 import { ActivityIndicator } from "react-native";
 import Skeleton from "../Skeletons/Skeleton";
 import { LinearGradient } from "expo-linear-gradient";
+import Actitivity from "../hooks/ActivityHook";
 
 const { width, height } = Dimensions.get("window");
 
@@ -102,6 +103,7 @@ const ChallengeDetail = () => {
       );
       if (res.data == "Uploaded") {
         setUploadStatus("Uploaded");
+        Actitivity(user._id, `${selectedChallenge.title} Completed`);
         // console.log(res.data);
       }
     }

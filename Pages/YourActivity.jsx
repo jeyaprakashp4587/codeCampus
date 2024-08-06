@@ -9,13 +9,14 @@ import { useData } from "../Context/Contexter";
 import Api from "../Api";
 import axios from "axios";
 import { Dimensions } from "react-native";
+import TopicsText from "../utils/TopicsText";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCode } from "@fortawesome/free-solid-svg-icons";
 
 const YourActivity = () => {
   const { width } = Dimensions.get("window");
   const { user } = useData();
   useEffect(() => {
-    // console.log(user._id);
-    // Actitivity(user._id, "Logged IN");
     getAllActivityDates();
   }, []);
   // get the activity dates
@@ -27,38 +28,60 @@ const YourActivity = () => {
     );
     if (res.data) {
       const markedDatesArray = res.data.map((date) => ({
-        [date]: { marked: true },
+        [date]: {
+          marked: true,
+        },
       }));
       const markedDates = Object.assign({}, ...markedDatesArray);
       setDates(markedDates);
     }
   };
   // get the particular date activities
+  const [selectesDate, setSeletedDate] = useState("");
+
+  const selectedDatefun = (date) => {
+    getParticularDateActivities(date.dateString);
+  };
+  // get particuar date function
   const getParticularDateActivities = async (date) => {
-    console.log(date.dateString);
+    setSeletedDate(date);
     const res = await axios.post(
       `${Api}/Activity/getParticularDateActitvities/${user._id}`,
-      { Date: date.dateString }
+      { Date: date }
     );
     if (res.data) {
       setActivitiesList(res.data);
-      console.log(res.data);
+    } else {
+      setActivitiesList([]);
     }
   };
 
   return (
     <View style={pageView}>
+      {/* code icon  */}
+      <FontAwesomeIcon
+        icon={faCode}
+        size={200}
+        style={{
+          position: "absolute",
+          opacity: 0.8,
+          color: Colors.veryLightGrey,
+          alignSelf: "center",
+          top: "60%",
+        }}
+      />
       {/* heading text */}
       <HeadingText text="Your Activities" />
       {/* calender preview */}
       <Calendar
-        style={{ borderWidth: 0, width: "100%" }}
+        style={{ borderWidth: 0, width: "100%", height: "auto" }}
         markedDates={dates}
-        onDayPress={getParticularDateActivities}
+        onDayPress={selectedDatefun}
       />
       {/* list Activities */}
       <HrLine width="100%" />
       <ScrollView>
+        <TopicsText text={selectesDate ? selectesDate : ""} />
         {activitiesList.map((item, index) => (
           <Text
             style={{
@@ -73,7 +96,7 @@ const YourActivity = () => {
             }}
             key={index}
           >
-            {item.activityName}
+            {index + 1}. {item.activityName}
           </Text>
         ))}
       </ScrollView>

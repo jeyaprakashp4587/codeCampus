@@ -37,7 +37,6 @@ const Home = () => {
     setTimeout(() => {
       setLoad(true);
     }, 100);
-    ActivityHook(user._id, "sign in");
   }, []);
 
   // refresh page

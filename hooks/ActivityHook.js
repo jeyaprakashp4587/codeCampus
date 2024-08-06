@@ -4,7 +4,6 @@ import Api from "../Api";
 
 const Actitivity = async (userId, ActivityName) => {
   const date = moment().format("YYYY-MM-DD");
-  console.log(userId, ActitivityN);
   const res = await axios.post(`${Api}/Activity/setActitvity/${userId}`, {
     ActivityName: ActivityName,
     Date: date,

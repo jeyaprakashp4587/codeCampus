@@ -17,6 +17,7 @@ import TopicsText from "../utils/TopicsText";
 import PragraphText from "../utils/PragraphText";
 import Api from "../Api";
 import axios from "axios";
+import Actitivity from "../hooks/ActivityHook";
 
 const { width, height } = Dimensions.get("window");
 
@@ -31,6 +32,7 @@ const SelectedCourse = ({ navigation }) => {
     if (res.data.Email) {
       setUser(res.data);
       Alert.alert("Course Added Successfully");
+      Actitivity(user._id, `${selectedCourse.name} Added`);
     } else {
       Alert.alert(res.data);
     }

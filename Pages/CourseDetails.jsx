@@ -15,6 +15,7 @@ import PragraphText from "../utils/PragraphText";
 import axios from "axios";
 import Api from "../Api";
 import { Button } from "react-native-paper";
+import Actitivity from "../hooks/ActivityHook";
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,6 +29,7 @@ const CourseDetails = ({ navigation }) => {
   } = useData();
 
   const HandleCourse = async (item) => {
+    await Actitivity(user._id, "course added");
     setselectedTechnology({ web: item.web, name: item.name });
     navigation.navigate("learn");
     const res = await axios.post(`${Api}/Courses/addTech`, {

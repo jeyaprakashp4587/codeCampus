@@ -30,6 +30,7 @@ import { storage } from "../Firebase/Firebase";
 import axios from "axios";
 import Api from "../Api";
 import { useRef } from "react";
+import Actitivity from "../hooks/ActivityHook";
 
 const Post = () => {
   const { user } = useData();
@@ -100,6 +101,7 @@ const Post = () => {
     if (res.data == "Uploaded") {
       setUploadText("Uploaded");
       setUploadIndi(false);
+      Actitivity(user._id, "Post Uploaded");
       setImages([]);
       postLink.current = "";
       postText.current = "";
