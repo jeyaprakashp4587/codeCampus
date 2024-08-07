@@ -12,7 +12,7 @@ import { Colors, font } from "../constants/Colors";
 import { faComment } from "@fortawesome/free-regular-svg-icons";
 import { Dimensions } from "react-native";
 
-const Posts = ({ post }) => {
+const Posts = ({ post, index }) => {
   const { width, height } = Dimensions.get("window");
   console.log(post);
   // console.log(post);
@@ -33,6 +33,7 @@ const Posts = ({ post }) => {
   };
   return (
     <View
+      key={index}
       style={{
         // borderWidth: 1,
         height: expanded ? "auto" : "auto",
@@ -112,8 +113,9 @@ const Posts = ({ post }) => {
           data={post.Images}
           style={{ borderWidth: 0 }}
           horizontal={true}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <Image
+              key={index}
               source={{ uri: item }}
               style={{
                 width: post.Images.length == 1 ? width * 0.84 : width * 0.8, // Adjust width as needed

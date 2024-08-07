@@ -37,7 +37,7 @@ import Posts from "../components/Posts";
 
 const Profile = ({ navigation }) => {
   const { user, setUser } = useData();
-  const { width, height } = Dimensions.get("screen");
+  const { width, height } = Dimensions.get("window");
 
   // get permission for image picker
   const ImagePermission = async () => {
@@ -507,8 +507,8 @@ const Profile = ({ navigation }) => {
       </View>
       {/* posts */}
       <View>
-        {user.Posts.map((post) => (
-          <Posts post={post} />
+        {user.Posts.map((post, index) => (
+          <Posts post={post} index={index} />
         ))}
       </View>
     </ScrollView>

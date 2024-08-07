@@ -60,7 +60,7 @@ const Home = () => {
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate("profile")}>
           <Image
-            source={require("../assets/images/pr.png")}
+            source={{ uri: user?.Images?.profile }}
             style={[
               styles.profileImage,
               {
