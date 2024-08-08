@@ -1,8 +1,20 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React from "react";
+import { useData } from "../Context/Contexter";
+import HeadingText from "../utils/HeadingText";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
-const userProfile = () => {
+const UserProfile = () => {
   const { width, height } = Dimensions.get("window");
+  const { selectedUser } = useData();
+
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: "white" }}
@@ -20,7 +32,7 @@ const userProfile = () => {
       <View style={{ borderWidth: 0 }}>
         <Image
           source={{
-            uri: user?.Images.coverImg,
+            uri: selectedUser?.Images?.coverImg,
           }}
           style={{ width: "100%", height: 220, resizeMode: "cover" }}
         />
@@ -36,9 +48,9 @@ const userProfile = () => {
         >
           <Image
             source={{
-              uri: user?.Images.profile
-                ? user?.Images.profile
-                : user.Gender === "Male"
+              uri: selectedUser?.Images?.profile
+                ? selectedUser?.Images?.profile
+                : selectedUser.Gender === "Male"
                 ? "https://i.ibb.co/3T4mNMm/man.png"
                 : "https://i.ibb.co/3mCcQp9/woman.png",
             }}
@@ -60,7 +72,7 @@ const userProfile = () => {
               letterSpacing: 1,
             }}
           >
-            {user?.firstName} {user.LastName}
+            {selectedUser?.firstName} {selectedUser.LastName}
           </Text>
           <Text
             style={{
@@ -69,7 +81,7 @@ const userProfile = () => {
               letterSpacing: 1,
             }}
           >
-            {user?.Bio ? user.Bio : "I want to become a Winner"}
+            {selectedUser?.Bio ? selectedUser.Bio : "I want to become a Winner"}
           </Text>
           {/* Update User Info Modal */}
 
@@ -82,7 +94,7 @@ const userProfile = () => {
               letterSpacing: 1,
             }}
           >
-            {user?.InstitudeName}
+            {selectedUser?.InstitudeName}
           </Text>
           <Text
             style={{
@@ -91,7 +103,7 @@ const userProfile = () => {
               letterSpacing: 1,
             }}
           >
-            {user?.District}, {user?.State}
+            {selectedUser?.District}, {selectedUser?.State}
           </Text>
         </View>
       </View>
@@ -123,7 +135,7 @@ const userProfile = () => {
               letterSpacing: 1,
             }}
           >
-            {user?.Followers?.length}
+            {selectedUser?.Followers?.length}
           </Text>
         </View>
         <View>
@@ -144,7 +156,7 @@ const userProfile = () => {
               letterSpacing: 1,
             }}
           >
-            {user?.Following?.length}
+            {selectedUser?.Following?.length}
           </Text>
         </View>
         <View>
@@ -165,7 +177,7 @@ const userProfile = () => {
               letterSpacing: 1,
             }}
           >
-            {user?.Posts?.length}
+            {selectedUser?.Posts?.length}
           </Text>
         </View>
       </View>
@@ -173,4 +185,4 @@ const userProfile = () => {
   );
 };
 
-export default userProfile;
+export default UserProfile;

@@ -17,12 +17,11 @@ import Api from "../Api";
 import { FlatList } from "react-native";
 import { Dimensions } from "react-native";
 import Ripple from "react-native-material-ripple";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faAdd, faUserFriends } from "@fortawesome/free-solid-svg-icons";
+import { useData } from "../Context/Contexter";
 
 const Search = ({ navigation }) => {
   const { width, height } = Dimensions.get("window");
-  //
+  const { setSelectedUser } = useData();
   const userName = useRef(null);
   const [users, setUsers] = useState();
   const handleSearch = debounce((text) => {
@@ -74,6 +73,10 @@ const Search = ({ navigation }) => {
           style={{ marginTop: 20 }}
           renderItem={(user) => (
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("userprofile");
+                setSelectedUser(user.item);
+              }}
               style={{
                 width: "100%",
                 padding: height * 0.015,
