@@ -73,10 +73,6 @@ const Search = ({ navigation }) => {
           style={{ marginTop: 20 }}
           renderItem={(user) => (
             <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("userprofile");
-                setSelectedUser(user.item);
-              }}
               style={{
                 width: "100%",
                 padding: height * 0.015,
@@ -106,6 +102,10 @@ const Search = ({ navigation }) => {
                 {user.item.firstName} {user.item.LastName}
               </Text>
               <Ripple
+                onPress={() => {
+                  navigation.navigate("userprofile");
+                  setSelectedUser(user.item);
+                }}
                 style={{ backgroundColor: Colors.violet, borderRadius: 10 }}
               >
                 <Text

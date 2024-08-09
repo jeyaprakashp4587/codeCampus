@@ -365,7 +365,7 @@ const Profile = ({ navigation }) => {
               letterSpacing: 1,
             }}
           >
-            Followers
+            Networks
           </Text>
           <Text
             style={{
@@ -376,27 +376,6 @@ const Profile = ({ navigation }) => {
             }}
           >
             {user?.Followers?.length}
-          </Text>
-        </View>
-        <View>
-          <Text
-            style={{
-              fontWeight: "600",
-              color: Colors.mildGrey,
-              letterSpacing: 1,
-            }}
-          >
-            Following
-          </Text>
-          <Text
-            style={{
-              textAlign: "center",
-              color: Colors.mildGrey,
-              fontSize: width * 0.04,
-              letterSpacing: 1,
-            }}
-          >
-            {user?.Following?.length}
           </Text>
         </View>
         <View>

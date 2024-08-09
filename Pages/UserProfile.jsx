@@ -6,14 +6,48 @@ import {
   Text,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useData } from "../Context/Contexter";
 import HeadingText from "../utils/HeadingText";
-import { Colors } from "react-native/Libraries/NewAppScreen";
+import Fontisto from "@expo/vector-icons/Fontisto";
+import Ripple from "react-native-material-ripple";
+import { Colors } from "../constants/Colors";
+import Posts from "../components/Posts";
+import HrLine from "../utils/HrLine";
+import axios from "axios";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import Api from "../Api";
 
 const UserProfile = () => {
   const { width, height } = Dimensions.get("window");
-  const { selectedUser } = useData();
+  const { selectedUser, user } = useData();
+  // ckech if this user follwer
+  const [existsFollower, setExistsfollower] = useState(false);
+  const findExistsFollower = async () => {
+    const res = await axios.post(`${Api}/Following/findExistsConnection`, {
+      ConnectionId: selectedUser?._id,
+      userId: user._id,
+    });
+    if (res.data) {
+      setExistsfollower(true);
+      console.log(res.data);
+    } else {
+      setExistsfollower(false);
+    }
+  };
+  useEffect(() => {
+    findExistsFollower();
+  }, [selectedUser]);
+  // add folower
+  const addFollower = async () => {
+    const res = await axios.post(`${Api}/Following/addConnection`, {
+      ConnectionId: selectedUser?._id,
+      userId: user._id,
+    });
+    if (res.data) {
+      setExistsfollower(true);
+    }
+  };
 
   return (
     <ScrollView
@@ -50,7 +84,7 @@ const UserProfile = () => {
             source={{
               uri: selectedUser?.Images?.profile
                 ? selectedUser?.Images?.profile
-                : selectedUser.Gender === "Male"
+                : selectedUser?.Gender === "Male"
                 ? "https://i.ibb.co/3T4mNMm/man.png"
                 : "https://i.ibb.co/3mCcQp9/woman.png",
             }}
@@ -72,7 +106,7 @@ const UserProfile = () => {
               letterSpacing: 1,
             }}
           >
-            {selectedUser?.firstName} {selectedUser.LastName}
+            {selectedUser?.firstName} {selectedUser?.LastName}
           </Text>
           <Text
             style={{
@@ -115,28 +149,58 @@ const UserProfile = () => {
           justifyContent: "space-around",
           marginVertical: height * -0.02,
           marginBottom: 5,
+          flexWrap: "wrap",
         }}
       >
         <View>
-          <Text
-            style={{
-              fontWeight: "600",
-              color: Colors.mildGrey,
-              letterSpacing: 1,
-            }}
-          >
-            Followers
-          </Text>
-          <Text
-            style={{
-              textAlign: "center",
-              color: Colors.mildGrey,
-              fontSize: width * 0.04,
-              letterSpacing: 1,
-            }}
-          >
-            {selectedUser?.Followers?.length}
-          </Text>
+          {existsFollower ? (
+            <Ripple
+              style={{
+                backgroundColor: Colors.violet,
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: width * 0.03,
+                borderRadius: 5,
+                columnGap: 10,
+              }}
+            >
+              <SimpleLineIcons name="user-following" size={20} color="white" />
+              <Text
+                style={{
+                  fontSize: width * 0.04,
+                  color: "white",
+                  letterSpacing: 1,
+                }}
+              >
+                Follow
+              </Text>
+            </Ripple>
+          ) : (
+            <Ripple
+              onPress={addFollower}
+              style={{
+                backgroundColor: Colors.mildGrey,
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: width * 0.03,
+                borderRadius: 5,
+                columnGap: 10,
+              }}
+            >
+              <SimpleLineIcons name="user-follow" size={20} color="white" />
+              <Text
+                style={{
+                  fontSize: width * 0.04,
+                  color: "white",
+                  letterSpacing: 1,
+                }}
+              >
+                Follow
+              </Text>
+            </Ripple>
+          )}
         </View>
         <View>
           <Text
@@ -146,7 +210,7 @@ const UserProfile = () => {
               letterSpacing: 1,
             }}
           >
-            Following
+            NetWorks
           </Text>
           <Text
             style={{
@@ -156,7 +220,7 @@ const UserProfile = () => {
               letterSpacing: 1,
             }}
           >
-            {selectedUser?.Following?.length}
+            {selectedUser?.Connections?.length}
           </Text>
         </View>
         <View>
@@ -180,6 +244,24 @@ const UserProfile = () => {
             {selectedUser?.Posts?.length}
           </Text>
         </View>
+      </View>
+      {/* post */}
+      {/* H */}
+      <HrLine />
+      <Text
+        style={{
+          color: Colors.mildGrey,
+          fontSize: width * 0.06,
+          letterSpacing: 1,
+          paddingHorizontal: 20,
+        }}
+      >
+        Posts
+      </Text>
+      <View>
+        {selectedUser?.Posts.map((post, index) => (
+          <Posts post={post} index={index} />
+        ))}
       </View>
     </ScrollView>
   );

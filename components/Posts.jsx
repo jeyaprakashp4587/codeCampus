@@ -14,7 +14,7 @@ import { Dimensions } from "react-native";
 
 const Posts = ({ post, index }) => {
   const { width, height } = Dimensions.get("window");
-  console.log(post);
+  // console.log(post);
   // console.log(post);
   let initialText = post.PostText;
   // initialText =
