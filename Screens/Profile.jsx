@@ -375,7 +375,7 @@ const Profile = ({ navigation }) => {
               letterSpacing: 1,
             }}
           >
-            {user?.Followers?.length}
+            {user?.Connections?.length}
           </Text>
         </View>
         <View>

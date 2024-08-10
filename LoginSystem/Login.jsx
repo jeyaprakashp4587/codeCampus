@@ -49,7 +49,7 @@ const Login = ({ navigation }) => {
   const HandleLogin = () => {
     if (Validation()) {
       axios.post(`${Api}/LogIn/signIn`, form).then((data) => {
-        console.log(data.data);
+        // console.log(data.data);
         if (data.data.firstName) {
           AsyncStorage.setItem("Email", data.data.Email);
           setUser(data.data);
