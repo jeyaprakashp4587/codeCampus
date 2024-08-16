@@ -55,6 +55,7 @@ const YourCourses = () => {
       <HeadingText text="Your Courses" />
       {/* wrappers */}
       <ScrollView
+        showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refresh} onRefresh={HandleRefresh} />
         }
@@ -124,6 +125,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
     elevation: 5,
+    marginHorizontal: 3,
     padding: width * 0.05, // 5% of screen width
   },
   courseContainer: {

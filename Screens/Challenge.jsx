@@ -5,6 +5,7 @@ import {
   View,
   Image,
   StatusBar,
+  ImageBackground,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Colors, pageView } from "../constants/Colors";
@@ -33,11 +34,6 @@ const Challenge = ({ navigation }) => {
       ChallengeName: "App development",
       bgColor: "#8cb3d9",
       img: "https://i.ibb.co/WcPBv7x/app.png",
-    },
-    {
-      ChallengeName: "Problem Solving",
-      bgColor: "#b3b3ff",
-      img: "https://i.ibb.co/QQT3CGx/problem-solving.png",
     },
   ];
 
@@ -101,7 +97,7 @@ const Challenge = ({ navigation }) => {
             }}
             style={{
               width: "100%",
-              backgroundColor: "#adc2eb",
+              backgroundColor: "skyblue",
               height: 100,
               justifyContent: "center",
               alignItems: "center",
@@ -116,7 +112,7 @@ const Challenge = ({ navigation }) => {
             <PragraphText
               text="My Challenges"
               fsize={19}
-              color={Colors.veryLightGrey}
+              color={Colors.white}
             />
           </TouchableOpacity>
         </View>

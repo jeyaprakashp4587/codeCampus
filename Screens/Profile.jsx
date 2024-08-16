@@ -159,7 +159,9 @@ const Profile = ({ navigation }) => {
         ) : (
           <Image
             source={{
-              uri: user?.Images.coverImg,
+              uri: user?.Images?.coverImg
+                ? user?.Images?.coverImg
+                : user?.Images.Profile,
             }}
             style={{ width: "100%", height: 220, resizeMode: "cover" }}
           />
@@ -192,8 +194,8 @@ const Profile = ({ navigation }) => {
           ) : (
             <Image
               source={{
-                uri: user?.Images.profile
-                  ? user?.Images.profile
+                uri: user?.Images?.profile
+                  ? user?.Images?.profile
                   : user.Gender === "Male"
                   ? "https://i.ibb.co/3T4mNMm/man.png"
                   : "https://i.ibb.co/3mCcQp9/woman.png",

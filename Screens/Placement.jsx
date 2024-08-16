@@ -1,11 +1,20 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { pageView } from "../constants/Colors";
+import { Colors, pageView } from "../constants/Colors";
 
 const Placement = () => {
   return (
     <View style={pageView}>
-      <Text>pl</Text>
+      <Text
+        style={{
+          fontSize: 20,
+          padding: 10,
+          color: Colors.mildGrey,
+          letterSpacing: 2,
+        }}
+      >
+        We Are Working on it... :)
+      </Text>
     </View>
   );
 };

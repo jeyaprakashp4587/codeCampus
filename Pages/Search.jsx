@@ -63,6 +63,7 @@ const Search = ({ navigation }) => {
             flex: 1,
             padding: 10,
           }}
+          focusable={true}
           onChangeText={handleSearch}
         />
       </TouchableOpacity>

@@ -30,7 +30,7 @@ const UserProfile = () => {
     });
     if (res.data) {
       setExistsfollower(true);
-      console.log(res.data);
+      // console.log(res.data);
     } else {
       setExistsfollower(false);
     }
