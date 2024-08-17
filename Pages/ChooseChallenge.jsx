@@ -17,7 +17,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { Feather } from "@expo/vector-icons";
 import { Button, Menu } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBars,
+  faHandDots,
+  faListDots,
+} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Api from "../Api";
 import Skeleton from "../Skeletons/Skeleton";
@@ -38,7 +42,7 @@ const ChooseChallenge = ({ navigation }) => {
   const [visible, setVisible] = useState(false);
 
   const getChallenges = async (ChallengeTopic) => {
-    console.log(ChallengeTopic);
+    // console.log(ChallengeTopic);
     const res = await axios.post(`${Api}/Challenges/getChallenges`, {
       ChallengeTopic: ChallengeTopic,
     });
@@ -102,7 +106,7 @@ const ChooseChallenge = ({ navigation }) => {
           anchor={
             <TouchableOpacity onPress={openMenu}>
               <FontAwesomeIcon
-                icon={faBars}
+                icon={faListDots}
                 color={Colors.mildGrey}
                 size={20}
               />
@@ -115,7 +119,17 @@ const ChooseChallenge = ({ navigation }) => {
               rippleColor="orange"
               onPress={() => HandleSelectLevel(level.name)}
               title={level.name}
-              style={{ backgroundColor: Colors.mildGrey }}
+              titleStyle={{
+                color: "white",
+                letterSpacing: 1,
+                fontWeight: 300,
+              }}
+              style={{
+                backgroundColor: Colors.mildGrey,
+                borderLeftWidth: 0,
+                borderRightWidth: 0,
+                borderTopWidth: 1,
+              }}
             />
           ))}
         </Menu>

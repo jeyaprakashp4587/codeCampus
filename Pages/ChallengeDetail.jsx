@@ -38,7 +38,7 @@ const { width, height } = Dimensions.get("window");
 
 const ChallengeDetail = () => {
   const { selectedChallenge, user, setUser, setSelectedChallenge } = useData();
-  // console.log(selectedChallenge);
+  // console.log("sele", selectedChallenge);
   const [Buttons, setButton] = useState();
   const [uploadTut, setUploadTut] = useState();
   const [uploadStatus, setUploadStatus] = useState();
@@ -126,7 +126,7 @@ const ChallengeDetail = () => {
     checkChallengeStatus();
     getParticularChallenge();
   }, []);
-  // fetch the particular challlenge
+  // fetch the particular challenge
   const getParticularChallenge = async () => {
     const res = await axios.post(
       `${Api}/Challenges/getParticularChallenge/${user._id}`,
@@ -150,7 +150,6 @@ const ChallengeDetail = () => {
   };
 
   return (
-    // <View style={[styles.pageView, { paddingVertical: 20 }]}>
     <LinearGradient
       colors={["#ffe6f0", "white", "#e6f7ff"]}
       style={{
@@ -429,7 +428,6 @@ const ChallengeDetail = () => {
               <Text></Text>
             )}
             {/*  */}
-
             <Ripple
               onPress={HandleUpload}
               style={{
@@ -454,7 +452,6 @@ const ChallengeDetail = () => {
         ) : null}
       </ScrollView>
     </LinearGradient>
-    // </View>
   );
 };
 

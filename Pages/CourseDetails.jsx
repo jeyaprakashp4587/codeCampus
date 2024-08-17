@@ -27,7 +27,6 @@ const CourseDetails = ({ navigation }) => {
     user,
     setUser,
   } = useData();
-
   const HandleCourse = async (item) => {
     await Actitivity(user._id, "course added");
     setselectedTechnology({ web: item.web, name: item.name });
