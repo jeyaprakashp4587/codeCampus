@@ -27,11 +27,11 @@ const Challenge = ({ navigation }) => {
   const Challenges = [
     {
       ChallengeName: "Web Development",
-      bgColor: "#008080",
+      bgColor: "#80bfff",
       img: "https://i.ibb.co/qn5dFQL/data.png",
     },
     {
-      ChallengeName: "App development",
+      ChallengeName: "App Development",
       bgColor: "#8cb3d9",
       img: "https://i.ibb.co/WcPBv7x/app.png",
     },
@@ -68,7 +68,7 @@ const Challenge = ({ navigation }) => {
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: 10,
-                marginTop: 30,
+                marginBottom: 30,
                 elevation: 5,
                 flexDirection: "row",
                 columnGap: 20,
@@ -97,12 +97,12 @@ const Challenge = ({ navigation }) => {
             }}
             style={{
               width: "100%",
-              backgroundColor: "skyblue",
+              backgroundColor: "#d6d6c2",
               height: 100,
               justifyContent: "center",
               alignItems: "center",
               borderRadius: 10,
-              marginTop: 30,
+              marginBottom: 30,
               elevation: 5,
               flexDirection: "row",
               columnGap: 20,
@@ -117,7 +117,6 @@ const Challenge = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-      {/* <StatusBar backgroundColor="hsl(336, 100%, 97%)" /> */}
     </LinearGradient>
   );
 };

@@ -163,7 +163,11 @@ const Profile = ({ navigation }) => {
                 ? user?.Images?.coverImg
                 : user?.Images.Profile,
             }}
-            style={{ width: "100%", height: 220, resizeMode: "cover" }}
+            style={{
+              width: "100%",
+              height: height * 0.27,
+              resizeMode: "cover",
+            }}
           />
         )}
 
@@ -183,7 +187,7 @@ const Profile = ({ navigation }) => {
             style={{
               position: "absolute",
               left: width * 0.23,
-              top: height * 0.07,
+              top: height * 0.099,
               zIndex: 10,
             }}
           >

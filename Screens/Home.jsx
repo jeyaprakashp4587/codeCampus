@@ -101,7 +101,7 @@ const Home = () => {
           >
             <Image
               source={require("../assets/images/carrer.png")}
-              style={[styles.icon, { tintColor: "#52527a" }]}
+              style={[styles.icon, { tintColor: "#333333" }]}
             />
             <Text
               style={[styles.ideaText, { fontSize: width * 0.02 }]}
@@ -143,7 +143,7 @@ const Home = () => {
           >
             <Image
               source={require("../assets/images/calendar.png")}
-              style={[styles.icon, { tintColor: "#006666" }]}
+              style={[styles.icon, { tintColor: "#0077b3" }]}
             />
             <Text
               style={[styles.ideaText, { fontSize: width * 0.02 }]}

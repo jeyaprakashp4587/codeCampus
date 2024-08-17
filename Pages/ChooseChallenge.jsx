@@ -38,6 +38,7 @@ const ChooseChallenge = ({ navigation }) => {
   const [visible, setVisible] = useState(false);
 
   const getChallenges = async (ChallengeTopic) => {
+    console.log(ChallengeTopic);
     const res = await axios.post(`${Api}/Challenges/getChallenges`, {
       ChallengeTopic: ChallengeTopic,
     });
