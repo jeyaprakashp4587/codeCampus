@@ -17,7 +17,7 @@ import Api from "../Api";
 import { ScrollView } from "react-native";
 import { RefreshControl } from "react-native";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 const YourCourses = () => {
   const { user, setUser } = useData();

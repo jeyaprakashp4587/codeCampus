@@ -13,7 +13,7 @@ const Placement = () => {
           letterSpacing: 2,
         }}
       >
-        We Are Working on it... :) and it will be add comm
+        We Are Working on it... :) and it will be add comm small update and push
       </Text>
     </View>
   );
