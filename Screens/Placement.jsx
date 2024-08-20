@@ -6,6 +6,7 @@ const Placement = () => {
   return (
     <View style={pageView}>
       <Text
+        numberOfLines={2}
         style={{
           fontSize: 20,
           padding: 10,
@@ -14,6 +15,7 @@ const Placement = () => {
         }}
       >
         We Are Working on it... :) and it will be add comm small update and push
+        and ake some ui update
       </Text>
     </View>
   );
