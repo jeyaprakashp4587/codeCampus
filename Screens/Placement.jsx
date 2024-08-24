@@ -14,8 +14,7 @@ const Placement = () => {
           letterSpacing: 2,
         }}
       >
-        We Are Working on it... :) and it will be add comm small update and push
-        and ake some ui update
+        I'm Back
       </Text>
     </View>
   );
