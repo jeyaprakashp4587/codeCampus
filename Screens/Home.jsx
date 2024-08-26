@@ -68,6 +68,7 @@ const Home = () => {
                 height: width * 0.12,
                 borderRadius: (width * 0.12) / 2,
                 borderWidth: 1,
+                // borderColor: "#404040",
               },
             ]}
           />
@@ -94,6 +95,7 @@ const Home = () => {
           <RefreshControl refreshing={refControl} onRefresh={refreshUser} />
         }
       >
+        {/* ideas wrapper */}
         <View style={styles.ideasWrapper}>
           <TouchableOpacity
             style={styles.ideaBox}
@@ -101,7 +103,7 @@ const Home = () => {
           >
             <Image
               source={require("../assets/images/carrer.png")}
-              style={[styles.icon, { tintColor: "#333333" }]}
+              style={[styles.icon, { tintColor: "#ff9999" }]}
             />
             <Text
               style={[styles.ideaText, { fontSize: width * 0.02 }]}
@@ -116,7 +118,7 @@ const Home = () => {
           >
             <Image
               source={require("../assets/images/learning.png")}
-              style={[styles.icon, { tintColor: "orange" }]}
+              style={[styles.icon, { tintColor: "#8600b3" }]}
             />
             <Text
               numberOfLines={1}
@@ -127,14 +129,14 @@ const Home = () => {
           </TouchableOpacity>
           <View style={styles.ideaBox}>
             <Image
-              source={require("../assets/images/reward.png")}
+              source={{ uri: "https://i.ibb.co/5n0FQH4/submit.png" }}
               style={[styles.icon, { tintColor: "#006622" }]}
             />
             <Text
               numberOfLines={1}
               style={[styles.ideaText, { fontSize: width * 0.02 }]}
             >
-              Rewards
+              Assignment
             </Text>
           </View>
           <TouchableOpacity
@@ -156,7 +158,6 @@ const Home = () => {
         {/* post */}
         <View></View>
       </ScrollView>
-      {/* <StatusBar barStyle="dark-content" /> */}
     </View>
   );
 };
