@@ -14,7 +14,7 @@ const Placement = () => {
           letterSpacing: 2,
         }}
       >
-        I'm Back
+        I'm Back after big break
       </Text>
     </View>
   );

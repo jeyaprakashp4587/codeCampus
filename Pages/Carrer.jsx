@@ -178,6 +178,7 @@ const Carrer = ({ navigation }) => {
             "Optionals: Using optionals to handle the absence of values.",
             "Protocols: Defining blueprints of methods, properties, and other requirements.",
           ],
+          web: "https://www.swift.org/getting-started/",
         },
         {
           name: "react Native",
@@ -189,6 +190,7 @@ const Carrer = ({ navigation }) => {
             "Navigation: Implementing navigation between different screens.",
             "Native Modules: Integrating with native code to use platform-specific features.",
           ],
+          web: "https://reactnative.dev/docs/getting-started",
         },
         {
           name: "kotlin",
@@ -206,6 +208,7 @@ const Carrer = ({ navigation }) => {
             "Null Safety: Handling null values safely with nullable types.",
             "Coroutines: Simplifying asynchronous programming with coroutines.",
           ],
+          web: "https://kotlinlang.org/docs/basic-syntax.html",
         },
       ],
       topics: [
@@ -236,6 +239,7 @@ const Carrer = ({ navigation }) => {
             "Java Syntax: Learning the basic syntax and structure of Java.",
             "Exception Handling: Handling errors and exceptions gracefully.",
           ],
+          web: "https://www.w3schools.com/java/",
         },
       ],
       topics: [
@@ -270,6 +274,7 @@ const Carrer = ({ navigation }) => {
             "OOP Concepts: Applying object-oriented programming principles in C++.",
             "Memory Management: Managing memory manually using pointers and dynamic allocation.",
           ],
+          web: "https://www.geeksforgeeks.org/c-plus-plus/",
         },
       ],
       topics: [
