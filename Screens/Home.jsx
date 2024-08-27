@@ -159,6 +159,7 @@ const Home = () => {
           </TouchableOpacity>
         </View>
         {/* carousel  */}
+        <carouel />
 
         {/* post */}
         <View></View>
