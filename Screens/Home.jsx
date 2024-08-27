@@ -25,6 +25,7 @@ import { RefreshControl } from "react-native";
 import axios from "axios";
 import Api from "../Api";
 import ActivityHook from "../hooks/ActivityHook";
+import Carousel from "react-native-reanimated-carousel";
 
 const { width, height } = Dimensions.get("window");
 const Home = () => {
@@ -53,6 +54,8 @@ const Home = () => {
   if (!load) {
     return <HomeSkeleton />;
   }
+  // const carouel = [{ name: "jeya" }, { name: "prakash" }, { name: "money" }];
+  const carouel = new Array(10);
 
   return (
     <View style={[pageView, { paddingHorizontal: 15 }]}>
@@ -155,6 +158,8 @@ const Home = () => {
             </Text>
           </TouchableOpacity>
         </View>
+        {/* carousel  */}
+
         {/* post */}
         <View></View>
       </ScrollView>
