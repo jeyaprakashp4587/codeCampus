@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
   StatusBar,
+  ImageBackground,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Colors, pageView } from "../constants/Colors";
@@ -26,6 +27,12 @@ import axios from "axios";
 import Api from "../Api";
 import ActivityHook from "../hooks/ActivityHook";
 import Carousel from "react-native-reanimated-carousel";
+// carousel images
+import learnImg from "../assets/images/learn.jpg";
+import practiceImg from "../assets/images/practice.jpg";
+import achiveImg from "../assets/images/achive.jpg";
+
+// code -----------
 
 const { width, height } = Dimensions.get("window");
 const Home = () => {
@@ -54,9 +61,23 @@ const Home = () => {
   if (!load) {
     return <HomeSkeleton />;
   }
-  // const carouel = [{ name: "jeya" }, { name: "prakash" }, { name: "money" }];
-  const carouel = new Array(10);
 
+  const carouel = [
+    { name: "jeya", img: learnImg },
+    {
+      name: "prakash",
+      img: practiceImg,
+    },
+    { name: "money", img: achiveImg },
+  ];
+  // const carouel = new Array(10);
+  const data = [
+    { id: 1, color: "tomato" },
+    { id: 2, color: "orange" },
+    { id: 3, color: "gold" },
+    { id: 4, color: "green" },
+    { id: 5, color: "blue" },
+  ];
   return (
     <View style={[pageView, { paddingHorizontal: 15 }]}>
       {/* header */}
@@ -159,8 +180,27 @@ const Home = () => {
           </TouchableOpacity>
         </View>
         {/* carousel  */}
-        <carouel />
-
+        <Carousel
+          style={{ margin: "auto" }}
+          width={width * 0.9}
+          height={height * 0.3}
+          data={carouel}
+          renderItem={({ item }) => (
+            // <Image source={{ uri: item.img }} />
+            <ImageBackground source={{ uri: item.img }}>
+              <Text>{item.name}</Text>
+              <Text>f</Text>
+            </ImageBackground>
+          )}
+          loop
+          mode="parallax"
+          modeConfig={{
+            stackInterval: 18,
+            scaleInterval: 0.08,
+            rotateZDeg: 15,
+            translateX: -25,
+          }}
+        />
         {/* post */}
         <View></View>
       </ScrollView>
