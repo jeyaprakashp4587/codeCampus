@@ -28,9 +28,9 @@ import Api from "../Api";
 import ActivityHook from "../hooks/ActivityHook";
 import Carousel from "react-native-reanimated-carousel";
 // carousel images
-import learnImg from "../assets/images/learn.jpg";
-import practiceImg from "../assets/images/practice.jpg";
-import achiveImg from "../assets/images/achive.jpg";
+import learnImg from "../assets/images/learn.png";
+import practiceImg from "../assets/images/practice.png";
+import achiveImg from "../assets/images/achive.png";
 
 // code -----------
 
@@ -63,21 +63,16 @@ const Home = () => {
   }
 
   const carouel = [
-    { name: "jeya", img: learnImg },
+    { name: "Learn", img: learnImg, bgColor: "#ffcccc" },
     {
-      name: "prakash",
+      name: "Practice",
       img: practiceImg,
+      bgColor: "#cce6ff",
     },
-    { name: "money", img: achiveImg },
+    { name: "Win", img: achiveImg, bgColor: "#b3ffb3" },
   ];
   // const carouel = new Array(10);
-  const data = [
-    { id: 1, color: "tomato" },
-    { id: 2, color: "orange" },
-    { id: 3, color: "gold" },
-    { id: 4, color: "green" },
-    { id: 5, color: "blue" },
-  ];
+
   return (
     <View style={[pageView, { paddingHorizontal: 15 }]}>
       {/* header */}
@@ -182,17 +177,52 @@ const Home = () => {
         {/* carousel  */}
         <Carousel
           style={{ margin: "auto" }}
-          width={width * 0.9}
-          height={height * 0.3}
+          width={width * 0.7}
+          height={height * 0.23}
           data={carouel}
           renderItem={({ item }) => (
-            // <Image source={{ uri: item.img }} />
-            <ImageBackground source={{ uri: item.img }}>
-              <Text>{item.name}</Text>
-              <Text>f</Text>
-            </ImageBackground>
+            <View
+              style={{
+                flex: 1,
+                // borderWidth: 0.5,
+                elevation: 2,
+                borderRadius: 10,
+                overflow: "hidden",
+              }}
+            >
+              <LinearGradient
+                colors={["white", "white", item.bgColor]}
+                style={{
+                  flexDirection: "row",
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  // borderWidth: 0.4,
+                  // borderRadius: 10,
+                  padding: 20,
+                  overflow: "hidden",
+                }}
+                start={[1, 0]}
+                end={[0, 1]}
+              >
+                <Text
+                  style={{
+                    fontSize: width * 0.06,
+                    textTransform: "capitalize",
+                    color: Colors.lightGrey,
+                    fontWeight: "700",
+                    letterSpacing: 2,
+                  }}
+                >
+                  {item.name}
+                </Text>
+                <Image
+                  source={item.img}
+                  style={{ width: "60%", height: "70%" }}
+                />
+              </LinearGradient>
+            </View>
           )}
-          loop
           mode="parallax"
           modeConfig={{
             stackInterval: 18,
@@ -200,6 +230,9 @@ const Home = () => {
             rotateZDeg: 15,
             translateX: -25,
           }}
+          autoPlay={true}
+          snapEnabled={true}
+          autoPlayInterval={2000}
         />
         {/* post */}
         <View></View>
