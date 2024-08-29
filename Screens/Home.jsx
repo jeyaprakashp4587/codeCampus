@@ -32,6 +32,7 @@ import SuggestionWapper from "../components/SuggestionWapper";
 import learnImg from "../assets/images/learn.png";
 import practiceImg from "../assets/images/practice.png";
 import achiveImg from "../assets/images/achive.png";
+import PragraphText from "../utils/PragraphText";
 
 // code -----------
 
@@ -122,7 +123,18 @@ const Home = () => {
         }
       >
         {/* ideas wrapper */}
-        <Text></Text>
+        <Text
+          style={{
+            color: Colors.mildGrey,
+            fontSize: width * 0.04,
+            lineHeight: 30,
+            letterSpacing: 1,
+            paddingVertical: 10,
+            // fontWeight: "700",
+          }}
+        >
+          Good Morning {user?.firstName}!
+        </Text>
         <View style={styles.ideasWrapper}>
           <TouchableOpacity
             style={styles.ideaBox}
@@ -295,7 +307,6 @@ const styles = StyleSheet.create({
   ideasWrapper: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 20,
     padding: 5,
     // borderWidth: 1,
   },

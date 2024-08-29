@@ -11,6 +11,8 @@ import {
 import { ScrollView } from "react-native";
 import { faEye } from "@fortawesome/free-regular-svg-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import TopicsText from "../utils/TopicsText";
+import ParagraphText from "../utils/PragraphText";
 
 const SuggestionWapper = () => {
   const { width, height } = Dimensions.get("window");
@@ -23,7 +25,7 @@ const SuggestionWapper = () => {
           justifyContent: "space-between",
         }}
       >
-        <Text
+        {/* <Text
           style={{
             fontSize: width * 0.04,
             letterSpacing: 1,
@@ -31,14 +33,15 @@ const SuggestionWapper = () => {
           }}
         >
           Suggestions
-        </Text>
+        </Text> */}
+        <ParagraphText text="Suggestions" />
         <FontAwesomeIcon icon={faTimes} size={18} color={Colors.mildGrey} />
       </View>
       {/* list */}
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <LinearGradient
-          colors={["white", "white", "#fff5cc"]}
-          style={{ elevation: 3, margin: 5, borderRadius: 5 }}
+          colors={["white", "white", "#f2f2f2"]}
+          style={{ elevation: 2, margin: 5, borderRadius: 5 }}
           start={[0, 1]}
           end={[1, 1]}
         >
@@ -48,7 +51,6 @@ const SuggestionWapper = () => {
               alignItems: "center",
               width: width * 0.8,
               height: height * 0.1,
-
               paddingHorizontal: 15,
               columnGap: 7,
             }}
@@ -64,11 +66,11 @@ const SuggestionWapper = () => {
             />
             <View style={{ borderWidth: 0, flex: 1 }}>
               <Text
-                style={{ fontSize: width * 0.05, color: Colors.veryDarkGrey }}
+                style={{ fontSize: width * 0.04, color: Colors.veryDarkGrey }}
               >
                 Jeya Prakash
               </Text>
-              <Text style={{ fontSize: width * 0.034, color: Colors.mildGrey }}>
+              <Text style={{ fontSize: width * 0.03, color: Colors.mildGrey }}>
                 The MDT Hindu College
               </Text>
             </View>
@@ -77,46 +79,6 @@ const SuggestionWapper = () => {
             </Ripple>
           </Ripple>
         </LinearGradient>
-        {/*  */}
-        <Ripple
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            // borderWidth: 1,
-            width: width * 0.8,
-            // justifyContent: "space-between",
-            height: height * 0.1,
-            borderRadius: 5,
-            paddingHorizontal: 15,
-            columnGap: 7,
-            backgroundColor: "white",
-            elevation: 3,
-            margin: 5,
-          }}
-        >
-          <Image
-            source={{ uri: "https://i.ibb.co/10C0xJx/pr.png" }}
-            style={{
-              width: width * 0.15,
-              height: height * 0.07,
-              borderRadius: 50,
-              // borderWidth: 1,
-            }}
-          />
-          <View style={{ borderWidth: 0, flex: 1 }}>
-            <Text
-              style={{ fontSize: width * 0.05, color: Colors.veryDarkGrey }}
-            >
-              Jeya Prakash
-            </Text>
-            <Text style={{ fontSize: width * 0.034, color: Colors.mildGrey }}>
-              The MDT Hindu College
-            </Text>
-          </View>
-          <Ripple>
-            <FontAwesomeIcon icon={faEye} color={Colors.violet} size={23} />
-          </Ripple>
-        </Ripple>
       </ScrollView>
     </View>
   );
