@@ -27,6 +27,7 @@ import axios from "axios";
 import Api from "../Api";
 import ActivityHook from "../hooks/ActivityHook";
 import Carousel from "react-native-reanimated-carousel";
+import SuggestionWapper from "../components/SuggestionWapper";
 // carousel images
 import learnImg from "../assets/images/learn.png";
 import practiceImg from "../assets/images/practice.png";
@@ -63,13 +64,19 @@ const Home = () => {
   }
 
   const carouel = [
-    { name: "Learn", img: learnImg, bgColor: "#ffcccc" },
+    {
+      name: "Learning",
+      img: learnImg,
+      bgColor: "#ffcccc",
+      route: "carrerScreen",
+    },
     {
       name: "Practice",
       img: practiceImg,
       bgColor: "#cce6ff",
+      route: "Challenge",
     },
-    { name: "Win", img: achiveImg, bgColor: "#b3ffb3" },
+    { name: "Achive", img: achiveImg, bgColor: "#b3ffb3", route: "Post" },
   ];
   // const carouel = new Array(10);
 
@@ -115,6 +122,7 @@ const Home = () => {
         }
       >
         {/* ideas wrapper */}
+        <Text></Text>
         <View style={styles.ideasWrapper}>
           <TouchableOpacity
             style={styles.ideaBox}
@@ -177,14 +185,14 @@ const Home = () => {
         {/* carousel  */}
         <Carousel
           style={{ margin: "auto" }}
-          width={width * 0.7}
-          height={height * 0.23}
+          width={width * 0.9}
+          height={height * 0.22}
           data={carouel}
           renderItem={({ item }) => (
-            <View
+            <TouchableOpacity
+              onPress={() => navigation.navigate(item.route)}
               style={{
                 flex: 1,
-                // borderWidth: 0.5,
                 elevation: 2,
                 borderRadius: 10,
                 overflow: "hidden",
@@ -195,11 +203,8 @@ const Home = () => {
                 style={{
                   flexDirection: "row",
                   flex: 1,
-                  alignItems: "center",
+                  alignItems: "flex-end",
                   justifyContent: "space-between",
-                  // borderWidth: 0.4,
-                  // borderRadius: 10,
-                  padding: 20,
                   overflow: "hidden",
                 }}
                 start={[1, 0]}
@@ -209,31 +214,29 @@ const Home = () => {
                   style={{
                     fontSize: width * 0.06,
                     textTransform: "capitalize",
-                    color: Colors.lightGrey,
-                    fontWeight: "700",
-                    letterSpacing: 2,
+                    color: Colors.mildGrey,
+                    letterSpacing: 3,
+                    paddingLeft: 20,
+                    paddingBottom: 20,
+                    opacity: 0.7,
                   }}
                 >
                   {item.name}
                 </Text>
                 <Image
                   source={item.img}
-                  style={{ width: "60%", height: "70%" }}
+                  style={{ width: "80%", height: "100%" }}
                 />
               </LinearGradient>
-            </View>
+            </TouchableOpacity>
           )}
           mode="parallax"
-          modeConfig={{
-            stackInterval: 18,
-            scaleInterval: 0.08,
-            rotateZDeg: 15,
-            translateX: -25,
-          }}
           autoPlay={true}
-          snapEnabled={true}
           autoPlayInterval={2000}
+          // vertical={true}
         />
+        {/* friends suggestions */}
+        <SuggestionWapper />
         {/* post */}
         <View></View>
       </ScrollView>
