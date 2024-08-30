@@ -37,7 +37,7 @@ const UserProfile = () => {
   };
   useEffect(() => {
     findExistsFollower();
-  }, [selectedUser.firstName]);
+  }, [selectedUser?.firstName]);
   // add folower
   const addFollower = async () => {
     const res = await axios.post(`${Api}/Following/addConnection`, {
@@ -66,7 +66,9 @@ const UserProfile = () => {
       <View style={{ borderWidth: 0 }}>
         <Image
           source={{
-            uri: selectedUser?.Images?.coverImg,
+            uri: selectedUser?.Images?.coverImg
+              ? selectedUser?.Images?.coverImg
+              : "https://i.ibb.co/wwGDt0t/2151133955.jpg",
           }}
           style={{ width: "100%", height: 220, resizeMode: "cover" }}
         />

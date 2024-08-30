@@ -53,16 +53,13 @@ const Home = () => {
   const [refControl, setRefControl] = useState(false);
   const refreshUser = async () => {
     setRefControl(true);
+    setSuggestDisplay(true);
     const res = await axios.post(`${Api}/Login/getUser`, { userId: user._id });
     if (res.data) {
       setUser(res.data);
       setRefControl(false);
     }
   };
-  // load the skeleton
-  if (!load) {
-    return <HomeSkeleton />;
-  }
   // carousel data
   const carouel = [
     {
@@ -79,7 +76,30 @@ const Home = () => {
     },
     { name: "Achive", img: achiveImg, bgColor: "#b3ffb3", route: "Post" },
   ];
+  // suggest display
+  const [suggestDisplay, setSuggestDisplay] = useState(true);
+  const HandlesuggestDisplay = (data) => {
+    setSuggestDisplay(data);
+  };
+  // time message
+  const getCurrentGreeting = () => {
+    const currentHour = new Date().getHours();
 
+    if (currentHour < 12) {
+      return "Good Morning";
+    } else if (currentHour < 17) {
+      return "Good Afternoon";
+    } else if (currentHour < 20) {
+      return "Good Evening";
+    } else {
+      return "Good Night";
+    }
+  };
+  // ----------------------
+  // load the skeleton
+  if (!load) {
+    return <HomeSkeleton />;
+  }
   return (
     <View style={[pageView, { paddingHorizontal: 15 }]}>
       {/* header */}
@@ -132,7 +152,7 @@ const Home = () => {
             // fontWeight: "700",
           }}
         >
-          Good Morning {user?.firstName}!
+          {getCurrentGreeting()} {user?.firstName}!
         </Text>
         <View style={styles.ideasWrapper}>
           <TouchableOpacity
@@ -250,7 +270,9 @@ const Home = () => {
           // vertical={true}
         />
         {/* friends suggestions */}
-        <SuggestionWapper />
+        <View style={{ display: suggestDisplay ? "flex" : "none" }}>
+          <SuggestionWapper trigger={HandlesuggestDisplay} />
+        </View>
         {/* post */}
         <View></View>
       </ScrollView>

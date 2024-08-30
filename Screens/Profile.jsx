@@ -165,7 +165,7 @@ const Profile = ({ navigation }) => {
             source={{
               uri: user?.Images?.coverImg
                 ? user?.Images?.coverImg
-                : user?.Images.Profile,
+                : "https://i.ibb.co/wwGDt0t/2151133955.jpg",
             }}
             style={{
               width: "100%",

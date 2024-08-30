@@ -18,8 +18,9 @@ import axios from "axios";
 import { FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useData } from "../Context/Contexter";
+import { TouchableOpacity } from "react-native";
 
-const SuggestionWapper = () => {
+const SuggestionWapper = ({ trigger }) => {
   const { width, height } = Dimensions.get("window");
   const [profiles, setProfiles] = useState();
   const Navigation = useNavigation();
@@ -33,6 +34,10 @@ const SuggestionWapper = () => {
   useEffect(() => {
     userSuggestions();
   }, []);
+  const HandleClose = () => {
+    trigger(false);
+  };
+
   return (
     <View style={{ flexDirection: "column", rowGap: 5 }}>
       <View
@@ -52,7 +57,9 @@ const SuggestionWapper = () => {
           Suggestions
         </Text> */}
         <ParagraphText text="Suggestions" />
-        <FontAwesomeIcon icon={faTimes} size={18} color={Colors.mildGrey} />
+        <TouchableOpacity onPress={HandleClose}>
+          <FontAwesomeIcon icon={faTimes} size={18} color={Colors.mildGrey} />
+        </TouchableOpacity>
       </View>
       {/* list */}
       <FlatList
