@@ -23,7 +23,7 @@ import { faUniversity, faUser } from "@fortawesome/free-solid-svg-icons";
 
 const Search = ({ navigation }) => {
   const { width, height } = Dimensions.get("window");
-  const { setSelectedUser } = useData();
+  const { setSelectedUser, user } = useData();
   const userName = useRef(null);
   const [users, setUsers] = useState();
   const handleSearch = debounce((text) => {
@@ -31,7 +31,7 @@ const Search = ({ navigation }) => {
     getUserName();
   }, 100);
   const getUserName = async () => {
-    const res = await axios.post(`${Api}/Search/getUserName`, {
+    const res = await axios.post(`${Api}/Search/getUserName/${user._id}`, {
       userName: userName.current,
     });
     if (res.data) {

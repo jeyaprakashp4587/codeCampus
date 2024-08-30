@@ -23,10 +23,10 @@ const SuggestionWapper = () => {
   const { width, height } = Dimensions.get("window");
   const [profiles, setProfiles] = useState();
   const Navigation = useNavigation();
-  const { setSelectedUser } = useData();
+  const { setSelectedUser, user } = useData();
   // show suggestion users
   async function userSuggestions() {
-    const res = await axios.get(`${Api}/Suggestions/users`);
+    const res = await axios.get(`${Api}/Suggestions/users/${user._id}`);
     if (res.data) setProfiles(res.data);
   }
   //
@@ -34,7 +34,7 @@ const SuggestionWapper = () => {
     userSuggestions();
   }, []);
   return (
-    <View style={{ flexDirection: "column", rowGap: 10 }}>
+    <View style={{ flexDirection: "column", rowGap: 5 }}>
       <View
         style={{
           flexDirection: "row",
@@ -73,7 +73,7 @@ const SuggestionWapper = () => {
                 width: width * 0.8,
                 height: height * 0.1,
                 paddingHorizontal: 15,
-                columnGap: 7,
+                columnGap: 10,
               }}
               onPress={() => {
                 Navigation.navigate("userprofile");
@@ -94,10 +94,10 @@ const SuggestionWapper = () => {
                   style={{
                     fontSize: width * 0.04,
                     color: Colors.veryDarkGrey,
+                    textTransform: "capitalize",
                   }}
                 >
-                  {user.item?.firstName}
-                  {user.item?.LastName}
+                  {user.item?.firstName} {user.item?.LastName}
                 </Text>
                 <Text
                   style={{ fontSize: width * 0.03, color: Colors.mildGrey }}
