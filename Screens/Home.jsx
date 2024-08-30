@@ -63,7 +63,7 @@ const Home = () => {
   if (!load) {
     return <HomeSkeleton />;
   }
-
+  // carousel data
   const carouel = [
     {
       name: "Learning",
@@ -79,7 +79,6 @@ const Home = () => {
     },
     { name: "Achive", img: achiveImg, bgColor: "#b3ffb3", route: "Post" },
   ];
-  // const carouel = new Array(10);
 
   return (
     <View style={[pageView, { paddingHorizontal: 15 }]}>
@@ -166,7 +165,10 @@ const Home = () => {
               Your Course
             </Text>
           </TouchableOpacity>
-          <View style={styles.ideaBox}>
+          <TouchableOpacity
+            style={styles.ideaBox}
+            // onPress={() => userSuggestions()}
+          >
             <Image
               source={{ uri: "https://i.ibb.co/5n0FQH4/submit.png" }}
               style={[styles.icon, { tintColor: "#006622" }]}
@@ -177,7 +179,7 @@ const Home = () => {
             >
               Assignment
             </Text>
-          </View>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.ideaBox}
             onPress={() => navigation.navigate("youractivities")}

@@ -76,9 +76,11 @@ const Profile = ({ navigation }) => {
       quality: 1,
     });
     if (result.assets[0].uri) {
-      hostImage(result.assets[0].uri, imageType).then((imageuri) => {
-        upload(imageuri, imageType);
-      });
+      hostImage(result.assets[0].uri, imageType)
+        .then((imageuri) => {
+          upload(imageuri, imageType);
+        })
+        .catch((err) => setUploadIndicator(false));
     }
   };
   // upload to server
@@ -120,6 +122,8 @@ const Profile = ({ navigation }) => {
   // refresh page
   const [refControl, setRefControl] = useState(false);
   const refreshUser = async () => {
+    setUploadActivityIndi(false);
+    setUploadIndicator(false);
     setRefControl(true);
     const res = await axios.post(`${Api}/Login/getUser`, { userId: user._id });
     if (res.data) {

@@ -37,7 +37,7 @@ const UserProfile = () => {
   };
   useEffect(() => {
     findExistsFollower();
-  }, [selectedUser]);
+  }, [selectedUser.firstName]);
   // add folower
   const addFollower = async () => {
     const res = await axios.post(`${Api}/Following/addConnection`, {

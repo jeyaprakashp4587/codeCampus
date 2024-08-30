@@ -18,6 +18,8 @@ import { FlatList } from "react-native";
 import { Dimensions } from "react-native";
 import Ripple from "react-native-material-ripple";
 import { useData } from "../Context/Contexter";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faUniversity, faUser } from "@fortawesome/free-solid-svg-icons";
 
 const Search = ({ navigation }) => {
   const { width, height } = Dimensions.get("window");
@@ -36,39 +38,12 @@ const Search = ({ navigation }) => {
       setUsers(res.data);
     }
   };
-  return (
-    <View style={pageView}>
-      <HeadingText text="Search" />
-      {/* search button */}
-      <TouchableOpacity
-        onPress={() => navigation.navigate("placement")}
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          backgroundColor: Colors.veryLightGrey,
-          width: "100%",
-          // padding: 10,
-          paddingHorizontal: 10,
-          borderRadius: 13,
-        }}
-      >
-        <EvilIcons name="search" size={30} color={Colors.lightGrey} />
-        <TextInput
-          placeholder="Search"
-          style={{
-            color: Colors.lightGrey,
-            fontSize: 16,
-            paddingHorizontal: 10,
-            // borderWidth: 1,
-            flex: 1,
-            padding: 10,
-          }}
-          focusable={true}
-          onChangeText={handleSearch}
-        />
-      </TouchableOpacity>
-      {/* usersList */}
-      {users?.length > 0 && (
+  // options
+  const [option, setOption] = useState("Profile");
+  // render pages
+  const ResultRender = () => {
+    if (users?.length > 0) {
+      return (
         <FlatList
           data={users}
           style={{ marginTop: 20 }}
@@ -79,7 +54,7 @@ const Search = ({ navigation }) => {
                 padding: height * 0.015,
                 flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "space-between",
+                // justifyContent: "space-between",
                 columnGap: 10,
                 marginTop: 10,
                 marginBottom: 10,
@@ -99,9 +74,20 @@ const Search = ({ navigation }) => {
                   resizeMode: "contain",
                 }}
               />
-              <Text style={{ letterSpacing: 1, color: Colors.mildGrey }}>
-                {user.item.firstName} {user.item.LastName}
-              </Text>
+              <View style={{ flex: 1, flexDirection: "column" }}>
+                <Text style={{ letterSpacing: 1, color: Colors.mildGrey }}>
+                  {user.item.firstName} {user.item.LastName}
+                </Text>
+                <Text
+                  style={{
+                    letterSpacing: 1,
+                    color: Colors.mildGrey,
+                    fontSize: width * 0.03,
+                  }}
+                >
+                  {user.item.InstitudeName}
+                </Text>
+              </View>
               <Ripple
                 onPress={() => {
                   navigation.navigate("userprofile");
@@ -118,7 +104,123 @@ const Search = ({ navigation }) => {
             </TouchableOpacity>
           )}
         />
-      )}
+      );
+    } else {
+      return (
+        <Text
+          style={{
+            fontSize: width * 0.07,
+            color: Colors.lightGrey,
+            marginTop: 20,
+            textAlign: "center",
+          }}
+        >
+          No result found!
+        </Text>
+      );
+    }
+  };
+  return (
+    <View style={pageView}>
+      <HeadingText text="Search" />
+      {/* search button */}
+      <TouchableOpacity
+        onPress={() => navigation.navigate("placement")}
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          backgroundColor: Colors.veryLightGrey,
+          width: "100%",
+          // padding: 10,
+          paddingHorizontal: 10,
+          borderRadius: 7,
+        }}
+      >
+        <EvilIcons name="search" size={30} color={Colors.lightGrey} />
+        <TextInput
+          placeholder="Search"
+          style={{
+            color: Colors.lightGrey,
+            fontSize: 16,
+            paddingHorizontal: 10,
+            // borderWidth: 1,
+            flex: 1,
+            padding: 10,
+          }}
+          focusable={true}
+          onChangeText={handleSearch}
+        />
+      </TouchableOpacity>
+      {/* options */}
+      <View style={{ flexDirection: "row", columnGap: 20, marginTop: 20 }}>
+        <Ripple
+          onPress={() => setOption("Profile")}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            borderWidth: 1,
+            paddingVertical: 5,
+            paddingHorizontal: 15,
+            borderRadius: 5,
+            columnGap: 6,
+            borderColor: "#ff9933",
+          }}
+        >
+          <FontAwesomeIcon icon={faUser} size={20} color={Colors.mildGrey} />
+          <Text
+            style={{
+              fontSize: width * 0.04,
+              letterSpacing: 1,
+              color: Colors.mildGrey,
+            }}
+          >
+            Profile
+          </Text>
+        </Ripple>
+        <Ripple
+          onPress={() => setOption("College")}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            borderWidth: 1,
+            paddingVertical: 5,
+            paddingHorizontal: 15,
+            borderRadius: 5,
+            columnGap: 6,
+            borderColor: "#ff9933",
+          }}
+        >
+          <FontAwesomeIcon
+            icon={faUniversity}
+            size={20}
+            color={Colors.mildGrey}
+          />
+          <Text
+            style={{
+              fontSize: width * 0.04,
+              letterSpacing: 1,
+              color: Colors.mildGrey,
+            }}
+          >
+            Colleges
+          </Text>
+        </Ripple>
+      </View>
+      {/* current option */}
+      <Text
+        style={{
+          color: Colors.mildGrey,
+          fontSize: width * 0.06,
+          lineHeight: 30,
+          letterSpacing: 2,
+          paddingVertical: 10,
+          marginTop: 10,
+        }}
+      >
+        {option}
+      </Text>
+      {/* usersList */}
+      <ResultRender />
     </View>
   );
 };

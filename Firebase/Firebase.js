@@ -3,13 +3,19 @@ import { getAnalytics } from "firebase/analytics";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBML6AEP76H_aJQB6wi4pUuDyK3xbr64Zw",
-  authDomain: "codecampus-bfa48.firebaseapp.com",
-  projectId: "codecampus-bfa48",
-  storageBucket: "codecampus-bfa48.appspot.com",
-  messagingSenderId: "750664543169",
-  appId: "1:750664543169:web:dc1091e6f7450203501d40",
-  measurementId: "G-W17XH2N5NH",
+  apiKey: "AIzaSyA0pSght5VfrJatvTaD7t2b-g8CPeB9KfQ",
+
+  authDomain: "codecampus-d77fb.firebaseapp.com",
+
+  projectId: "codecampus-d77fb",
+
+  storageBucket: "codecampus-d77fb.appspot.com",
+
+  messagingSenderId: "217528310642",
+
+  appId: "1:217528310642:web:76c2401fbdbf9c74591beb",
+
+  measurementId: "G-G6JH1NCMPV",
 };
 
 // Initialize Firebase
