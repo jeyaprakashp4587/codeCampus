@@ -42,6 +42,7 @@ const CourseDetails = ({ navigation }) => {
     if (res.data.Email) {
       setUser(res.data);
       Alert.alert("Course Added Successfully");
+      Actitivity(user._id, `${selectedCourse.name} Sucessfully Added.`);
     } else {
       Alert.alert(res.data);
     }

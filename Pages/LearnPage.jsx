@@ -39,7 +39,7 @@ const LearnPage = () => {
   }, [hours, minutes, seconds]);
 
   return (
-    <View style={[pageView, styles.container]}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <HeadingText text="Study Area" />
         <View style={styles.headerRight}>
@@ -78,12 +78,15 @@ export default LearnPage;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: width * 0.05,
+    // paddingHorizontal: width * 0.05,
+    backgroundColor: "white",
+    flex: 1,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    paddingHorizontal: width * 0.05,
   },
   headerRight: {
     flexDirection: "row",
