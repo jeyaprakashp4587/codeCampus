@@ -33,7 +33,7 @@ import learnImg from "../assets/images/learn.png";
 import practiceImg from "../assets/images/practice.png";
 import achiveImg from "../assets/images/achive.png";
 import PragraphText from "../utils/PragraphText";
-import { OneSignal } from "react-native-onesignal";
+
 // code -----------
 
 const { width, height } = Dimensions.get("window");
@@ -42,11 +42,7 @@ const Home = () => {
 
   const { user, setUser } = useData();
   const [load, setLoad] = useState(false);
-  useEffect(() => {
-    OneSignal.initialize("861087e8-fa92-422a-9185-a129ca3e86d2 ");
-    OneSignal.Notifications.getPermissionAsync();
-    OneSignal.Notifications.requestPermission();
-  }, []);
+  useEffect(() => {}, []);
   useEffect(() => {
     setTimeout(() => {
       setLoad(true);
