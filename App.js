@@ -14,6 +14,7 @@ const App = () => {
   const Handleduration = (data) => {
     setLoad(data);
   };
+  // call the notification
 
   return (
     <PaperProvider>

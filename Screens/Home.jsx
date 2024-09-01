@@ -32,8 +32,7 @@ import SuggestionWapper from "../components/SuggestionWapper";
 import learnImg from "../assets/images/learn.png";
 import practiceImg from "../assets/images/practice.png";
 import achiveImg from "../assets/images/achive.png";
-import PragraphText from "../utils/PragraphText";
-import { OneSignal } from "react-native-onesignal";
+
 // code -----------
 
 const { width, height } = Dimensions.get("window");
@@ -42,9 +41,7 @@ const Home = () => {
 
   const { user, setUser } = useData();
   const [load, setLoad] = useState(false);
-  useEffect(() => {
-    OneSignal.initialize("861087e8-fa92-422a-9185-a129ca3e86d2");
-  }, []);
+
   useEffect(() => {
     setTimeout(() => {
       setLoad(true);
@@ -98,6 +95,7 @@ const Home = () => {
     }
   };
   // ----------------------
+
   // load the skeleton
   if (!load) {
     return <HomeSkeleton />;
@@ -112,9 +110,9 @@ const Home = () => {
             style={[
               styles.profileImage,
               {
-                width: width * 0.12,
-                height: width * 0.12,
-                borderRadius: (width * 0.12) / 2,
+                width: width * 0.18,
+                height: width * 0.18,
+                borderRadius: 50,
                 borderWidth: 1,
                 // borderColor: "#404040",
               },
@@ -123,7 +121,7 @@ const Home = () => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => navigation.navigate("search")}
-          style={[styles.searchButton, { width: width * 0.66 }]}
+          style={[styles.searchButton, { flex: 1, marginHorizontal: 10 }]}
         >
           <EvilIcons name="search" size={30} color={Colors.lightGrey} />
           <TextInput
