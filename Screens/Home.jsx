@@ -32,6 +32,7 @@ import SuggestionWapper from "../components/SuggestionWapper";
 import learnImg from "../assets/images/learn.png";
 import practiceImg from "../assets/images/practice.png";
 import achiveImg from "../assets/images/achive.png";
+import Noti from "../Notification/Noti";
 
 // code -----------
 
@@ -46,6 +47,7 @@ const Home = () => {
     setTimeout(() => {
       setLoad(true);
     }, 100);
+    // Noti();
   }, []);
 
   // refresh page
