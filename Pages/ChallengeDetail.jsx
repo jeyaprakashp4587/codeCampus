@@ -41,9 +41,8 @@ const ChallengeDetail = () => {
   // console.log("sele", selectedChallenge);
   const [uploadTut, setUploadTut] = useState();
   const [uploadStatus, setUploadStatus] = useState();
-  const [challegStatus, setChallengeStatus] = useState("start");
   const HandleStart = async (chName) => {
-    setUploadStatus("Waiting");
+    setUploadStatus("uploading");
     const res = await axios.post(`${Api}/Challenges/addChallenge`, {
       userId: user._id,
       ChallengeName: chName,
@@ -116,9 +115,8 @@ const ChallengeDetail = () => {
       }
     );
     if (res.data) {
-      setButton(true);
+      console.log(res.data);
       setUploadStatus(res.data);
-      challegStatus();
     }
   };
   // check the status initially
@@ -143,10 +141,8 @@ const ChallengeDetail = () => {
       }
     );
     if (res.data) {
-      // console.log(res.data);
       setSelectedChallenge(res.data);
       checkChallengeStatus();
-      // ChallengeStatus();
     }
   };
   //  uploadStatus == "open"
@@ -154,24 +150,6 @@ const ChallengeDetail = () => {
   //                   : uploadStatus == "Uploaded"
   //                   ? "Uploaded"
   //                   : "Pending"
-  useEffect(() => {
-    // const ChallengeStatus = () => {
-    switch (uploadStatus) {
-      case "pending":
-        setChallengeStatus("Pending");
-        break;
-      case "Uploaded":
-        setChallengeStatus("Uploaded");
-        break;
-      case "Waiting":
-        setChallengeStatus("Pending");
-        break;
-      default:
-        setChallengeStatus("Wait");
-        break;
-    }
-    // };
-  }, [uploadStatus]);
 
   return (
     <LinearGradient
@@ -257,9 +235,9 @@ const ChallengeDetail = () => {
               ))}
             </View>
             <Image />
-            {uploadStatus === "pending" || uploadStatus == "Waiting" ? (
+            {selectedChallenge?.status === "Pending" ? (
               <Button
-                text={challegStatus}
+                text={selectedChallenge?.status}
                 bgcolor="#563d7c"
                 textColor="white"
                 fsize={18}
