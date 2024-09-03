@@ -39,12 +39,11 @@ const { width, height } = Dimensions.get("window");
 const ChallengeDetail = () => {
   const { selectedChallenge, user, setUser, setSelectedChallenge } = useData();
   // console.log("sele", selectedChallenge);
-  const [Buttons, setButton] = useState();
   const [uploadTut, setUploadTut] = useState();
   const [uploadStatus, setUploadStatus] = useState();
-
+  const [challegStatus, setChallengeStatus] = useState("start");
   const HandleStart = async (chName) => {
-    setButton(true);
+    setUploadStatus("Waiting");
     const res = await axios.post(`${Api}/Challenges/addChallenge`, {
       userId: user._id,
       ChallengeName: chName,
@@ -119,6 +118,7 @@ const ChallengeDetail = () => {
     if (res.data) {
       setButton(true);
       setUploadStatus(res.data);
+      challegStatus();
     }
   };
   // check the status initially
@@ -146,8 +146,32 @@ const ChallengeDetail = () => {
       // console.log(res.data);
       setSelectedChallenge(res.data);
       checkChallengeStatus();
+      // ChallengeStatus();
     }
   };
+  //  uploadStatus == "open"
+  //                   ? "Wait..."
+  //                   : uploadStatus == "Uploaded"
+  //                   ? "Uploaded"
+  //                   : "Pending"
+  useEffect(() => {
+    // const ChallengeStatus = () => {
+    switch (uploadStatus) {
+      case "pending":
+        setChallengeStatus("Pending");
+        break;
+      case "Uploaded":
+        setChallengeStatus("Uploaded");
+        break;
+      case "Waiting":
+        setChallengeStatus("Pending");
+        break;
+      default:
+        setChallengeStatus("Wait");
+        break;
+    }
+    // };
+  }, [uploadStatus]);
 
   return (
     <LinearGradient
@@ -233,15 +257,9 @@ const ChallengeDetail = () => {
               ))}
             </View>
             <Image />
-            {Buttons ? (
+            {uploadStatus === "pending" || uploadStatus == "Waiting" ? (
               <Button
-                text={
-                  uploadStatus == "open"
-                    ? "Wait..."
-                    : uploadStatus == "Uploaded"
-                    ? "Uploaded"
-                    : "Pending"
-                }
+                text={challegStatus}
                 bgcolor="#563d7c"
                 textColor="white"
                 fsize={18}

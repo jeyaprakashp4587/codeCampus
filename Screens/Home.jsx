@@ -32,7 +32,6 @@ import SuggestionWapper from "../components/SuggestionWapper";
 import learnImg from "../assets/images/learn.png";
 import practiceImg from "../assets/images/practice.png";
 import achiveImg from "../assets/images/achive.png";
-import Noti from "../Notification/Noti";
 
 // code -----------
 
@@ -358,5 +357,3 @@ const styles = StyleSheet.create({
     // fontSize: 20,
   },
 });
-// 861087e8-fa92-422a-9185-a129ca3e86d2 app id
-// ZTNhNWZkYTQtNGVkMS00MmU3LTlkNGQtNjY1MTdkMzA4MGI0
