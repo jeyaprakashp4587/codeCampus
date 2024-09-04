@@ -33,6 +33,7 @@ import { ActivityIndicator } from "react-native";
 import Skeleton from "../Skeletons/Skeleton";
 import { LinearGradient } from "expo-linear-gradient";
 import Actitivity from "../hooks/ActivityHook";
+import { RefreshControl } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -40,9 +41,11 @@ const ChallengeDetail = () => {
   const { selectedChallenge, user, setUser, setSelectedChallenge } = useData();
   // console.log("sele", selectedChallenge);
   const [uploadTut, setUploadTut] = useState();
-  const [uploadStatus, setUploadStatus] = useState();
+  const [ChallengeStatus, setChallengeStatus] = useState("");
+  const [statusButtonToggle, setStatusbuttonToggle] = useState(false);
   const HandleStart = async (chName) => {
-    setUploadStatus("uploading");
+    setStatusbuttonToggle(true);
+    setChallengeStatus("Pending");
     const res = await axios.post(`${Api}/Challenges/addChallenge`, {
       userId: user._id,
       ChallengeName: chName,
@@ -50,6 +53,7 @@ const ChallengeDetail = () => {
       ChallengeImage: selectedChallenge.sample_image,
       ChallengeLevel: selectedChallenge.level,
     });
+    if (res.data) setUploadTut(true);
   };
 
   const [uploadForm, setUploadForm] = useState({
@@ -99,8 +103,8 @@ const ChallengeDetail = () => {
           ChallengeName: selectedChallenge.title,
         }
       );
-      if (res.data == "Uploaded") {
-        setUploadStatus("Uploaded");
+      if (res.data == "completed") {
+        setChallengeStatus("completed");
         Actitivity(user._id, `${selectedChallenge.title} Completed`);
         // console.log(res.data);
       }
@@ -116,13 +120,21 @@ const ChallengeDetail = () => {
     );
     if (res.data) {
       console.log(res.data);
-      setUploadStatus(res.data);
+      setChallengeStatus(res.data);
     }
   };
-  // check the status initially
+
   useEffect(() => {
     checkChallengeStatus();
     getParticularChallenge();
+  }, [selectedChallenge]);
+  // this useeffec for se challengeStatus
+  useEffect(() => {
+    if (!selectedChallenge.status) setStatusbuttonToggle(false);
+    if (selectedChallenge?.status) {
+      setStatusbuttonToggle(true);
+      setChallengeStatus(selectedChallenge?.status);
+    }
   }, []);
   // fetch the particular challenge
   const getParticularChallenge = async () => {
@@ -141,16 +153,14 @@ const ChallengeDetail = () => {
       }
     );
     if (res.data) {
+      // console.log(res.data);
       setSelectedChallenge(res.data);
       checkChallengeStatus();
     }
   };
-  //  uploadStatus == "open"
-  //                   ? "Wait..."
-  //                   : uploadStatus == "Uploaded"
-  //                   ? "Uploaded"
-  //                   : "Pending"
 
+  const HandleRefresh = () => {};
+  // -------------
   return (
     <LinearGradient
       colors={["#ffe6f0", "white", "#e6f7ff"]}
@@ -163,7 +173,11 @@ const ChallengeDetail = () => {
       end={[1, 0]}
     >
       <HeadingText text="Challenge Details" />
-      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={{ flex: 1 }}
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl onRefresh={() => HandleRefresh()} />}
+      >
         {selectedChallenge?.sample_image || selectedChallenge?.level ? (
           <View style={{ flexDirection: "column", rowGap: 30, marginTop: 25 }}>
             {selectedChallenge?.level === "newbie" ? (
@@ -234,15 +248,13 @@ const ChallengeDetail = () => {
                 />
               ))}
             </View>
-            <Image />
-            {selectedChallenge?.status === "Pending" ? (
+            {statusButtonToggle ? (
               <Button
-                text={selectedChallenge?.status}
+                text={ChallengeStatus}
                 bgcolor="#563d7c"
                 textColor="white"
                 fsize={18}
                 width="100%"
-                function={() => setUploadStatus("open")}
               />
             ) : (
               <Button
@@ -349,7 +361,7 @@ const ChallengeDetail = () => {
             </View>
           </View>
         ) : null}
-        {uploadStatus == "open" ? (
+        {ChallengeStatus == "Pending" ? (
           <View
             style={{
               marginTop: 30,
