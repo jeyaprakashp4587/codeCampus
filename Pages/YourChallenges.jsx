@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, View, Image } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Dimensions } from "react-native";
 import Ripple from "react-native-material-ripple";
 import { ScrollView } from "react-native";
@@ -26,19 +26,23 @@ const YourChallenges = (props) => {
   const [challenges, setChallenges] = useState();
   const [skLoad, setSkLoad] = useState();
   //   fetch chllenges from DB
-  const getChallenges = async (option) => {
-    const res = await axios.post(
-      `${Api}/Challenges/getUserChallege/${user._id}`,
-      {
-        option: option,
+  const getChallenges = useCallback(
+    async (option) => {
+      try {
+        const res = await axios.post(
+          `${Api}/Challenges/getUserChallege/${user._id}`,
+          { option }
+        );
+        if (res.data) {
+          setChallenges(res.data);
+          setSkLoad(true);
+        }
+      } catch (error) {
+        console.error("Error fetching challenges:", error);
       }
-    );
-    // console.log(res.data);
-    if (res.data) {
-      setChallenges(res.data);
-      setSkLoad(true);
-    }
-  };
+    },
+    [user._id]
+  );
   // console.log("challenges", challenges);
   useEffect(() => {
     setSkLoad(false);
