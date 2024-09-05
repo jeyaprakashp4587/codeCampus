@@ -111,8 +111,8 @@ const Home = () => {
             style={[
               styles.profileImage,
               {
-                width: width * 0.18,
-                height: width * 0.18,
+                width: width * 0.15,
+                height: width * 0.15,
                 borderRadius: 50,
                 borderWidth: 1,
                 // borderColor: "#404040",

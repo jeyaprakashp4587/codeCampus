@@ -497,7 +497,7 @@ const Profile = ({ navigation }) => {
       {/* posts */}
       <View>
         {user.Posts.map((post, index) => (
-          <Posts post={post} index={index} />
+          <Posts post={post} index={index} admin={true} />
         ))}
       </View>
     </ScrollView>

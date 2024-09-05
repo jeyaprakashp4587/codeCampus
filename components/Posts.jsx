@@ -11,25 +11,41 @@ import React, { useState } from "react";
 import { Colors, font } from "../constants/Colors";
 import { faComment } from "@fortawesome/free-regular-svg-icons";
 import { Dimensions } from "react-native";
+import Ripple from "react-native-material-ripple";
+import Api from "../Api";
+import axios from "axios";
+import { useData } from "../Context/Contexter";
 
-const Posts = ({ post, index }) => {
+const Posts = ({ post, index, admin }) => {
   const { width, height } = Dimensions.get("window");
-  // console.log(post);
-  // console.log(post);
   let initialText = post.PostText;
-  // initialText =
-  //   "Your long paragraph goes here with more than 20 words. You can test this by adding some lorem ipsum text or any long text to see how it behaves...";
+  const { user, setUser } = useData();
   const wordThreshold = 20;
-
   const [expanded, setExpanded] = useState(false);
-
   const toggleExpanded = () => {
     setExpanded(!expanded);
   };
-
   // Function to count words in a string
   const countWords = (text) => {
     return text.trim().split(/\s+/).length;
+  };
+  // delete disp state
+  const [deldisplay, setDeldisplay] = useState(false);
+  const handleDelDisp = () => {
+    setDeldisplay((prev) => !prev);
+  };
+  // handle Delete
+  const HandleDelete = async (postId) => {
+    try {
+      const res = await axios.post(`${Api}/Post/deletePost/${user._id}`, {
+        postId: postId,
+      });
+      if (res.data) {
+        setUser(res.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <View
@@ -44,6 +60,7 @@ const Posts = ({ post, index }) => {
         backgroundColor: "white",
         marginBottom: 10,
         marginHorizontal: 5,
+        position: "relative",
         // margin: 10,
       }}
     >
@@ -79,11 +96,37 @@ const Posts = ({ post, index }) => {
             The MDT Hindu College
           </Text>
         </View>
-        <TouchableOpacity>
-          <Image
-            source={{ uri: "https://i.ibb.co/nn25gZN/menu.png" }}
-            style={{ width: 20, height: 20, tintColor: Colors.lightGrey }}
-          />
+        {admin && (
+          <TouchableOpacity onPress={() => handleDelDisp()}>
+            <Image
+              source={{ uri: "https://i.ibb.co/nn25gZN/menu.png" }}
+              style={{ width: 20, height: 20, tintColor: Colors.lightGrey }}
+            />
+          </TouchableOpacity>
+        )}
+        {/* delete section */}
+        <TouchableOpacity
+          onPress={() => HandleDelete(post._id)}
+          style={{
+            position: "absolute",
+            right: width * 0.03,
+            top: height * 0.07,
+            backgroundColor: "orange",
+            borderRadius: 4,
+            display: deldisplay ? "flex" : "none",
+            zIndex: 100,
+          }}
+        >
+          <Text
+            style={{
+              color: "white",
+              letterSpacing: 1,
+              paddingHorizontal: 15,
+              paddingVertical: 5,
+            }}
+          >
+            Delete
+          </Text>
         </TouchableOpacity>
       </View>
       {/* post about */}
@@ -118,14 +161,13 @@ const Posts = ({ post, index }) => {
               key={index}
               source={{ uri: item }}
               style={{
-                width: post.Images.length == 1 ? width * 0.84 : width * 0.8, // Adjust width as needed
+                width: post.Images.length == 1 ? width * 0.84 : width * 0.8,
                 height: height * 0.3,
                 objectFit: "contain",
                 borderWidth: 1,
               }}
             />
           )}
-          keyExtractor={(item, index) => index.toString()}
         />
       )}
       {/* </ScrollView> */}
