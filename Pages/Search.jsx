@@ -178,9 +178,47 @@ const Search = ({ navigation }) => {
       </TouchableOpacity>
       {/* show history list */}
       {history.length > 0 && (
-        <View>
-          {history.map((term, index) => (
-            <Text key={index}>{term.firstName}</Text>
+        <View style={{ marginTop: 10 }}>
+          <Text
+            style={{
+              fontSize: width * 0.05,
+              color: Colors.veryDarkGrey,
+              letterSpacing: 1,
+              paddingVertical: 10,
+            }}
+          >
+            Recent Search
+          </Text>
+          {history.map((item, index) => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("userprofile");
+                setSelectedUser(item);
+              }}
+              key={index}
+              style={{
+                flexDirection: "row",
+                columnGap: 15,
+                alignItems: "center",
+                borderBottomWidth: 1,
+                paddingBottom: 10,
+                borderColor: Colors.veryLightGrey,
+                // justifyContent: "center",
+              }}
+            >
+              <Image
+                source={{ uri: item.Images?.profile }}
+                style={{
+                  width: width * 0.14,
+                  height: height * 0.07,
+                  borderRadius: 50,
+                }}
+              />
+
+              <Text style={{ letterSpacing: 1, color: Colors.mildGrey }}>
+                {item.firstName} {item.LastName}
+              </Text>
+            </TouchableOpacity>
           ))}
         </View>
       )}
