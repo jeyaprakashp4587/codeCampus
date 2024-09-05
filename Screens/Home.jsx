@@ -32,6 +32,7 @@ import SuggestionWapper from "../components/SuggestionWapper";
 import learnImg from "../assets/images/learn.png";
 import practiceImg from "../assets/images/practice.png";
 import achiveImg from "../assets/images/achive.png";
+import io from "socket.io-client";
 
 // code -----------
 
@@ -96,6 +97,8 @@ const Home = () => {
       setRefControl(false);
     }
   };
+  // socket------
+
   // ----------------------
 
   // load the skeleton
