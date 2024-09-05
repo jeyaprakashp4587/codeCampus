@@ -119,16 +119,10 @@ const ChallengeDetail = () => {
       }
     );
     if (res.data) {
-      console.log(res.data);
       setChallengeStatus(res.data);
     }
   };
-
-  useEffect(() => {
-    checkChallengeStatus();
-    getParticularChallenge();
-  }, [selectedChallenge]);
-  // this useeffec for se challengeStatus
+  // this useeffect for set challengeStatus
   useEffect(() => {
     if (!selectedChallenge.status) setStatusbuttonToggle(false);
     if (selectedChallenge?.status) {
@@ -158,6 +152,11 @@ const ChallengeDetail = () => {
       checkChallengeStatus();
     }
   };
+  // -----
+  useEffect(() => {
+    checkChallengeStatus();
+    getParticularChallenge();
+  }, [selectedChallenge]);
 
   const HandleRefresh = () => {};
   // -------------
@@ -217,7 +216,7 @@ const ChallengeDetail = () => {
             >
               <Text
                 style={{
-                  fontWeight: "600",
+                  fontWeight: "60=",
                   color: "orange",
                   textTransform: "capitalize",
                 }}
@@ -361,7 +360,7 @@ const ChallengeDetail = () => {
             </View>
           </View>
         ) : null}
-        {ChallengeStatus == "Pending" ? (
+        {ChallengeStatus == "pending" ? (
           <View
             style={{
               marginTop: 30,
