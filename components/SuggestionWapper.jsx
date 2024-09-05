@@ -20,7 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useData } from "../Context/Contexter";
 import { TouchableOpacity } from "react-native";
 
-const SuggestionWapper = ({ trigger }) => {
+const SuggestionWapper = ({ trigger, refresh }) => {
   const { width, height } = Dimensions.get("window");
   const [profiles, setProfiles] = useState();
   const Navigation = useNavigation();
@@ -34,6 +34,9 @@ const SuggestionWapper = ({ trigger }) => {
   useEffect(() => {
     userSuggestions();
   }, []);
+  useEffect(() => {
+    userSuggestions();
+  }, [refresh]);
   const HandleClose = () => {
     trigger(false);
   };

@@ -28,7 +28,7 @@ const UserProfile = () => {
       ConnectionId: selectedUser?._id,
       userId: user._id,
     });
-    if (res.data) {
+    if (res.data == "Yes") {
       setExistsfollower(true);
       // console.log(res.data);
     } else {
@@ -37,15 +37,29 @@ const UserProfile = () => {
   };
   useEffect(() => {
     findExistsFollower();
-  }, [selectedUser?.firstName]);
+  }, [selectedUser]);
   // add folower
   const addFollower = async () => {
     const res = await axios.post(`${Api}/Following/addConnection`, {
       ConnectionId: selectedUser?._id,
       userId: user._id,
     });
-    if (res.data) {
+    if (res.data == "Sucess") {
       setExistsfollower(true);
+    } else {
+      setExistsfollower(false);
+    }
+  };
+  // remove connection
+  const removeConnection = async () => {
+    const res = await axios.post(
+      `${Api}/Following/removeConnection/${user._id}`,
+      {
+        ConnectionId: selectedUser?._id,
+      }
+    );
+    if (res.data == "Done") {
+      setExistsfollower(false);
     }
   };
 
@@ -157,6 +171,7 @@ const UserProfile = () => {
         <View>
           {existsFollower ? (
             <Ripple
+              onPress={() => removeConnection()}
               style={{
                 backgroundColor: Colors.violet,
                 flexDirection: "row",
@@ -175,7 +190,7 @@ const UserProfile = () => {
                   letterSpacing: 1,
                 }}
               >
-                Follow
+                Unfollow
               </Text>
             </Ripple>
           ) : (
@@ -250,16 +265,18 @@ const UserProfile = () => {
       {/* post */}
       {/* H */}
       <HrLine />
-      <Text
-        style={{
-          color: Colors.mildGrey,
-          fontSize: width * 0.06,
-          letterSpacing: 1,
-          paddingHorizontal: 20,
-        }}
-      >
-        Posts
-      </Text>
+      {selectedUser?.Posts.length > 0 && (
+        <Text
+          style={{
+            color: Colors.mildGrey,
+            fontSize: width * 0.06,
+            letterSpacing: 1,
+            paddingHorizontal: 20,
+          }}
+        >
+          Posts
+        </Text>
+      )}
       <View>
         {selectedUser?.Posts.map((post, index) => (
           <Posts post={post} index={index} />

@@ -46,20 +46,8 @@ const Home = () => {
     setTimeout(() => {
       setLoad(true);
     }, 100);
-    // Noti();
   }, []);
 
-  // refresh page
-  const [refControl, setRefControl] = useState(false);
-  const refreshUser = async () => {
-    setRefControl(true);
-    setSuggestDisplay(true);
-    const res = await axios.post(`${Api}/Login/getUser`, { userId: user._id });
-    if (res.data) {
-      setUser(res.data);
-      setRefControl(false);
-    }
-  };
   // carousel data
   const carouel = [
     {
@@ -78,6 +66,7 @@ const Home = () => {
   ];
   // suggest display
   const [suggestDisplay, setSuggestDisplay] = useState(true);
+  const [suggestRefresh, setSuggestRefresh] = useState(false);
   const HandlesuggestDisplay = (data) => {
     setSuggestDisplay(data);
   };
@@ -93,6 +82,18 @@ const Home = () => {
       return "Good Evening";
     } else {
       return "Good Night";
+    }
+  };
+  // refresh page
+  const [refControl, setRefControl] = useState(false);
+  const refreshUser = async () => {
+    setRefControl(true);
+    setSuggestDisplay(true);
+    setSuggestRefresh((prev) => !prev);
+    const res = await axios.post(`${Api}/Login/getUser`, { userId: user._id });
+    if (res.data) {
+      setUser(res.data);
+      setRefControl(false);
     }
   };
   // ----------------------
@@ -272,7 +273,10 @@ const Home = () => {
         />
         {/* friends suggestions */}
         <View style={{ display: suggestDisplay ? "flex" : "none" }}>
-          <SuggestionWapper trigger={HandlesuggestDisplay} />
+          <SuggestionWapper
+            trigger={HandlesuggestDisplay}
+            refresh={suggestRefresh}
+          />
         </View>
         {/* post */}
         <View></View>
@@ -284,10 +288,6 @@ const Home = () => {
 export default Home;
 
 const styles = StyleSheet.create({
-  pageView: {
-    flex: 1,
-    backgroundColor: Colors.white,
-  },
   calendar: {
     position: "absolute",
     zIndex: 10,
