@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import { EvilIcons } from "@expo/vector-icons";
 import HeadingText from "../utils/HeadingText";
@@ -20,26 +20,39 @@ import Ripple from "react-native-material-ripple";
 import { useData } from "../Context/Contexter";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faUniversity, faUser } from "@fortawesome/free-solid-svg-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Search = ({ navigation }) => {
   const { width, height } = Dimensions.get("window");
   const { setSelectedUser, user } = useData();
   const userName = useRef(null);
+  const [history, setHistory] = useState([]);
   const [users, setUsers] = useState();
   const handleSearch = debounce((text) => {
     userName.current = text;
     getUserName();
   }, 100);
+  // get userName
   const getUserName = async () => {
     const res = await axios.post(`${Api}/Search/getUserName/${user._id}`, {
-      userName: userName.current,
+      userName: userName.current.trim(),
     });
     if (res.data) {
+      // console.log(res.data);
       setUsers(res.data);
     }
   };
-  // options
-  const [option, setOption] = useState("Profile");
+  //  search history
+  const updateSearchHistory = useCallback((term) => {
+    setHistory((prevHistory) => {
+      const newHistory = [
+        term,
+        ...prevHistory.filter((item) => item.firstName !== term.firstName),
+      ].slice(0, 5);
+      AsyncStorage.setItem("history", JSON.stringify(newHistory));
+      return newHistory;
+    });
+  }, []);
   // render pages
   const ResultRender = () => {
     if (users?.length > 0) {
@@ -92,6 +105,7 @@ const Search = ({ navigation }) => {
                 onPress={() => {
                   navigation.navigate("userprofile");
                   setSelectedUser(user.item);
+                  updateSearchHistory(user.item);
                 }}
                 style={{ backgroundColor: Colors.violet, borderRadius: 10 }}
               >
@@ -120,6 +134,17 @@ const Search = ({ navigation }) => {
       );
     }
   };
+  // check the history
+  useEffect(() => {
+    const loadHistory = async () => {
+      const savedHistory = await AsyncStorage.getItem("history");
+      if (savedHistory) {
+        setHistory(JSON.parse(savedHistory));
+      }
+    };
+    loadHistory();
+  }, []);
+  //
   return (
     <View style={pageView}>
       <HeadingText text="Search" />
@@ -151,74 +176,14 @@ const Search = ({ navigation }) => {
           onChangeText={handleSearch}
         />
       </TouchableOpacity>
-      {/* options */}
-      <View style={{ flexDirection: "row", columnGap: 20, marginTop: 20 }}>
-        <Ripple
-          onPress={() => setOption("Profile")}
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            borderWidth: 1,
-            paddingVertical: 5,
-            paddingHorizontal: 15,
-            borderRadius: 5,
-            columnGap: 6,
-            borderColor: "#ff9933",
-          }}
-        >
-          <FontAwesomeIcon icon={faUser} size={20} color={Colors.mildGrey} />
-          <Text
-            style={{
-              fontSize: width * 0.04,
-              letterSpacing: 1,
-              color: Colors.mildGrey,
-            }}
-          >
-            Profile
-          </Text>
-        </Ripple>
-        <Ripple
-          onPress={() => setOption("College")}
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            borderWidth: 1,
-            paddingVertical: 5,
-            paddingHorizontal: 15,
-            borderRadius: 5,
-            columnGap: 6,
-            borderColor: "#ff9933",
-          }}
-        >
-          <FontAwesomeIcon
-            icon={faUniversity}
-            size={20}
-            color={Colors.mildGrey}
-          />
-          <Text
-            style={{
-              fontSize: width * 0.04,
-              letterSpacing: 1,
-              color: Colors.mildGrey,
-            }}
-          >
-            Colleges
-          </Text>
-        </Ripple>
-      </View>
-      {/* current option */}
-      <Text
-        style={{
-          color: Colors.mildGrey,
-          fontSize: width * 0.06,
-          lineHeight: 30,
-          letterSpacing: 2,
-          paddingVertical: 10,
-          marginTop: 10,
-        }}
-      >
-        {option}
-      </Text>
+      {/* show history list */}
+      {history.length > 0 && (
+        <View>
+          {history.map((term, index) => (
+            <Text key={index}>{term.firstName}</Text>
+          ))}
+        </View>
+      )}
       {/* usersList */}
       <ResultRender />
     </View>
