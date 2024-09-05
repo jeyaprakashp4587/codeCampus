@@ -2,6 +2,7 @@ import {
   Alert,
   Dimensions,
   Image,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -38,9 +39,11 @@ const Post = () => {
   const { width, height } = Dimensions.get("window");
   const postText = useRef(null);
   const postLink = useRef(null);
+  const inputRef = useRef(null);
   const handlePostText = (text) => {
     postText.current = text;
   };
+
   const handlePostLink = (text) => {
     postLink.current = text;
   };
@@ -90,27 +93,51 @@ const Post = () => {
   const [uploadIndi, setUploadIndi] = useState(false);
   const HandleUpload = async () => {
     setUploadIndi(true);
-    // console.log(postLink.current, postText.current);
-    const res = await axios.post(`${Api}/Post/UploadPost`, {
-      userId: user._id,
-      Images: Images,
-      postText: postText.current,
-      postLink: postLink.current,
-    });
-
-    // console.log(res.data);
-    if (res.data == "Uploaded") {
-      setUploadText("Uploaded");
+    //  check the post links and texts
+    if (postLink.current && postText.current) {
+      const res = await axios.post(`${Api}/Post/UploadPost`, {
+        userId: user._id,
+        Images: Images,
+        postText: postText.current,
+        postLink: postLink.current,
+      });
+      if (res.data == "Uploaded") {
+        setUploadText("Uploaded");
+        setUploadIndi(false);
+        Actitivity(user._id, "Post Uploaded");
+        setImages([]);
+        postLink.current = "";
+        postText.current = "";
+        inputRef.current.close();
+        Alert.alert("Uploaded Sucessfully");
+      } else {
+        Alert.alert("Something Wrong?");
+      }
+    } else {
+      Alert.alert("Fill the Fields");
       setUploadIndi(false);
-      Actitivity(user._id, "Post Uploaded");
-      setImages([]);
-      postLink.current = "";
-      postText.current = "";
-      Alert.alert("Uploaded Sucessfully");
     }
   };
+  // refreshing
+  const [refreshcon, setRefreshcon] = useState(false);
+  const RefreshCon = () => {
+    setRefreshcon(true);
+    inputRef.current.clear();
+    setImages([]);
+    setTimeout(() => {
+      setRefreshcon(false);
+    }, 1000);
+  };
   return (
-    <View style={[pageView, { rowGap: 10 }]}>
+    <ScrollView
+      style={[pageView, { rowGap: 10 }]}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshcon}
+          onRefresh={() => RefreshCon()}
+        />
+      }
+    >
       {/* heading Text */}
       <HeadingText text="Post" />
       {/* profile */}
@@ -150,6 +177,7 @@ const Post = () => {
       >
         <View style={{ rowGap: 30 }}>
           <TextInput
+            ref={inputRef}
             placeholder="Type Something..."
             style={{
               color: Colors.mildGrey,
@@ -161,6 +189,7 @@ const Post = () => {
             onChangeText={handlePostText}
           />
           <TextInput
+            ref={inputRef}
             placeholder="Share Links"
             onChangeText={handlePostLink}
             style={{
@@ -282,7 +311,7 @@ const Post = () => {
           </Text>
         </Ripple>
       </ScrollView>
-    </View>
+    </ScrollView>
   );
 };
 

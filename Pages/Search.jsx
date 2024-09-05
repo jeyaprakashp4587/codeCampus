@@ -19,7 +19,11 @@ import { Dimensions } from "react-native";
 import Ripple from "react-native-material-ripple";
 import { useData } from "../Context/Contexter";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faUniversity, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTimes,
+  faUniversity,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Search = ({ navigation }) => {
@@ -144,7 +148,13 @@ const Search = ({ navigation }) => {
     };
     loadHistory();
   }, []);
-  //
+  // remove list from history
+  const removeHistory = (userId) => {
+    const filter = history.filter((user) => user._id != userId);
+    setHistory(filter);
+    AsyncStorage.setItem("history", JSON.stringify(filter));
+  };
+  // ------------------------- //
   return (
     <View style={pageView}>
       <HeadingText text="Search" />
@@ -179,16 +189,37 @@ const Search = ({ navigation }) => {
       {/* show history list */}
       {history.length > 0 && (
         <View style={{ marginTop: 10 }}>
-          <Text
+          {/* Recent Search */}
+          <View
             style={{
-              fontSize: width * 0.05,
-              color: Colors.veryDarkGrey,
-              letterSpacing: 1,
-              paddingVertical: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
-            Recent Search
-          </Text>
+            <Text
+              style={{
+                fontSize: width * 0.05,
+                color: Colors.veryDarkGrey,
+                letterSpacing: 1,
+                paddingVertical: 10,
+              }}
+            >
+              Recent Search
+            </Text>
+            <TouchableOpacity onPress={() => setHistory([])}>
+              <Text
+                style={{
+                  color: Colors.violet,
+                  textDecorationLine: "underline",
+                  letterSpacing: 1,
+                }}
+              >
+                Clear All
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {/* history lists */}
           {history.map((item, index) => (
             <TouchableOpacity
               onPress={() => {
@@ -215,9 +246,23 @@ const Search = ({ navigation }) => {
                 }}
               />
 
-              <Text style={{ letterSpacing: 1, color: Colors.mildGrey }}>
+              <Text
+                style={{
+                  letterSpacing: 1,
+                  color: Colors.mildGrey,
+                  flex: 1,
+                  // borderWidth: 1,
+                }}
+              >
                 {item.firstName} {item.LastName}
               </Text>
+              <Ripple onPress={() => removeHistory(item._id)}>
+                <FontAwesomeIcon
+                  icon={faTimes}
+                  size={20}
+                  color={Colors.mildGrey}
+                />
+              </Ripple>
             </TouchableOpacity>
           ))}
         </View>
