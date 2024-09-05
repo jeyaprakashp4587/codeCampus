@@ -108,7 +108,7 @@ const Post = () => {
         setImages([]);
         postLink.current = "";
         postText.current = "";
-        inputRef.current.close();
+        inputRef.current.clear();
         Alert.alert("Uploaded Sucessfully");
       } else {
         Alert.alert("Something Wrong?");
