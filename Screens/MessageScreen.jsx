@@ -1,16 +1,20 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { pageView } from "../constants/Colors";
 import io from "socket.io-client";
 import Api from "../Api";
 import { useData } from "../Context/Contexter";
+import NotificationsHook from "../Notification/NotificationsHook";
 
 const MessageScreen = () => {
   const { user } = useData();
+  const { sendLocalNotification } = NotificationsHook();
   const socket = io(Api, { query: { userId: user._id } });
+  const msg = { text: "hlo" };
   useEffect(() => {
     socket.on("connect", () => {
       // console.log("connecteed");
+      sendLocalNotification(msg);
     });
     return () => {
       socket.disconnect();
