@@ -25,6 +25,7 @@ import {
 import axios from "axios";
 import Api from "../Api";
 import Skeleton from "../Skeletons/Skeleton";
+import Ripple from "react-native-material-ripple";
 
 const { width, height } = Dimensions.get("window");
 
@@ -186,26 +187,26 @@ const ChooseChallenge = ({ navigation }) => {
                   color={Colors.mildGrey}
                 />
               </View>
-              <LinearGradient
-                colors={["#003399", "#6699ff", "#003399"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={styles.linearGradient}
+              <Ripple
+                rippleColor="lightgrey"
+                onPress={() => {
+                  navigation.navigate("challengeDetail");
+                  setSelectedChallenge(item);
+                }}
+                textColor="white"
+                // style={{ padding: 1 }}
               >
-                <Button
-                  rippleColor="lightgrey"
-                  onPress={() => {
-                    navigation.navigate("challengeDetail");
-                    setSelectedChallenge(item);
-                  }}
-                  style={styles.viewChallengeButton}
-                  textColor="white"
+                <LinearGradient
+                  colors={["#003399", "#6699ff", "#003399"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.linearGradient}
                 >
                   <Text style={styles.viewChallengeButtonText}>
                     View Challenge
                   </Text>
-                </Button>
-              </LinearGradient>
+                </LinearGradient>
+              </Ripple>
             </View>
           )}
         />
@@ -277,6 +278,10 @@ const styles = StyleSheet.create({
   linearGradient: {
     borderRadius: 10,
     overflow: "hidden",
+    padding: 10,
+    textAlign: "center",
+    flexDirection: "row",
+    justifyContent: "center",
   },
   viewChallengeButton: {
     borderRadius: 5,
@@ -287,5 +292,6 @@ const styles = StyleSheet.create({
   },
   viewChallengeButtonText: {
     letterSpacing: 1,
+    color: "white",
   },
 });

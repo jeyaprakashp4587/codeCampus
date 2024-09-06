@@ -81,7 +81,7 @@ const NotificationsHook = () => {
     await Notifications.scheduleNotificationAsync({
       content: {
         title: "New Message!",
-        body: msgData.text, // Display the message text in the notification
+        body: msgData.text,
         data: { msgData },
       },
       trigger: { seconds: 1 },

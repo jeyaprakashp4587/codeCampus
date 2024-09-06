@@ -1,21 +1,17 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import TopicsText from "../utils/TopicsText";
+import HeadingText from "../utils/HeadingText";
 import { Colors, pageView } from "../constants/Colors";
+import Moment from "moment";
 
 const Placement = () => {
+  console.log(Moment().format("YYYY-MM-DDTHH:mm:ss"));
   return (
     <View style={pageView}>
-      <Text
-        numberOfLines={2}
-        style={{
-          fontSize: 20,
-          padding: 10,
-          color: Colors.mildGrey,
-          letterSpacing: 2,
-        }}
-      >
-        I'm Back after big break
-      </Text>
+      {/* header */}
+      <HeadingText text="Placement" />
+      {/* jobs lists */}
     </View>
   );
 };
