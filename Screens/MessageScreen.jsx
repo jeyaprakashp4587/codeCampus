@@ -3,12 +3,14 @@ import React, { useEffect } from "react";
 import { pageView } from "../constants/Colors";
 import io from "socket.io-client";
 import Api from "../Api";
+import { useData } from "../Context/Contexter";
 
 const MessageScreen = () => {
-  const socket = io(Api);
+  const { user } = useData();
+  const socket = io(Api, { query: { userId: user._id } });
   useEffect(() => {
     socket.on("connect", () => {
-      console.log("connecteed");
+      // console.log("connecteed");
     });
     return () => {
       socket.disconnect();
