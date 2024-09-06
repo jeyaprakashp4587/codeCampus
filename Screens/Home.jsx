@@ -95,9 +95,19 @@ const Home = () => {
     if (res.data) {
       setUser(res.data);
       setRefControl(false);
+      getConnectionPosts();
     }
   };
   // socket------
+  // get posts list
+
+  const getConnectionPosts = async () => {
+    const res = await axios.get(`${Api}/Post/getConnectionPosts/${user._id}`);
+    console.log(res.data);
+  };
+  useEffect(() => {
+    getConnectionPosts();
+  }, []);
 
   // ----------------------
 
