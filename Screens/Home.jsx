@@ -33,6 +33,7 @@ import learnImg from "../assets/images/learn.png";
 import practiceImg from "../assets/images/practice.png";
 import achiveImg from "../assets/images/achive.png";
 import io from "socket.io-client";
+// import InitialSocket from "../Socket/InitialSocket";
 
 // code -----------
 
@@ -47,6 +48,7 @@ const Home = () => {
     setTimeout(() => {
       setLoad(true);
     }, 100);
+    // InitialSocket();
   }, []);
 
   // carousel data
