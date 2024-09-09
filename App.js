@@ -7,6 +7,8 @@ import { ContextProvider } from "./Context/Contexter";
 import SplashScreen from "./Splashscreen/SplashScreen";
 import { PaperProvider } from "react-native-paper";
 import { StatusBar } from "react-native";
+import useSocket from "./Socket/useSocket";
+import useSocketEmit from "./Socket/useSocketEmit";
 
 const App = () => {
   // this load for render splash screen

@@ -16,7 +16,7 @@ import { AntDesign } from "@expo/vector-icons";
 import HomeSkeleton from "../Skeletons/HomeSkeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { EvilIcons } from "@expo/vector-icons";
-import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
+import { faBell, faTimesCircle } from "@fortawesome/free-regular-svg-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useData } from "../Context/Contexter";
 import { Dimensions } from "react-native";
@@ -35,7 +35,9 @@ import achiveImg from "../assets/images/achive.png";
 import io from "socket.io-client";
 import useSocket from "../Socket/useSocket";
 import useSocketEmit from "../Socket/useSocketEmit";
-
+import useSocketOn from "../Socket/useSocketOn";
+import NotificationsHook from "../Notification/NotificationsHook";
+import Ripple from "react-native-material-ripple";
 // code -----------
 
 const { width, height } = Dimensions.get("window");
@@ -101,11 +103,15 @@ const Home = () => {
     }
   };
   // socket------
+  const { sendLocalNotification } = NotificationsHook();
   const socket = useSocket();
   const emitEvent = useSocketEmit(socket);
-  emitEvent("test", "hloo");
+  emitEvent("test", (data) => {});
+  useSocketOn(socket, "Noti-test", (data) => {
+    console.log(data);
+    // sendLocalNotification(data);
+  });
   // get posts list
-
   const getConnectionPosts = async () => {
     const res = await axios.get(`${Api}/Post/getConnectionPosts/${user._id}`);
     console.log(res.data);
@@ -161,19 +167,63 @@ const Home = () => {
           <RefreshControl refreshing={refControl} onRefresh={refreshUser} />
         }
       >
-        {/* ideas wrapper */}
-        <Text
+        {/* greeding and notification */}
+        <View
           style={{
-            color: Colors.mildGrey,
-            fontSize: width * 0.04,
-            lineHeight: 30,
-            letterSpacing: 1,
-            paddingVertical: 10,
-            // fontWeight: "700",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          {getCurrentGreeting()} {user?.firstName}!
-        </Text>
+          <Text
+            style={{
+              color: Colors.mildGrey,
+              fontSize: width * 0.04,
+              lineHeight: 30,
+              letterSpacing: 1,
+              paddingVertical: 10,
+              // fontWeight: "700",
+            }}
+          >
+            {getCurrentGreeting()} {user?.firstName}!
+          </Text>
+
+          <Ripple
+            style={{ position: "relative" }}
+            onPress={() => navigation.navigate("notifications")}
+          >
+            {/* notificatio badge */}
+            <View
+              style={{
+                position: "absolute",
+                top: -height * 0.01,
+                right: 0,
+                backgroundColor: "red",
+                width: 15,
+                height: 15,
+                borderRadius: 50,
+                zIndex: 10,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                display: "none",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: width * 0.03,
+                  color: "white",
+                }}
+              >
+                1
+              </Text>
+            </View>
+            <FontAwesomeIcon color="orange" icon={faBell} size={23} />
+          </Ripple>
+        </View>
+
+        {/* ideas wrapper */}
+
         <View style={styles.ideasWrapper}>
           <TouchableOpacity
             style={styles.ideaBox}

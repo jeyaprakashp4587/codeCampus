@@ -36,6 +36,7 @@ import { Dimensions } from "react-native";
 import YourChallenges from "../Pages/YourChallenges";
 import YourActivity from "../Pages/YourActivity";
 import UserProfile from "../Pages/UserProfile";
+import Notifications from "../Pages/Notifications";
 
 // ------------- //
 // Tab navigations
@@ -215,6 +216,11 @@ const StackNavigations = () => {
       <Stack.Screen
         name="challengeDetail"
         component={ChallengeDetail}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="notifications"
+        component={Notifications}
         options={{ headerShown: false }}
       />
       <Stack.Screen
