@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-
+import useSocket from "./useSocket";
 const useSocketOn = (socket, eventName, callback) => {
+  useSocket();
   useEffect(() => {
     if (socket) {
       socket.on(eventName, callback);

@@ -33,7 +33,8 @@ import learnImg from "../assets/images/learn.png";
 import practiceImg from "../assets/images/practice.png";
 import achiveImg from "../assets/images/achive.png";
 import io from "socket.io-client";
-// import InitialSocket from "../Socket/InitialSocket";
+import useSocket from "../Socket/useSocket";
+import useSocketEmit from "../Socket/useSocketEmit";
 
 // code -----------
 
@@ -48,7 +49,6 @@ const Home = () => {
     setTimeout(() => {
       setLoad(true);
     }, 100);
-    // InitialSocket();
   }, []);
 
   // carousel data
@@ -101,6 +101,9 @@ const Home = () => {
     }
   };
   // socket------
+  const socket = useSocket();
+  const emitEvent = useSocketEmit(socket);
+  emitEvent("test", "hloo");
   // get posts list
 
   const getConnectionPosts = async () => {

@@ -4,7 +4,6 @@ const useSocketEmit = (socket) => {
       socket.emit(eventName, data);
     }
   };
-
   return emitEvent;
 };
 
