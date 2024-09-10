@@ -118,7 +118,18 @@ const Home = () => {
   };
   useEffect(() => {
     getConnectionPosts();
+    getNotifications();
   }, []);
+  // get Notification length
+  const [NotificationLength, setNotificationLength] = useState();
+  const getNotifications = async () => {
+    const res = await axios.get(
+      `${Api}/Notifications/getNotifications/${user._id}`
+    );
+    if (res.data) {
+      setNotificationLength(res.data.length);
+    }
+  };
 
   // ----------------------
 
@@ -206,7 +217,7 @@ const Home = () => {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
-                display: "none",
+                display: NotificationLength > 0 ? "flex" : "none",
               }}
             >
               <Text
@@ -215,15 +226,13 @@ const Home = () => {
                   color: "white",
                 }}
               >
-                1
+                {NotificationLength}
               </Text>
             </View>
             <FontAwesomeIcon color="orange" icon={faBell} size={23} />
           </Ripple>
         </View>
-
         {/* ideas wrapper */}
-
         <View style={styles.ideasWrapper}>
           <TouchableOpacity
             style={styles.ideaBox}

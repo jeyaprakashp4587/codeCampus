@@ -13,7 +13,7 @@ import Api from "../Api";
 import axios from "axios";
 import { useData } from "../Context/Contexter";
 
-const Notifications = () => {
+const Notifications = ({ NotificationLength }) => {
   const { user } = useData();
   const [NotificationList, setNotificationsList] = useState();
   const getNotifications = async () => {
@@ -23,6 +23,7 @@ const Notifications = () => {
     if (res.data) {
       console.log("Noti Console", res.data);
       setNotificationsList(res.data);
+      NotificationLength(res.data.length);
     }
   };
   useEffect(() => {
@@ -41,7 +42,9 @@ const Notifications = () => {
       ) : (
         <FlatList
           data={NotificationList}
-          renderItem={({ item }) => <Text>{item.NotificationText}</Text>}
+          renderItem={(notification) => (
+            <Text>{notification.item.NotificationText}</Text>
+          )}
         />
       )}
       <Text> {NotificationList?.length}</Text>
