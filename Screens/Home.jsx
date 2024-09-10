@@ -106,10 +106,10 @@ const Home = () => {
   const { sendLocalNotification } = NotificationsHook();
   const socket = useSocket();
   const emitEvent = useSocketEmit(socket);
-  emitEvent("test", (data) => {});
+  // emitEvent("test", (data) => {});
   useSocketOn(socket, "Noti-test", (data) => {
     console.log(data);
-    // sendLocalNotification(data);
+    sendLocalNotification(data);
   });
   // get posts list
   const getConnectionPosts = async () => {

@@ -17,10 +17,22 @@ import HrLine from "../utils/HrLine";
 import axios from "axios";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import Api from "../Api";
+import useSocket from "../Socket/useSocket";
+import useSocketEmit from "../Socket/useSocketEmit";
 
 const UserProfile = () => {
   const { width, height } = Dimensions.get("window");
   const { selectedUser, user } = useData();
+  // socket
+  const socket = useSocket();
+  const emitSocket = useSocketEmit(socket);
+  // // send the notification to user
+  const sendNotification = () => {
+    emitSocket("sendNotificationToUSer", {
+      ReceiverId: selectedUser._id,
+      SenderId: user._id,
+    });
+  };
   // ckech if this user follwer
   const [existsFollower, setExistsfollower] = useState(false);
   const findExistsFollower = async () => {
@@ -46,10 +58,12 @@ const UserProfile = () => {
     });
     if (res.data == "Sucess") {
       setExistsfollower(true);
+      sendNotification();
     } else {
       setExistsfollower(false);
     }
   };
+
   // remove connection
   const removeConnection = async () => {
     const res = await axios.post(

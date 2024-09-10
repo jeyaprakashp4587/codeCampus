@@ -11,7 +11,7 @@ const HrLine = (props) => {
         height: 1,
         borderBottomWidth: 1,
         alignSelf: "center",
-        marginVertical: 20,
+        marginVertical: props.margin ? props.margin : 20,
       }}
     />
   );
