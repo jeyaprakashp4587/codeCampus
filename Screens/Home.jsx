@@ -38,6 +38,7 @@ import useSocketEmit from "../Socket/useSocketEmit";
 import useSocketOn from "../Socket/useSocketOn";
 import NotificationsHook from "../Notification/NotificationsHook";
 import Ripple from "react-native-material-ripple";
+import Posts from "../components/Posts";
 // code -----------
 
 const { width, height } = Dimensions.get("window");
@@ -105,16 +106,18 @@ const Home = () => {
   // socket------
   const { sendLocalNotification } = NotificationsHook();
   const socket = useSocket();
-  const emitEvent = useSocketEmit(socket);
   // emitEvent("test", (data) => {});
   useSocketOn(socket, "Noti-test", (data) => {
     console.log(data);
     sendLocalNotification(data);
+    getNotifications();
   });
   // get posts list
+  const [posts, setPosts] = useState();
   const getConnectionPosts = async () => {
     const res = await axios.get(`${Api}/Post/getConnectionPosts/${user._id}`);
     console.log(res.data);
+    if (res.data) setPosts(res.data);
   };
   useEffect(() => {
     getConnectionPosts();
@@ -356,7 +359,12 @@ const Home = () => {
           />
         </View>
         {/* post */}
-        <View></View>
+        <View>
+          <FlatList
+            data={posts}
+            renderItem={(post) => <Posts postText={null} />}
+          />
+        </View>
       </ScrollView>
     </View>
   );

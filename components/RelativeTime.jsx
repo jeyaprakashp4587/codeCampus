@@ -1,23 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Dimensions, Text } from "react-native";
 import moment from "moment";
+import { Colors } from "../constants/Colors";
 
 const RelativeTime = ({ time }) => {
+  // Destructure the 'time' prop correctly
   const [relativeTime, setRelativeTime] = useState("");
+  const { width } = Dimensions.get("window");
 
   useEffect(() => {
+    // console.log("Received time:", time); // Debug to check the time being passed
+
     const updateRelativeTime = () => {
-      setRelativeTime(moment(time).fromNow());
+      if (time) {
+        const formattedTime = moment(time).fromNow();
+        // console.log("Formatted relative time:", formattedTime); // Check if Moment is working
+        setRelativeTime(formattedTime);
+      }
     };
 
-    updateRelativeTime();
+    updateRelativeTime(); // Set initial relative time
 
-    const intervalId = setInterval(updateRelativeTime, 1000);
+    const intervalId = setInterval(updateRelativeTime, 60000); // Update every minute
 
-    return () => clearInterval(intervalId);
+    return () => clearInterval(intervalId); // Cleanup on unmount
   }, [time]);
 
-  return { relativeTime };
+  return (
+    <Text style={{ fontSize: width * 0.03, color: Colors.mildGrey }}>
+      {relativeTime || "Time not available"}
+      {/* Display fallback if relativeTime is empty */}
+    </Text>
+  );
 };
 
 export default RelativeTime;

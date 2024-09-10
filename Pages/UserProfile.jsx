@@ -19,20 +19,40 @@ import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import Api from "../Api";
 import useSocket from "../Socket/useSocket";
 import useSocketEmit from "../Socket/useSocketEmit";
+import moment from "moment";
 
 const UserProfile = () => {
   const { width, height } = Dimensions.get("window");
-  const { selectedUser, user } = useData();
+  const { selectedUser, user, setSelectedUser } = useData();
   // socket
   const socket = useSocket();
+  const [render, setRender] = useState(false);
   const emitSocket = useSocketEmit(socket);
   // // send the notification to user
   const sendNotification = () => {
-    emitSocket("sendNotificationToUSer", {
+    emitSocket("sendNotificationToUser", {
       ReceiverId: selectedUser._id,
       SenderId: user._id,
+      Time: moment().format("YYYY-MM-DDTHH:mm:ss"),
     });
   };
+  // get the selectes user
+  const getSelectedUser = async () => {
+    const res = await axios.post(`${Api}/Login/getUser`, {
+      userId: selectedUser,
+    });
+    if (res.data) {
+      setSelectedUser(res.data);
+      // setRefControl(false);
+      setRender(true);
+    }
+  };
+  useEffect(() => {
+    if (!selectedUser.firstName) {
+      getSelectedUser();
+      console.log(selectedUser);
+    }
+  }, [selectedUser]);
   // ckech if this user follwer
   const [existsFollower, setExistsfollower] = useState(false);
   const findExistsFollower = async () => {
@@ -76,7 +96,11 @@ const UserProfile = () => {
       setExistsfollower(false);
     }
   };
-
+  // render
+  if (!render) {
+    return null;
+  }
+  //
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: "white" }}
@@ -279,7 +303,7 @@ const UserProfile = () => {
       {/* post */}
       {/* H */}
       <HrLine />
-      {selectedUser?.Posts.length > 0 && (
+      {selectedUser?.Posts?.length > 0 && (
         <Text
           style={{
             color: Colors.mildGrey,
@@ -292,7 +316,7 @@ const UserProfile = () => {
         </Text>
       )}
       <View>
-        {selectedUser?.Posts.map((post, index) => (
+        {selectedUser?.Posts?.map((post, index) => (
           <Posts post={post} index={index} />
         ))}
       </View>
