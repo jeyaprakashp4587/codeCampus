@@ -9,16 +9,22 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { Colors, font } from "../constants/Colors";
-import { faComment } from "@fortawesome/free-regular-svg-icons";
+import {
+  faComment,
+  faCommentDots,
+  faComments,
+  faHeart,
+} from "@fortawesome/free-regular-svg-icons";
 import { Dimensions } from "react-native";
 import Ripple from "react-native-material-ripple";
 import Api from "../Api";
 import axios from "axios";
 import { useData } from "../Context/Contexter";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
-const Posts = ({ post, index, admin }) => {
+const Posts = ({ post, index, admin, updateLikeCount }) => {
   const { width, height } = Dimensions.get("window");
-  let initialText = post.PostText;
+  let initialText = post.item.PostText;
   const { user, setUser } = useData();
   const wordThreshold = 20;
   const [expanded, setExpanded] = useState(false);
@@ -27,7 +33,7 @@ const Posts = ({ post, index, admin }) => {
   };
   // Function to count words in a string
   const countWords = (text) => {
-    return text.trim().split(/\s+/).length;
+    return text?.trim().split(/\s+/).length;
   };
   // delete disp state
   const [deldisplay, setDeldisplay] = useState(false);
@@ -37,7 +43,7 @@ const Posts = ({ post, index, admin }) => {
   // handle Delete
   const HandleDelete = async (postId) => {
     try {
-      const res = await axios.post(`${Api}/Post/deletePost/${user._id}`, {
+      const res = await axios.post.item(`${Api}/Post/deletePost/${user._id}`, {
         postId: postId,
       });
       if (res.data) {
@@ -45,6 +51,21 @@ const Posts = ({ post, index, admin }) => {
       }
     } catch (err) {
       console.log(err);
+    }
+  };
+  // like
+  const [likeCount, setLikeCount] = useState(post?.item.Like);
+  const handleLike = async () => {
+    try {
+      // Send request to the backend to increment the like count
+      const res = await axios.post(`${Api}/Post/likePost/${post.item._id}`);
+      if (res.status === 200) {
+        // Update the like count locally
+        setLikeCount(likeCount + 1);
+        updateLikeCount(post.item._id, likeCount + 1); // Update the like count in parent component
+      }
+    } catch (error) {
+      console.error("Error liking the post.item", error);
     }
   };
   return (
@@ -64,7 +85,7 @@ const Posts = ({ post, index, admin }) => {
         // margin: 10,
       }}
     >
-      {/* post header */}
+      {/* post.item header */}
       <View
         style={{
           flexDirection: "row",
@@ -106,7 +127,7 @@ const Posts = ({ post, index, admin }) => {
         )}
         {/* delete section */}
         <TouchableOpacity
-          onPress={() => HandleDelete(post._id)}
+          onPress={() => HandleDelete(post.item._id)}
           style={{
             position: "absolute",
             right: width * 0.03,
@@ -129,7 +150,7 @@ const Posts = ({ post, index, admin }) => {
           </Text>
         </TouchableOpacity>
       </View>
-      {/* post about */}
+      {/* post.item about */}
       <Text
         style={{
           fontFamily: font.poppins,
@@ -140,7 +161,7 @@ const Posts = ({ post, index, admin }) => {
       >
         {expanded
           ? initialText
-          : `${initialText.split(" ").slice(0, wordThreshold).join(" ")}...`}
+          : `${initialText?.split(" ").slice(0, wordThreshold).join(" ")}...`}
       </Text>
       {countWords(initialText) > wordThreshold && (
         <TouchableOpacity onPress={toggleExpanded} style={styles.showMore}>
@@ -149,11 +170,11 @@ const Posts = ({ post, index, admin }) => {
           </Text>
         </TouchableOpacity>
       )}
-      <Text style={{ color: Colors.violet }}>{post.PostLink}</Text>
-      {/* post image */}
-      {post.Images && (
+      <Text style={{ color: Colors.violet }}>{post.item.PostLink}</Text>
+      {/* post.item image */}
+      {post.item.Images && (
         <FlatList
-          data={post.Images}
+          data={post.item.Images}
           style={{ borderWidth: 0 }}
           horizontal={true}
           renderItem={({ item, index }) => (
@@ -161,7 +182,8 @@ const Posts = ({ post, index, admin }) => {
               key={index}
               source={{ uri: item }}
               style={{
-                width: post.Images.length == 1 ? width * 0.84 : width * 0.8,
+                width:
+                  post.item.Images.length == 1 ? width * 0.84 : width * 0.8,
                 height: height * 0.3,
                 objectFit: "contain",
                 borderWidth: 1,
@@ -170,26 +192,7 @@ const Posts = ({ post, index, admin }) => {
           )}
         />
       )}
-      {/* </ScrollView> */}
-      {/* post details */}
-      <View
-        style={{
-          paddingBottom: 10,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          borderBottomColor: Colors.veryLightGrey,
-          borderBottomWidth: 1,
-        }}
-      >
-        <Text style={{ fontFamily: font.poppins, fontSize: 13 }}>
-          You and 11 others
-        </Text>
-        <Text style={{ fontFamily: font.poppins, fontSize: 13 }}>
-          +31 Comments
-        </Text>
-      </View>
-      {/* post sections */}
+      {/* post.item sections */}
       <View
         style={{
           // borderWidth: 1,
@@ -199,14 +202,29 @@ const Posts = ({ post, index, admin }) => {
           paddingTop: 10,
         }}
       >
-        <Image
-          source={require("../assets/images/like.png")}
-          style={{ width: 25, height: 25, tintColor: Colors.lightGrey }}
-        />
-        <Image
-          source={require("../assets/images/chat.png")}
-          style={{ width: 25, height: 25, tintColor: Colors.lightGrey }}
-        />
+        <TouchableOpacity
+          onPress={handleLike}
+          style={{ flexDirection: "row", alignItems: "center", columnGap: 10 }}
+        >
+          <Text style={{ fontFamily: font.poppins, fontSize: width * 0.04 }}>
+            {post.item.Like}
+          </Text>
+          <FontAwesomeIcon size={20} icon={faHeart} color={Colors.mildGrey} />
+          {/* <Image
+            source={require("../assets/images/like.png")}
+            style={{ width: 25, height: 25, tintColor: Colors.lightGrey }}
+          /> */}
+        </TouchableOpacity>
+        <TouchableOpacity style={{ flexDirection: "row", columnGap: 10 }}>
+          <Text style={{ fontFamily: font.poppins, fontSize: width * 0.04 }}>
+            12
+          </Text>
+          <FontAwesomeIcon
+            icon={faComments}
+            size={22}
+            color={Colors.mildGrey}
+          />
+        </TouchableOpacity>
         <Image
           source={require("../assets/images/share.png")}
           style={{ width: 25, height: 25, tintColor: Colors.lightGrey }}

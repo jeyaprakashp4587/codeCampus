@@ -33,6 +33,7 @@ import axios from "axios";
 import Api from "../Api";
 import { useRef } from "react";
 import Actitivity from "../hooks/ActivityHook";
+import moment from "moment";
 
 const Post = () => {
   const { user } = useData();
@@ -100,6 +101,7 @@ const Post = () => {
         Images: Images,
         postText: postText.current,
         postLink: postLink.current,
+        Time: moment().format("YYYY-MM-DDTHH:mm:ss"),
       });
       if (res.data == "Uploaded") {
         setUploadText("Uploaded");

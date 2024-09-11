@@ -119,6 +119,14 @@ const Home = () => {
     // console.log(res.data);
     if (res.data) setPosts(res.data);
   };
+  // liked post
+  const updateLikeCount = (postId, newLikeCount) => {
+    const updatedPosts = posts.map((post) =>
+      post._id === postId ? { ...post, Like: newLikeCount } : post
+    );
+    setPosts(updatedPosts); // Update the state with the new like count
+  };
+  //  ------
   useEffect(() => {
     getConnectionPosts();
     getNotifications();
@@ -358,7 +366,16 @@ const Home = () => {
         </View>
         {/* post */}
         <View>
-          <FlatList data={posts} renderItem={(post) => <Posts post={post} />} />
+          <FlatList
+            data={posts}
+            renderItem={(post, index) => (
+              <Posts
+                post={post}
+                updateLikeCount={updateLikeCount}
+                index={index}
+              />
+            )}
+          />
         </View>
       </ScrollView>
     </View>
