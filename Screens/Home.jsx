@@ -360,10 +360,7 @@ const Home = () => {
         </View>
         {/* post */}
         <View>
-          <FlatList
-            data={posts}
-            renderItem={(post) => <Posts postText={null} />}
-          />
+          <FlatList data={posts} renderItem={(post) => <Posts post={post} />} />
         </View>
       </ScrollView>
     </View>
