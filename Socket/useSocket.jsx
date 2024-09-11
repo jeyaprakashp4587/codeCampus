@@ -11,7 +11,7 @@ const useSocket = () => {
     setSocket(newSocket);
 
     newSocket.on("connect", () => {
-      console.log("socket connected");
+      // console.log("socket connected");
     });
 
     return () => {

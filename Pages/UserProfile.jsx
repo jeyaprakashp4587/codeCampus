@@ -48,9 +48,9 @@ const UserProfile = () => {
     }
   };
   useEffect(() => {
-    if (!selectedUser.firstName) {
+    if (!selectedUser?.firstName) {
       getSelectedUser();
-      console.log(selectedUser);
+      // console.log(selectedUser);
     }
   }, [selectedUser]);
   // ckech if this user follwer

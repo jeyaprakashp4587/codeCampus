@@ -16,12 +16,18 @@ import axios from "axios";
 import { useData } from "../Context/Contexter";
 import RelativeTime from "../components/RelativeTime";
 import { useNavigation } from "@react-navigation/native";
+import useSocket from "../Socket/useSocket";
+import useSocketEmit from "../Socket/useSocketEmit";
 
 const Notifications = () => {
   const { user, setSelectedUser } = useData();
   const { width, height } = Dimensions.get("window");
   const Navigation = useNavigation();
   const [NotificationList, setNotificationsList] = useState();
+  // ---- socket
+  const socket = useSocket();
+  const emitSocket = useSocketEmit(socket);
+  //----
   const getNotifications = async () => {
     const res = await axios.get(
       `${Api}/Notifications/getNotifications/${user._id}`
@@ -41,8 +47,28 @@ const Notifications = () => {
     { name: "Others" },
   ];
   // HandleNotificationClick} -------
-  const HandleNotificationClick = (item) => {
-    console.log(item.NotificationType);
+  const HandleNotificationClick = async (item) => {
+    // Check if the notification is not seen
+    if (!item.seen) {
+      try {
+        // Send request to update the notification as seen
+        await axios.patch(
+          `${Api}/Notifications/markAsSeen/${user._id}/${item._id}`
+        );
+        // Optionally, update the state to mark this item as seen locally
+        setNotificationsList((prevList) =>
+          prevList.map((notification) =>
+            notification._id === item._id
+              ? { ...notification, seen: true }
+              : notification
+          )
+        );
+        emitSocket("checkNotification", "");
+      } catch (error) {
+        console.log("Error marking notification as seen:", error);
+      }
+    }
+    // Handle different types of notifications
     switch (item.NotificationType) {
       case "connection":
         Navigation.navigate("userprofile");
@@ -53,6 +79,7 @@ const Notifications = () => {
         break;
     }
   };
+
   // -----
   return (
     <View style={pageView}>
@@ -93,7 +120,7 @@ const Notifications = () => {
               flexDirection: "row",
               alignItems: "center",
               columnGap: 20,
-              backgroundColor: "white",
+              backgroundColor: item?.seen ? "white" : Colors.veryLightGrey,
               // flexWrap: "wrap",
               elevation: 3,
             }}

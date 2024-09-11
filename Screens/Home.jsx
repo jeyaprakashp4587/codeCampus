@@ -101,14 +101,14 @@ const Home = () => {
       setUser(res.data);
       setRefControl(false);
       getConnectionPosts();
+      getNotifications();
     }
   };
   // socket------
   const { sendLocalNotification } = NotificationsHook();
   const socket = useSocket();
-  // emitEvent("test", (data) => {});
   useSocketOn(socket, "Noti-test", (data) => {
-    console.log(data);
+    // console.log(data);
     sendLocalNotification(data);
     getNotifications();
   });
@@ -116,21 +116,25 @@ const Home = () => {
   const [posts, setPosts] = useState();
   const getConnectionPosts = async () => {
     const res = await axios.get(`${Api}/Post/getConnectionPosts/${user._id}`);
-    console.log(res.data);
+    // console.log(res.data);
     if (res.data) setPosts(res.data);
   };
   useEffect(() => {
     getConnectionPosts();
     getNotifications();
   }, []);
-  // get Notification length
-  const [NotificationLength, setNotificationLength] = useState();
+  // get unseen Notification length
+  useSocketOn(socket, "checkNotification", () => {
+    getNotifications();
+  });
+  const [unseenCount, setUnseenCount] = useState(0);
   const getNotifications = async () => {
     const res = await axios.get(
       `${Api}/Notifications/getNotifications/${user._id}`
     );
     if (res.data) {
-      setNotificationLength(res.data.length);
+      const unseen = res.data.filter((notification) => !notification.seen);
+      setUnseenCount(unseen.length); // Count unseen notifications
     }
   };
 
@@ -207,31 +211,25 @@ const Home = () => {
             onPress={() => navigation.navigate("notifications")}
           >
             {/* notificatio badge */}
-            <View
+            <Text
               style={{
+                display: unseenCount > 0 ? "flex" : "none",
                 position: "absolute",
-                top: -height * 0.01,
-                right: 0,
+                top: -height * 0.016,
+                right: -width * 0.0,
+                // height: height * 0.018,
+                width: width * 0.04,
+                fontSize: width * 0.026,
+                textAlign: "center",
+                color: "white",
                 backgroundColor: "red",
-                width: 15,
-                height: 15,
+                // padding: 5,
                 borderRadius: 50,
                 zIndex: 10,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                display: NotificationLength > 0 ? "flex" : "none",
               }}
             >
-              <Text
-                style={{
-                  fontSize: width * 0.03,
-                  color: "white",
-                }}
-              >
-                {NotificationLength}
-              </Text>
-            </View>
+              {unseenCount}
+            </Text>
             <FontAwesomeIcon color="orange" icon={faBell} size={23} />
           </Ripple>
         </View>
