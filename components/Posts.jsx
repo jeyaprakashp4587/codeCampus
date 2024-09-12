@@ -21,10 +21,11 @@ import Api from "../Api";
 import axios from "axios";
 import { useData } from "../Context/Contexter";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import RelativeTime from "./RelativeTime";
 
 const Posts = ({ post, index, admin, updateLikeCount }) => {
   const { width, height } = Dimensions.get("window");
-  let initialText = post.item.PostText;
+  let initialText = post.item?.PostText ? post.item?.PostText : post.PostText;
   const { user, setUser } = useData();
   const wordThreshold = 20;
   const [expanded, setExpanded] = useState(false);
@@ -54,15 +55,22 @@ const Posts = ({ post, index, admin, updateLikeCount }) => {
     }
   };
   // like
-  const [likeCount, setLikeCount] = useState(post?.item.Like);
+  const [likeCount, setLikeCount] = useState(
+    post?.item?.Like ? post.item.Like : post?.Like
+  );
   const handleLike = async () => {
     try {
       // Send request to the backend to increment the like count
-      const res = await axios.post(`${Api}/Post/likePost/${post.item._id}`);
+      const res = await axios.post(
+        `${Api}/Post/likePost/${post.item._id ? post.item._id : post._id}`
+      );
       if (res.status === 200) {
         // Update the like count locally
         setLikeCount(likeCount + 1);
-        updateLikeCount(post.item._id, likeCount + 1); // Update the like count in parent component
+        updateLikeCount(
+          post?.item?.Like ? post.item?.Like : post?.Like,
+          likeCount + 1
+        ); // Update the like count in parent component
       }
     } catch (error) {
       console.error("Error liking the post.item", error);
@@ -94,27 +102,30 @@ const Posts = ({ post, index, admin, updateLikeCount }) => {
         }}
       >
         <Image
-          source={require("../assets/images/jp.jpeg")}
+          source={{}}
           style={{ width: 50, height: 50, borderRadius: 50 }}
         />
         <View style={{ flex: 1, paddingHorizontal: 15 }}>
           <Text
             style={{
-              fontSize: 18,
+              fontSize: width * 0.044,
               color: Colors.veryDarkGrey,
               fontFamily: font.poppins,
+              letterSpacing: 1,
             }}
           >
-            Jeya Prakash
+            {post.item?.firstName
+              ? post.item?.firstName + post.item?.LastName
+              : post.firstName + post.LastName}
           </Text>
           <Text
             style={{
-              fontSize: 13,
+              fontSize: width * 0.033,
               color: Colors.lightGrey,
               fontFamily: font.poppins,
             }}
           >
-            The MDT Hindu College
+            {post.item?.Institute ? post.item?.Institute : post.Institute}
           </Text>
         </View>
         {admin && (
@@ -127,7 +138,9 @@ const Posts = ({ post, index, admin, updateLikeCount }) => {
         )}
         {/* delete section */}
         <TouchableOpacity
-          onPress={() => HandleDelete(post.item._id)}
+          onPress={() =>
+            HandleDelete(post.item?._id ? post.item?._id : post._id)
+          }
           style={{
             position: "absolute",
             right: width * 0.03,
@@ -170,28 +183,32 @@ const Posts = ({ post, index, admin, updateLikeCount }) => {
           </Text>
         </TouchableOpacity>
       )}
-      <Text style={{ color: Colors.violet }}>{post.item.PostLink}</Text>
+      <Text style={{ color: Colors.violet }}>{post.item?.PostLink}</Text>
       {/* post.item image */}
-      {post.item.Images && (
-        <FlatList
-          data={post.item.Images}
-          style={{ borderWidth: 0 }}
-          horizontal={true}
-          renderItem={({ item, index }) => (
-            <Image
-              key={index}
-              source={{ uri: item }}
-              style={{
-                width:
-                  post.item.Images.length == 1 ? width * 0.84 : width * 0.8,
-                height: height * 0.3,
-                objectFit: "contain",
-                borderWidth: 1,
-              }}
+      {post.item?.Images
+        ? post.item?.Images
+        : post.Images && (
+            <FlatList
+              data={post.item?.Images ? post.item?.Images : post.Images}
+              style={{ borderWidth: 0 }}
+              horizontal={true}
+              renderItem={({ item, index }) => (
+                <Image
+                  key={index}
+                  source={{ uri: item }}
+                  style={{
+                    width:
+                      post.item?.Images.length == 1
+                        ? width * 0.84
+                        : width * 0.8,
+                    height: height * 0.3,
+                    objectFit: "contain",
+                    borderWidth: 1,
+                  }}
+                />
+              )}
             />
           )}
-        />
-      )}
       {/* post.item sections */}
       <View
         style={{
@@ -207,7 +224,7 @@ const Posts = ({ post, index, admin, updateLikeCount }) => {
           style={{ flexDirection: "row", alignItems: "center", columnGap: 10 }}
         >
           <Text style={{ fontFamily: font.poppins, fontSize: width * 0.04 }}>
-            {post.item.Like}
+            {post.item?.Like ? post.item?.Like : post.Like}
           </Text>
           <FontAwesomeIcon size={20} icon={faHeart} color={Colors.mildGrey} />
           {/* <Image
@@ -225,13 +242,10 @@ const Posts = ({ post, index, admin, updateLikeCount }) => {
             color={Colors.mildGrey}
           />
         </TouchableOpacity>
-        <Image
-          source={require("../assets/images/share.png")}
-          style={{ width: 25, height: 25, tintColor: Colors.lightGrey }}
-        />
-        <Image
-          source={require("../assets/images/save.png")}
-          style={{ width: 25, height: 25, tintColor: Colors.lightGrey }}
+
+        <RelativeTime
+          time={post.item?.Time ? post.item?.Time : post.Time}
+          fsize={width * 0.033}
         />
       </View>
     </View>

@@ -36,7 +36,7 @@ const UserProfile = () => {
       Time: moment().format("YYYY-MM-DDTHH:mm:ss"),
     });
   };
-  // get the selectes user
+  // get the selected user
   const getSelectedUser = async () => {
     const res = await axios.post(`${Api}/Login/getUser`, {
       userId: selectedUser,
@@ -62,6 +62,7 @@ const UserProfile = () => {
     });
     if (res.data == "Yes") {
       setExistsfollower(true);
+      setRender(true);
       // console.log(res.data);
     } else {
       setExistsfollower(false);

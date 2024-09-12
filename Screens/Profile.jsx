@@ -495,8 +495,9 @@ const Profile = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       {/* posts */}
-      <View>
-        {user.Posts.map((post, index) => (
+      <View style={{ paddingHorizontal: 20 }}>
+        <TopicsText text={user?.Posts.length > 0 ? "Posts" : "s"} />
+        {user?.Posts.map((post, index) => (
           <Posts post={post} index={index} admin={true} />
         ))}
       </View>

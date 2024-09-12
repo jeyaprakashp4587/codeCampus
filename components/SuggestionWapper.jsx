@@ -87,7 +87,7 @@ const SuggestionWapper = ({ trigger, refresh }) => {
               }}
               onPress={() => {
                 Navigation.navigate("userprofile");
-                setSelectedUser(user.item);
+                setSelectedUser(user.item._id);
               }}
             >
               <Image

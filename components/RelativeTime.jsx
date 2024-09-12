@@ -3,7 +3,7 @@ import { Dimensions, Text } from "react-native";
 import moment from "moment";
 import { Colors } from "../constants/Colors";
 
-const RelativeTime = ({ time }) => {
+const RelativeTime = ({ time, fsize }) => {
   // Destructure the 'time' prop correctly
   const [relativeTime, setRelativeTime] = useState("");
   const { width } = Dimensions.get("window");
@@ -27,7 +27,9 @@ const RelativeTime = ({ time }) => {
   }, [time]);
 
   return (
-    <Text style={{ fontSize: width * 0.03, color: Colors.mildGrey }}>
+    <Text
+      style={{ fontSize: fsize ? fsize : width * 0.03, color: Colors.mildGrey }}
+    >
       {relativeTime || "Time not available"}
       {/* Display fallback if relativeTime is empty */}
     </Text>
