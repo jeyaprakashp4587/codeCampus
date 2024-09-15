@@ -26,7 +26,7 @@ const splashScreen = (props) => {
         });
         if (response.data.Email) {
           setUser(response.data);
-          nav.navigate("index");
+          nav.navigate("Tab");
         }
       }
     } catch (error) {

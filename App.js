@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import Navigation from "./Navigations/Navigation";
@@ -9,7 +9,8 @@ import { PaperProvider } from "react-native-paper";
 import { StatusBar } from "react-native";
 import useSocket from "./Socket/useSocket";
 import useSocketEmit from "./Socket/useSocketEmit";
-
+import Test from "./Screens/Test";
+const { width } = Dimensions.get("window");
 const App = () => {
   // this load for render splash screen
   const [load, setLoad] = useState(true);
@@ -20,14 +21,15 @@ const App = () => {
 
   return (
     <PaperProvider>
-      <NavigationContainer>
-        <ContextProvider>
-          <SafeAreaView style={styles.cn}>
-            {load ? <SplashScreen duration={Handleduration} /> : <Navigation />}
-          </SafeAreaView>
-          <StatusBar barStyle="dark-content" backgroundColor="white" />
-        </ContextProvider>
-      </NavigationContainer>
+      {/* <NavigationContainer> */}
+      <ContextProvider>
+        <SafeAreaView style={styles.cn}>
+          {load ? <SplashScreen duration={Handleduration} /> : <Navigation />}
+          {/* <Navigation /> */}
+        </SafeAreaView>
+        <StatusBar barStyle="dark-content" backgroundColor="white" />
+      </ContextProvider>
+      {/* </NavigationContainer> */}
     </PaperProvider>
   );
 };
@@ -37,6 +39,7 @@ export default App;
 const styles = StyleSheet.create({
   cn: {
     flex: 1,
+    width: width,
     backgroundColor: "#ffff",
     // marginTop: "10%",
     // paddingHorizontal: 10,

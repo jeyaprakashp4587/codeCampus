@@ -169,7 +169,7 @@ const StackNavigations = () => {
         options={{ headerShadow: false }}
       />
       <Stack.Screen
-        name="index"
+        name="Tab"
         component={TabNavigation}
         options={{ headerShown: false }}
       />

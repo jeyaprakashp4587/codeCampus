@@ -45,6 +45,7 @@
     "updates": {
       "url": "https://u.expo.dev/33fe3feb-9df5-42ea-9238-95f9f88081fb"
     },
-    "owner": "jeyaprakash4587"
+    "owner": "jeyaprakash4587",
+    "plugins": ["expo-router"]
   }
 }

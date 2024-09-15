@@ -46,6 +46,7 @@ const Home = () => {
   const navigation = useNavigation();
 
   const { user, setUser } = useData();
+
   const [load, setLoad] = useState(false);
 
   useEffect(() => {

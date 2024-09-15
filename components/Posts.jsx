@@ -127,7 +127,6 @@ const Posts = ({ post, index, admin, updateLikeCount }) => {
             />
           </TouchableOpacity>
         )}
-
         {/* Delete Section */}
         {deldisplay && (
           <TouchableOpacity
