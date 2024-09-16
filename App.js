@@ -10,12 +10,15 @@ import { StatusBar } from "react-native";
 import useSocket from "./Socket/useSocket";
 import useSocketEmit from "./Socket/useSocketEmit";
 import Test from "./Screens/Test";
+import checkForUpdates from "./update/checkForUpdates";
+// -----
 const { width } = Dimensions.get("window");
 const App = () => {
   // this load for render splash screen
   const [load, setLoad] = useState(true);
   const Handleduration = (data) => {
     setLoad(data);
+    checkForUpdates();
   };
   // call the notification
 
