@@ -53,11 +53,13 @@ const Login = ({ navigation }) => {
         if (data.data.firstName) {
           AsyncStorage.setItem("Email", data.data.Email);
           setUser(data.data);
-          navigation.navigate("index");
+          navigation.navigate("Tab");
         } else {
           Alert.alert("Email or Password is Incorrect");
         }
       });
+    } else {
+      console.log("not user");
     }
   };
   // send the user data to server
