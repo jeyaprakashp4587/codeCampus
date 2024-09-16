@@ -4,7 +4,7 @@
     "slug": "codecampus",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/app.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -43,7 +43,7 @@
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/33fe3feb-9df5-42ea-9238-95f9f88081fb"
+      "url": "https://u.expo.dev/90904e36-9f3f-41ec-859e-9454e9836e98"
     },
     "owner": "jeyaprakash4587",
     "plugins": ["expo-router"]

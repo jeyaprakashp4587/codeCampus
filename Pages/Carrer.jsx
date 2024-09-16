@@ -297,7 +297,7 @@ const Carrer = ({ navigation }) => {
       <View style={styles.pageView}>
         <Text style={styles.titleText}>Choose Your Learning Carrer</Text>
         <Image
-          source={require("../assets/images/carrer.jpeg")}
+          source={{ uri: "https://i.ibb.co/vDwVGnW/carrer.jpg" }}
           style={{
             ...styles.careerImage,
             width: width * 0.7,
