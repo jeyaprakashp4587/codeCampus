@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/app.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.jeyaprakash4587.codeCampus"
@@ -35,19 +35,18 @@
         "origin": false
       },
       "eas": {
-        "projectId": "90904e36-9f3f-41ec-859e-9454e9836e98"
+        "projectId": "727846d7-69c0-4dda-96cd-f432c2c5ddb7"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
-    "updates": {
-      "url": "https://u.expo.dev/90904e36-9f3f-41ec-859e-9454e9836e98",
-      "enabled": true,
-      "checkAutomatically": "ON_LOAD",
-      "fallbackToCacheTimeout": 0
-    },
     "owner": "jeyaprakash4587",
-    "plugins": ["expo-router"]
+    "plugins": [
+      "expo-router"
+    ],
+    "updates": {
+      "url": "https://u.expo.dev/727846d7-69c0-4dda-96cd-f432c2c5ddb7"
+    }
   }
 }
