@@ -33,20 +33,12 @@
     "extra": {
       "router": {
         "origin": false
-      },
-      "eas": {
-        "projectId": "727846d7-69c0-4dda-96cd-f432c2c5ddb7"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "owner": "jeyaprakash4587",
-    "plugins": [
-      "expo-router"
-    ],
-    "updates": {
-      "url": "https://u.expo.dev/727846d7-69c0-4dda-96cd-f432c2c5ddb7"
-    }
+    "plugins": ["expo-router"]
   }
 }
