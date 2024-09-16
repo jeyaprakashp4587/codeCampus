@@ -8,9 +8,8 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/images/splash.jpg",
+      "resizeMode": "contain"
     },
     "ios": {
       "supportsTablet": true,
@@ -43,7 +42,10 @@
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/90904e36-9f3f-41ec-859e-9454e9836e98"
+      "url": "https://u.expo.dev/90904e36-9f3f-41ec-859e-9454e9836e98",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
     },
     "owner": "jeyaprakash4587",
     "plugins": ["expo-router"]
