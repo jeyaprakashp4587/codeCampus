@@ -9,10 +9,12 @@
       "distribution": "internal"
     },
     "preview": {
+      "channel": "staging",
       "distribution": "internal"
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "channel": "production"
     }
   },
   "submit": {

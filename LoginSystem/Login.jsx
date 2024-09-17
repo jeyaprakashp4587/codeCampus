@@ -9,7 +9,7 @@ import {
 import React, { useRef, useState } from "react";
 import { Colors, font, pageView } from "../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Button } from "react-native-paper";
+import { ActivityIndicator, Button } from "react-native-paper";
 import Api from "../Api";
 import axios from "axios";
 import { TextInput } from "react-native-paper";
@@ -26,6 +26,7 @@ const Login = ({ navigation }) => {
     Email: "",
     Password: "",
   });
+  const [activityIndi, setActivityIndi] = useState(false);
   const handleEmail = (name, text) => {
     setForm({ ...form, [name]: text });
   };
@@ -47,6 +48,7 @@ const Login = ({ navigation }) => {
     return isValid;
   };
   const HandleLogin = () => {
+    setActivityIndi(true);
     if (Validation()) {
       axios.post(`${Api}/LogIn/signIn`, form).then((data) => {
         // console.log(data.data);
@@ -54,7 +56,9 @@ const Login = ({ navigation }) => {
           AsyncStorage.setItem("Email", data.data.Email);
           setUser(data.data);
           navigation.navigate("Tab");
+          setActivityIndi(false);
         } else {
+          setActivityIndi(false);
           Alert.alert("Email or Password is Incorrect");
         }
       });
@@ -106,8 +110,13 @@ const Login = ({ navigation }) => {
               justifyContent: "center",
               alignItems: "center",
               borderRadius: 10,
+              flexDirection: "row",
+              columnGap: 5,
             }}
           >
+            {activityIndi && (
+              <ActivityIndicator size={20} color={Colors.violet} />
+            )}
             <Text
               style={{
                 fontWeight: "700",

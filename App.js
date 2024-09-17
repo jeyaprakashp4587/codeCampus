@@ -10,6 +10,7 @@ import { StatusBar } from "react-native";
 import useSocket from "./Socket/useSocket";
 import useSocketEmit from "./Socket/useSocketEmit";
 import Test from "./Screens/Test";
+import * as Updates from "expo-updates";
 // import checkForUpdates from "./update/checkForUpdates";
 // -----
 const { width } = Dimensions.get("window");
@@ -20,6 +21,24 @@ const App = () => {
     setLoad(data);
     // checkForUpdates();
   };
+  useEffect(() => {
+    const checkForUpdates = async () => {
+      try {
+        // Check if an update is available
+        const update = await Updates.checkForUpdateAsync();
+        if (update.isAvailable) {
+          // If an update is available, fetch and apply it
+          await Updates.fetchUpdateAsync();
+          // Once the update is fetched, reload the app
+          await Updates.reloadAsync();
+        }
+      } catch (e) {
+        console.log("Error checking for updates:", e);
+      }
+    };
+
+    checkForUpdates();
+  }, []);
   // call the notification
 
   return (

@@ -20,6 +20,7 @@ const splashScreen = (props) => {
   const validLogin = async () => {
     try {
       const email = await AsyncStorage.getItem("Email");
+      console.log(email);
       if (email) {
         const response = await axios.post(`${Api}/LogIn/splash`, {
           Email: email,

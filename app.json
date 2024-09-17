@@ -8,7 +8,7 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.jpg",
+      "image": "./assets/images/appss.png",
       "resizeMode": "contain"
     },
     "ios": {
@@ -33,6 +33,9 @@
     "extra": {
       "router": {
         "origin": false
+      },
+      "eas": {
+        "projectId": "ef967fdb-3770-48d5-aee5-9042b40468d9"
       }
     },
     "runtimeVersion": {
