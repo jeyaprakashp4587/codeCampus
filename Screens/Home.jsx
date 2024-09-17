@@ -129,11 +129,7 @@ const Home = () => {
     );
     setPosts(updatedPosts); // Update the state with the new like count
   };
-  //  ------
-  useEffect(() => {
-    getConnectionPosts();
-    getNotifications();
-  }, []);
+
   // get unseen Notification length
   useSocketOn(socket, "checkNotification", () => {
     getNotifications();
@@ -148,9 +144,21 @@ const Home = () => {
       setUnseenCount(unseen.length); // Count unseen notifications
     }
   };
-
+  // update profile picure
+  const setProfilePic = async () => {
+    const res = await axios.post(`${Api}/Profile/setProfile/${user._id}`);
+    if (res.data) {
+      console.log(res.data);
+      setUser(res.data);
+    }
+  };
   // ----------------------
-
+  //  ------
+  useEffect(() => {
+    getConnectionPosts();
+    getNotifications();
+    setProfilePic();
+  }, []);
   // load the skeleton
   if (!load) {
     return <HomeSkeleton />;
@@ -161,7 +169,13 @@ const Home = () => {
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate("profile")}>
           <Image
-            source={{ uri: user?.Images?.profile }}
+            source={{
+              uri: user?.Images?.profile
+                ? user?.Images?.profile
+                : user.Gender == "Male"
+                ? "https://i.ibb.co/3T4mNMm/man.png"
+                : "https://i.ibb.co/3mCcQp9/woman.png",
+            }}
             style={[
               styles.profileImage,
               {

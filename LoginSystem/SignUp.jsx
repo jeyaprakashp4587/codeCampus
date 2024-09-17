@@ -6,6 +6,7 @@ import {
   Text,
   View,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import React, { useRef } from "react";
 import { Colors, font, pageView } from "../constants/Colors";
@@ -47,7 +48,7 @@ const SignUp = ({ navigation }) => {
     District: "",
     Nationality: "",
   }).current;
-
+  const [loading, setLoading] = useState(false);
   const handleInput = (name, value) => {
     formData[name] = value;
   };
@@ -61,10 +62,11 @@ const SignUp = ({ navigation }) => {
         refs[key].current.setNativeProps({
           style: { borderColor: "red", borderWidth: 1, borderRadius: 5 },
         });
+        setLoading(false);
         isValid = false;
       } else {
         refs[key].current.setNativeProps({
-          style: { borderColor: Colors.veryLightGrey, borderWidth: 1 },
+          style: { borderColor: Colors.veryLightGrey, borderWidth: 0 },
         });
       }
     }
@@ -90,11 +92,16 @@ const SignUp = ({ navigation }) => {
     return isValid;
   };
   const handleSignUp = async () => {
+    setLoading(true);
     // console.log(formData.First_Name);
     if (validateForm()) {
       const valid = await axios.post(`${Api}/LogIn/signUp`, formData);
       if (valid.data == "SignUp Sucessfully") {
+        setLoading(false);
         navigation.navigate("login");
+      } else if (valid.data == "Email has Already Taken") {
+        setLoading(false);
+        Alert.alert("Email has Already Taken");
       }
     }
   };
@@ -135,7 +142,7 @@ const SignUp = ({ navigation }) => {
               style={{
                 marginTop: 5,
                 backgroundColor: "white",
-                padding: 2,
+                // padding: 2,
                 borderRadius: 10,
                 textDecorationLine: "none",
               }}
@@ -143,6 +150,7 @@ const SignUp = ({ navigation }) => {
               mode="outlined"
               textColor={Colors.mildGrey}
               activeOutlineColor={Colors.mildGrey}
+              // outlineColor={Colors.veryLightGrey}
               outlineColor={Colors.mildGrey}
               label={key.replace("_", " ")}
               ref={refs[key]}
@@ -155,7 +163,7 @@ const SignUp = ({ navigation }) => {
           onPress={() => handleSignUp()}
           style={{
             // borderWidth: 1,
-            flexDirection: "column",
+            flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
             padding: 12,
@@ -164,8 +172,10 @@ const SignUp = ({ navigation }) => {
             elevation: 2,
             width: "100%",
             alignSelf: "center",
+            columnGap: 10,
           }}
         >
+          {loading && <ActivityIndicator size={22} color={Colors.mildGrey} />}
           <Text
             style={{
               fontSize: 15,

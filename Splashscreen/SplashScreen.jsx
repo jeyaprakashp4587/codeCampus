@@ -26,6 +26,7 @@ const splashScreen = (props) => {
           Email: email,
         });
         if (response.data.Email) {
+          props.duration(false);
           setUser(response.data);
           nav.navigate("Tab");
         }
@@ -39,16 +40,16 @@ const splashScreen = (props) => {
     validLogin();
   }, []);
 
-  useEffect(() => {
-    for (let i = 0; i <= 320; i++) {
-      setTimeout(() => {
-        setLength(i);
-        if (i === 300) {
-          props.duration(false);
-        }
-      }, 0);
-    }
-  }, []);
+  // useEffect(() => {
+  //   for (let i = 0; i <= 320; i++) {
+  //     setTimeout(() => {
+  //       setLength(i);
+  //       if (i === 300) {
+  //         props.duration(false);
+  //       }
+  //     }, 0);
+  //   }
+  // }, []);
 
   return (
     <View

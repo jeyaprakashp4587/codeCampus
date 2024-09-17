@@ -22,7 +22,7 @@ const MessageScreen = () => {
   }, []);
   return (
     <View style={pageView}>
-      <Text>MessageScreen</Text>
+      <Text>Under Working!</Text>
     </View>
   );
 };

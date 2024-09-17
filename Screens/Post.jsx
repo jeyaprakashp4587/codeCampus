@@ -147,7 +147,13 @@ const Post = () => {
         style={{ flexDirection: "row", alignItems: "center", columnGap: 20 }}
       >
         <Image
-          source={{ uri: user.Images.profile }}
+          source={{
+            uri: user?.Images?.profile
+              ? user?.Images?.profile
+              : user.Gender == "Male"
+              ? "https://i.ibb.co/3T4mNMm/man.png"
+              : "https://i.ibb.co/3mCcQp9/woman.png",
+          }}
           style={{ width: 60, height: 60, borderRadius: 50 }}
         />
         <Text

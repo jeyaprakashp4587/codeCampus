@@ -165,7 +165,7 @@ const Profile = ({ navigation }) => {
             source={{
               uri: user?.Images?.coverImg
                 ? user?.Images?.coverImg
-                : "https://i.ibb.co/wwGDt0t/2151133955.jpg",
+                : "https://i.ibb.co/Fh1fwGm/2151777507.jpg",
             }}
             style={{
               width: "100%",
@@ -204,7 +204,7 @@ const Profile = ({ navigation }) => {
               source={{
                 uri: user?.Images?.profile
                   ? user?.Images?.profile
-                  : user.Gender === "Male"
+                  : user.Gender == "Male"
                   ? "https://i.ibb.co/3T4mNMm/man.png"
                   : "https://i.ibb.co/3mCcQp9/woman.png",
               }}
@@ -215,6 +215,7 @@ const Profile = ({ navigation }) => {
                 borderColor: "white",
                 borderWidth: 5,
                 resizeMode: "cover",
+                backgroundColor: "white",
               }}
             />
           )}
