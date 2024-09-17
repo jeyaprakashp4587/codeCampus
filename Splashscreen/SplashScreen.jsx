@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Colors, pageView } from "../constants/Colors";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -12,11 +12,12 @@ import Api from "../Api";
 import { useNavigation } from "@react-navigation/native";
 import { useData } from "../Context/Contexter";
 
-const splashScreen = (props) => {
+const SplashScreen = ({ duration, navigation }) => {
   const { user, setUser } = useData();
+  const { height, width } = Dimensions.get("window");
   const nav = useNavigation();
   const [length, setLength] = useState(0);
-  // auto loginc
+  // auto login
   const validLogin = async () => {
     try {
       const email = await AsyncStorage.getItem("Email");
@@ -26,10 +27,11 @@ const splashScreen = (props) => {
           Email: email,
         });
         if (response.data.Email) {
-          props.duration(false);
           setUser(response.data);
           nav.navigate("Tab");
         }
+      } else {
+        nav.navigate("login");
       }
     } catch (error) {
       console.error("Error fetching email or logging in:", error);
@@ -40,16 +42,13 @@ const splashScreen = (props) => {
     validLogin();
   }, []);
 
-  // useEffect(() => {
-  //   for (let i = 0; i <= 320; i++) {
-  //     setTimeout(() => {
-  //       setLength(i);
-  //       if (i === 300) {
-  //         props.duration(false);
-  //       }
-  //     }, 0);
-  //   }
-  // }, []);
+  useEffect(() => {
+    for (let i = 0; i <= 320; i++) {
+      setTimeout(() => {
+        setLength(i);
+      }, 0);
+    }
+  }, []);
 
   return (
     <View
@@ -80,6 +79,19 @@ const splashScreen = (props) => {
         >
           Code Campus
         </Text>
+        <Text
+          style={{
+            position: "absolute",
+            top: height * 0.09,
+            color: Colors.violet,
+            right: width * 0.1,
+            fontWeight: 600,
+            fontSize: width * 0.03,
+            letterSpacing: 2,
+          }}
+        >
+          Beta Version
+        </Text>
         <FontAwesomeIcon
           icon={faCode}
           size={300}
@@ -95,6 +107,6 @@ const splashScreen = (props) => {
   );
 };
 
-export default splashScreen;
+export default SplashScreen;
 
 const styles = StyleSheet.create({});

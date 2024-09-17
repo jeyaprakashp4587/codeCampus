@@ -31,7 +31,7 @@ import YourCourses from "../Pages/YourCourses";
 import YourRewards from "../Pages/YourReward";
 import Search from "../Pages/Search";
 import Placement from "../Screens/Placement";
-import splashScreen from "../Splashscreen/SplashScreen";
+import SplashScreen from "../Splashscreen/SplashScreen";
 import { Dimensions } from "react-native";
 import YourChallenges from "../Pages/YourChallenges";
 import YourActivity from "../Pages/YourActivity";
@@ -155,14 +155,18 @@ const TabNavigation = () => {
 // stack navigations
 const StackNavigations = () => {
   const Stack = createNativeStackNavigator();
-
   return (
     <Stack.Navigator
-      initialRouteName="splash"
+      // initialRouteName="splash"
       screenOptions={{
         headerShown: false,
       }}
     >
+      <Stack.Screen
+        name="splash"
+        component={SplashScreen}
+        options={{ headerShadow: false }}
+      />
       <Stack.Screen
         name="login"
         component={Login}

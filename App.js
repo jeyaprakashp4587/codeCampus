@@ -36,22 +36,18 @@ const App = () => {
         console.log("Error checking for updates:", e);
       }
     };
-
     checkForUpdates();
   }, []);
   // call the notification
 
   return (
     <PaperProvider>
-      {/* <NavigationContainer> */}
       <ContextProvider>
         <SafeAreaView style={styles.cn}>
-          {load ? <SplashScreen duration={Handleduration} /> : <Navigation />}
-          {/* <Navigation /> */}
+          <Navigation />
         </SafeAreaView>
         <StatusBar barStyle="dark-content" backgroundColor="white" />
       </ContextProvider>
-      {/* </NavigationContainer> */}
     </PaperProvider>
   );
 };
