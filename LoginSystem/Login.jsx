@@ -73,7 +73,7 @@ const Login = ({ navigation }) => {
       <View style={styles.container}>
         <View style={styles.imageContainer}>
           <Image
-            source={require("../assets/images/loginbg.png")}
+            source={{ uri: "https://i.ibb.co/P5s1nZ5/loginbg.png" }}
             style={styles.image}
           />
           <Text style={styles.welcomeText}>
@@ -139,22 +139,23 @@ const Login = ({ navigation }) => {
           <Text style={styles.indicatorText}>OR</Text>
         </View>
         {/* login options */}
+
         <View style={styles.loginOptions}>
           <TouchableOpacity>
             <Image
-              source={require("../assets/images/search.png")}
+              source={{ uri: "https://i.ibb.co/zQC87X0/search.png" }}
               style={styles.icon}
             />
           </TouchableOpacity>
           <TouchableOpacity>
             <Image
-              source={require("../assets/images/facebook.png")}
+              source={{ uri: "https://i.ibb.co/Ypbh3dM/facebook.png" }}
               style={styles.icon}
             />
           </TouchableOpacity>
           <TouchableOpacity>
             <Image
-              source={require("../assets/images/github.png")}
+              source={{ uri: "https://i.ibb.co/xDZP0Lx/github.png" }}
               style={styles.icon}
             />
           </TouchableOpacity>

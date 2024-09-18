@@ -2,7 +2,6 @@ import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import { useEffect, useRef, useState } from "react";
 import { Alert, Platform } from "react-native";
-import icon from "../assets/images/chat.png";
 
 const NotificationsHook = () => {
   Notifications.setNotificationHandler({

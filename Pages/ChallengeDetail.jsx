@@ -124,7 +124,7 @@ const ChallengeDetail = () => {
   };
   // this useeffect for set challengeStatus
   useEffect(() => {
-    if (!selectedChallenge.status) setStatusbuttonToggle(false);
+    if (!selectedChallenge?.status) setStatusbuttonToggle(false);
     if (selectedChallenge?.status) {
       setStatusbuttonToggle(true);
       setChallengeStatus(selectedChallenge?.status);
@@ -383,7 +383,7 @@ const ChallengeDetail = () => {
             />
             <TextInput
               onChangeText={(text) => HandleText("LiveLink", text)}
-              placeholder="Enter Your Project Repository"
+              placeholder="Enter Your Project LiveLink"
               style={{
                 borderWidth: 1,
                 padding: 15,

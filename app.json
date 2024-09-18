@@ -35,7 +35,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "511e8cb2-ad8b-496e-a2fe-f1a5792df82b"
+        "projectId": "d353dd9c-d8ef-4c2b-86b6-b378fc6ae792"
       }
     },
     "runtimeVersion": {
@@ -44,9 +44,6 @@
     "owner": "jeyaprakash4587",
     "plugins": [
       "expo-router"
-    ],
-    "updates": {
-      "url": "https://u.expo.dev/511e8cb2-ad8b-496e-a2fe-f1a5792df82b"
-    }
+    ]
   }
 }

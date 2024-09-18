@@ -28,10 +28,7 @@ import Api from "../Api";
 import ActivityHook from "../hooks/ActivityHook";
 import Carousel from "react-native-reanimated-carousel";
 import SuggestionWapper from "../components/SuggestionWapper";
-// carousel images
-import learnImg from "../assets/images/learn.png";
-import practiceImg from "../assets/images/practice.png";
-import achiveImg from "../assets/images/achive.png";
+
 import io from "socket.io-client";
 import useSocket from "../Socket/useSocket";
 import useSocketEmit from "../Socket/useSocketEmit";
@@ -56,20 +53,26 @@ const Home = () => {
   }, []);
 
   // carousel data
+
   const carouel = [
     {
       name: "Learning",
-      img: learnImg,
+      img: "https://i.ibb.co/R2YnF4F/learn.png",
       bgColor: "#ffcccc",
       route: "carrerScreen",
     },
     {
       name: "Practice",
-      img: practiceImg,
+      img: "https://i.ibb.co/8mjYHzc/practice.png",
       bgColor: "#cce6ff",
       route: "Challenge",
     },
-    { name: "Achive", img: achiveImg, bgColor: "#b3ffb3", route: "Post" },
+    {
+      name: "Achive",
+      img: "https://i.ibb.co/6mt33RQ/achive.png",
+      bgColor: "#b3ffb3",
+      route: "Post",
+    },
   ];
   // suggest display
   const [suggestDisplay, setSuggestDisplay] = useState(true);
@@ -259,13 +262,14 @@ const Home = () => {
           </Ripple>
         </View>
         {/* ideas wrapper */}
+
         <View style={styles.ideasWrapper}>
           <TouchableOpacity
             style={styles.ideaBox}
             onPress={() => navigation.navigate("carrerScreen")}
           >
             <Image
-              source={require("../assets/images/carrer.png")}
+              source={{ uri: "https://i.ibb.co/pX2r3T0/carrer.png" }}
               style={[styles.icon, { tintColor: "#ff9999" }]}
             />
             <Text
@@ -280,7 +284,7 @@ const Home = () => {
             style={styles.ideaBox}
           >
             <Image
-              source={require("../assets/images/learning.png")}
+              source={{ uri: "https://i.ibb.co/QcnJZSz/learning.png" }}
               style={[styles.icon, { tintColor: "#8600b3" }]}
             />
             <Text
@@ -310,7 +314,7 @@ const Home = () => {
             onPress={() => navigation.navigate("youractivities")}
           >
             <Image
-              source={require("../assets/images/calendar.png")}
+              source={{ uri: "https://i.ibb.co/dtmzjnb/calendar.png" }}
               style={[styles.icon, { tintColor: "#0077b3" }]}
             />
             <Text
@@ -363,7 +367,7 @@ const Home = () => {
                   {item.name}
                 </Text>
                 <Image
-                  source={item.img}
+                  source={{ uri: item.img }}
                   style={{ width: "80%", height: "100%" }}
                 />
               </LinearGradient>

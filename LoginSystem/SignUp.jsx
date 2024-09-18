@@ -98,6 +98,7 @@ const SignUp = ({ navigation }) => {
       const valid = await axios.post(`${Api}/LogIn/signUp`, formData);
       if (valid.data == "SignUp Sucessfully") {
         setLoading(false);
+        Alert.alert("Signup Sucessfully");
         navigation.navigate("login");
       } else if (valid.data == "Email has Already Taken") {
         setLoading(false);
@@ -105,6 +106,7 @@ const SignUp = ({ navigation }) => {
       }
     }
   };
+
   return (
     <View style={[pageView, { paddingHorizontal: 20, paddingBottom: 20 }]}>
       <Text
@@ -122,7 +124,7 @@ const SignUp = ({ navigation }) => {
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         <View style={{ paddingBottom: 10 }}>
           <Image
-            source={require("../assets/images/signbg.jpeg")}
+            source={{ uri: "https://i.ibb.co/Njft952/signbg.jpg" }}
             style={{ width: 300, height: 300, alignSelf: "center" }}
           />
           <Text
