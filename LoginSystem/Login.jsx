@@ -21,51 +21,70 @@ const { width, height } = Dimensions.get("window");
 
 const Login = ({ navigation }) => {
   const { setUser } = useData();
-  // console.log(Api);
+  const navigation = useNavigation();
+
   const [form, setForm] = useState({
     Email: "",
     Password: "",
   });
+
   const [activityIndi, setActivityIndi] = useState(false);
-  const handleEmail = (name, text) => {
-    setForm({ ...form, [name]: text });
-  };
-  const handlePassword = (name, text) => {
-    setForm({ ...form, [name]: text });
-  };
-  const Validation = () => {
-    let isValid = true;
-    const emailRegex = /\S+@\S+\.\S+/;
-    if (!emailRegex.test(form.Email)) {
-      Alert.alert("Email was Not Corrected");
-      isValid = false;
+
+  // Email and password handlers with memoization to prevent unnecessary re-renders
+  const handleEmail = useCallback((name, text) => {
+    setForm((prevForm) => ({ ...prevForm, [name]: text }));
+  }, []);
+
+  const handlePassword = useCallback((name, text) => {
+    setForm((prevForm) => ({ ...prevForm, [name]: text }));
+  }, []);
+
+  // Email validation function
+  const isEmailValid = (email) => /\S+@\S+\.\S+/.test(email);
+
+  // Full form validation function
+  const validateForm = useCallback(() => {
+    if (!isEmailValid(form.Email)) {
+      Alert.alert("Invalid email format.");
+      return false;
     }
-    for (let val in form) {
-      if (!form[val]) {
-        Alert.alert("Email was Not Corrected");
+
+    for (let key in form) {
+      if (!form[key]) {
+        Alert.alert(`${key} is required.`);
+        return false;
       }
     }
-    return isValid;
-  };
-  const HandleLogin = () => {
+
+    return true;
+  }, [form]);
+
+  // Handle login
+  const HandleLogin = useCallback(async () => {
     setActivityIndi(true);
-    if (Validation()) {
-      axios.post(`${Api}/LogIn/signIn`, form).then((data) => {
-        // console.log(data.data);
-        if (data.data.firstName) {
-          AsyncStorage.setItem("Email", data.data.Email);
-          setUser(data.data);
-          navigation.navigate("Tab");
-          setActivityIndi(false);
-        } else {
-          setActivityIndi(false);
-          Alert.alert("Email or Password is Incorrect");
-        }
-      });
-    } else {
-      console.log("not user");
+
+    if (!validateForm()) {
+      setActivityIndi(false);
+      return;
     }
-  };
+
+    try {
+      const { data } = await axios.post(`${Api}/LogIn/signIn`, form);
+
+      if (data?.firstName) {
+        await AsyncStorage.setItem("Email", data.Email);
+        setUser(data);
+        navigation.navigate("Tab");
+      } else {
+        Alert.alert("Email or Password is incorrect.");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      Alert.alert("Login failed, please try again.");
+    } finally {
+      setActivityIndi(false);
+    }
+  }, [form, validateForm, setUser, navigation]);
   // send the user data to server
 
   return (

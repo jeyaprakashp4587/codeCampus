@@ -16,39 +16,50 @@ const SplashScreen = ({ duration, navigation }) => {
   const { user, setUser } = useData();
   const { height, width } = Dimensions.get("window");
   const nav = useNavigation();
+
+  // State to manage progress length
   const [length, setLength] = useState(0);
-  // auto login
-  const validLogin = async () => {
+
+  // Function to handle auto login
+  const validLogin = useCallback(async () => {
     try {
       const email = await AsyncStorage.getItem("Email");
-      console.log(email);
       if (email) {
         const response = await axios.post(`${Api}/LogIn/splash`, {
           Email: email,
         });
+
         if (response.data.Email) {
           setUser(response.data);
-          nav.navigate("Tab");
+          nav.navigate("Tab"); // Navigate to the main app if login is valid
+        } else {
+          nav.navigate("login"); // Navigate to login screen if email not found
         }
       } else {
         nav.navigate("login");
       }
     } catch (error) {
-      console.error("Error fetching email or logging in:", error);
+      console.error("Error during auto-login:", error);
     }
-  };
+  }, [nav, setUser]);
 
   useEffect(() => {
-    validLogin();
-  }, []);
+    validLogin(); // Call auto login on component mount
+  }, [validLogin]);
 
+  // Simulating progress bar for splash screen
   useEffect(() => {
-    for (let i = 0; i <= 320; i++) {
-      setTimeout(() => {
-        setLength(i);
-      }, 0);
-    }
-  }, []);
+    let timer;
+    const incrementLength = () => {
+      if (length < 320) {
+        setLength((prevLength) => prevLength + 1); // Increment length state
+        timer = setTimeout(incrementLength, 5); // Adjust the timeout interval for smoother progress
+      }
+    };
+    incrementLength(); // Start the progress
+
+    return () => clearTimeout(timer); // Cleanup to prevent memory leaks
+  }, [length]);
 
   return (
     <View
