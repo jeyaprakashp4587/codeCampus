@@ -5,7 +5,7 @@ import {
   View,
   Dimensions,
 } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import HeadingText from "../utils/HeadingText";
 import { Colors, pageView } from "../constants/Colors";
 import { useData } from "../Context/Contexter";

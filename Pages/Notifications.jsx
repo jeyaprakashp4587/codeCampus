@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import TopicsText from "../utils/TopicsText";
 import HrLine from "../utils/HrLine";
@@ -31,7 +31,6 @@ const Notifications = () => {
 
   // Fetch notifications from the API
   const getNotifications = useCallback(async () => {
-    setLoading(true);
     try {
       const res = await axios.get(
         `${Api}/Notifications/getNotifications/${user._id}`
@@ -124,7 +123,7 @@ const Notifications = () => {
         ))}
       </View> */}
       {/* Notifications Sections */}
-      {!NotificationList || NotificationList.length < 0 ? (
+      {!notificationList || notificationList.length < 0 ? (
         <Text>No Notifications There</Text>
       ) : (
         notificationList?.map((item, index) => (

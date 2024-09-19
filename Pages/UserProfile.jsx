@@ -22,6 +22,7 @@ import useSocketEmit from "../Socket/useSocketEmit";
 import moment from "moment";
 
 const UserProfile = () => {
+  const { width, height } = Dimensions.get("window");
   const { selectedUser, user, setSelectedUser } = useData();
   const socket = useSocket();
   const emitSocket = useSocketEmit(socket);
@@ -79,7 +80,7 @@ const UserProfile = () => {
         ConnectionId: selectedUser?._id,
         userId: user._id,
       });
-      if (res.data === "Success") {
+      if (res.data === "Sucess") {
         setExistsFollower(true);
         sendNotification();
       }

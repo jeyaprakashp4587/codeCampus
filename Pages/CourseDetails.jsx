@@ -6,7 +6,7 @@ import {
   Alert,
   Dimensions,
 } from "react-native";
-import React from "react";
+import React, { useCallback } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import { useData } from "../Context/Contexter";
 import HeadingText from "../utils/HeadingText";
@@ -20,7 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
 
-const CourseDetails = ({ navigation }) => {
+const CourseDetails = () => {
   const {
     selectedCourse,
     setselectedTechnology,
@@ -32,7 +32,6 @@ const CourseDetails = ({ navigation }) => {
 
   const HandleCourse = useCallback(
     async (item) => {
-      setLoading(true); // Start loading
       try {
         // Set the selected technology
         setselectedTechnology({ web: item.web, name: item.name });

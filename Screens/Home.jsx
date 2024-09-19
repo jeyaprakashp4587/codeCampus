@@ -10,7 +10,7 @@ import {
   StatusBar,
   ImageBackground,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import { AntDesign } from "@expo/vector-icons";
 import HomeSkeleton from "../Skeletons/HomeSkeleton";
@@ -20,18 +20,13 @@ import { faBell, faTimesCircle } from "@fortawesome/free-regular-svg-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useData } from "../Context/Contexter";
 import { Dimensions } from "react-native";
-import Post from "../components/Posts";
 import { LinearGradient } from "expo-linear-gradient";
 import { RefreshControl } from "react-native";
 import axios from "axios";
 import Api from "../Api";
-import ActivityHook from "../hooks/ActivityHook";
 import Carousel from "react-native-reanimated-carousel";
 import SuggestionWapper from "../components/SuggestionWapper";
-
-import io from "socket.io-client";
 import useSocket from "../Socket/useSocket";
-import useSocketEmit from "../Socket/useSocketEmit";
 import useSocketOn from "../Socket/useSocketOn";
 import NotificationsHook from "../Notification/NotificationsHook";
 import Ripple from "react-native-material-ripple";
@@ -64,7 +59,7 @@ const Home = () => {
         name: "Learning",
         img: "https://i.ibb.co/R2YnF4F/learn.png",
         bgColor: "#ffcccc",
-        route: "careerScreen",
+        route: "carrerScreen",
       },
       {
         name: "Practice",
@@ -393,20 +388,20 @@ const Home = () => {
             refresh={suggestRefresh}
           />
         </View>
-        {/* post */}
-        <View>
-          <FlatList
-            data={posts}
-            renderItem={(post, index) => (
-              <Posts
-                post={post}
-                updateLikeCount={updateLikeCount}
-                index={index}
-              />
-            )}
-          />
-        </View>
       </ScrollView>
+      {/* post */}
+      <View>
+        <FlatList
+          data={posts}
+          renderItem={(post, index) => (
+            <Posts
+              post={post}
+              updateLikeCount={updateLikeCount}
+              index={index}
+            />
+          )}
+        />
+      </View>
     </View>
   );
 };

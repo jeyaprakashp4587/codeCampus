@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import HeadingText from "../utils/HeadingText";
@@ -199,7 +199,6 @@ const Post = () => {
       >
         <View style={{ rowGap: 30 }}>
           <TextInput
-            ref={inputRef}
             placeholder="Type Something..."
             style={{
               color: Colors.mildGrey,
@@ -208,6 +207,7 @@ const Post = () => {
               borderColor: Colors.lightGrey,
               letterSpacing: 1,
             }}
+            ref={inputRef}
             onChangeText={handlePostText}
           />
           <TextInput

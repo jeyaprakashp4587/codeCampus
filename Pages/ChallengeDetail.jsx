@@ -54,10 +54,11 @@ const ChallengeDetail = () => {
       const res = await axios.post(
         `${Api}/Challenges/checkChallengeStatus/${user._id}`,
         {
-          ChallengeName: selectedChallenge?.title,
+          ChallengeName: selectedChallenge?.ChallengeName,
         }
       );
-      if (res.data) {
+      if (res.data == "pending" || res.data == "completed") {
+        setStatusButtonToggle(true);
         setChallengeStatus(res.data);
       }
     } catch (error) {
@@ -77,6 +78,7 @@ const ChallengeDetail = () => {
         }
       );
       if (res.data) {
+        // console.log(res.data);
         setSelectedChallenge(res.data);
         checkChallengeStatus();
       }
@@ -148,7 +150,7 @@ const ChallengeDetail = () => {
   // Handle challenge start
   const HandleStart = async (chName) => {
     setStatusButtonToggle(true);
-    setChallengeStatus("Pending");
+    setChallengeStatus("pending");
     try {
       const res = await axios.post(`${Api}/Challenges/addChallenge`, {
         userId: user._id,
@@ -166,7 +168,6 @@ const ChallengeDetail = () => {
   // Focus listener: Fetch data when the screen comes into focus
   useEffect(() => {
     const unsubscribeFocus = navigation.addListener("focus", () => {
-      checkChallengeStatus();
       getParticularChallenge();
     });
 

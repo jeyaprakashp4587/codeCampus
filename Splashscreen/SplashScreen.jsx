@@ -1,5 +1,5 @@
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useCallback } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCode } from "@fortawesome/free-solid-svg-icons";
@@ -12,7 +12,7 @@ import Api from "../Api";
 import { useNavigation } from "@react-navigation/native";
 import { useData } from "../Context/Contexter";
 
-const SplashScreen = ({ duration, navigation }) => {
+const SplashScreen = () => {
   const { user, setUser } = useData();
   const { height, width } = Dimensions.get("window");
   const nav = useNavigation();

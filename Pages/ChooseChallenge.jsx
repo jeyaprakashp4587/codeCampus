@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Colors, pageView } from "../constants/Colors";
@@ -30,14 +31,15 @@ import Ripple from "react-native-material-ripple";
 const { width, height } = Dimensions.get("window");
 
 const ChooseChallenge = ({ navigation }) => {
-  const Levels = useMemo(() => {
-    [
+  const Levels = useMemo(
+    () => [
       { name: "Newbie", bgcolor: "#009900" },
       { name: "Junior", bgcolor: "#cca300" },
       { name: "Expert", bgcolor: "#cc6600" },
       { name: "Legend", bgcolor: "#990000" },
-    ];
-  }, []);
+    ],
+    []
+  );
 
   const { selectedChallengeTopic, setSelectedChallenge } = useData();
   const [Challenges, setChallenges] = useState([]);

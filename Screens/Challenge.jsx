@@ -23,7 +23,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 const Challenge = ({ navigation }) => {
   const { selectedChallengeTopic, setselectedChallengeTopic } = useData();
-
+  const { width, height } = Dimensions.get("window");
   // Memoize the challenge data to avoid recalculating the array on every render
   const Challenges = useMemo(
     () => [

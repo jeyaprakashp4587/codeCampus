@@ -17,9 +17,10 @@ import { Alert } from "react-native";
 import { useData } from "../Context/Contexter";
 import { ScrollView } from "react-native";
 import Ripple from "react-native-material-ripple";
+import { useNavigation } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 
-const Login = ({ navigation }) => {
+const Login = () => {
   const { setUser } = useData();
   const navigation = useNavigation();
 
