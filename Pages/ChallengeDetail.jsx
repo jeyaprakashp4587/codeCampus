@@ -119,6 +119,7 @@ const ChallengeDetail = () => {
       }
     );
     if (res.data) {
+      console.log(res.data);
       setChallengeStatus(res.data);
     }
   };

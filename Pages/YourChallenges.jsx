@@ -26,23 +26,20 @@ const YourChallenges = (props) => {
   const [challenges, setChallenges] = useState();
   const [skLoad, setSkLoad] = useState();
   //   fetch chllenges from DB
-  const getChallenges = useCallback(
-    async (option) => {
-      try {
-        const res = await axios.post(
-          `${Api}/Challenges/getUserChallege/${user._id}`,
-          { option }
-        );
-        if (res.data) {
-          setChallenges(res.data);
-          setSkLoad(true);
-        }
-      } catch (error) {
-        console.error("Error fetching challenges:", error);
+  const getChallenges = async (option) => {
+    try {
+      const res = await axios.post(
+        `${Api}/Challenges/getUserChallege/${user._id}`,
+        { option: option }
+      );
+      if (res.data) {
+        setChallenges(res.data);
+        setSkLoad(true);
       }
-    },
-    [user._id]
-  );
+    } catch (error) {
+      console.error("Error fetching challenges:", error);
+    }
+  };
   // console.log("challenges", challenges);
   useEffect(() => {
     setSkLoad(false);
@@ -181,7 +178,7 @@ const YourChallenges = (props) => {
               </View>
               {item?.ChallengeLevel !== "newbie" && (
                 <Image
-                  source={{ uri: item.ChallengeImage }}
+                  source={{ uri: item?.ChallengeImage }}
                   style={styles.challengeImage}
                 />
               )}

@@ -376,7 +376,7 @@ const Profile = ({ navigation }) => {
               letterSpacing: 1,
             }}
           >
-            Networks
+            Connections
           </Text>
           <Text
             style={{

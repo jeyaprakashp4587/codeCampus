@@ -98,6 +98,7 @@ const SignUp = ({ navigation }) => {
       const valid = await axios.post(`${Api}/LogIn/signUp`, formData);
       if (valid.data == "SignUp Sucessfully") {
         setLoading(false);
+        console.log(valid.data);
         Alert.alert("Signup Sucessfully");
         navigation.navigate("login");
       } else if (valid.data == "Email has Already Taken") {

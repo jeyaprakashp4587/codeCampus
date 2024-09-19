@@ -120,10 +120,10 @@ const Home = () => {
   const [posts, setPosts] = useState();
   const getConnectionPosts = async () => {
     const res = await axios.get(`${Api}/Post/getConnectionPosts/${user._id}`);
-    // console.log(res.data);
-    // if (res.status === 200) {
-    //   setPosts(res.data);
-    // }
+    console.log(res.data);
+    if (res.status === 200) {
+      setPosts(res.data);
+    }
   };
   // liked post
   const updateLikeCount = (postId, newLikeCount) => {
