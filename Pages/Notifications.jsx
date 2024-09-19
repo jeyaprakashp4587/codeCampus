@@ -23,62 +23,82 @@ const Notifications = () => {
   const { user, setSelectedUser } = useData();
   const { width, height } = Dimensions.get("window");
   const Navigation = useNavigation();
-  const [NotificationList, setNotificationsList] = useState();
-  // ---- socket
+  const [notificationList, setNotificationList] = useState([]);
+
+  // Socket handling
   const socket = useSocket();
   const emitSocket = useSocketEmit(socket);
-  //----
-  const getNotifications = async () => {
-    const res = await axios.get(
-      `${Api}/Notifications/getNotifications/${user._id}`
-    );
-    if (res.data) {
-      // console.log("Noti Console", res.data);
-      setNotificationsList(res.data);
+
+  // Fetch notifications from the API
+  const getNotifications = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        `${Api}/Notifications/getNotifications/${user._id}`
+      );
+      if (res.data) {
+        setNotificationList(res.data);
+      }
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [user._id]);
+
+  // Handle notification click
+  const handleNotificationClick = useCallback(
+    async (item) => {
+      if (!item.seen) {
+        try {
+          // Mark the notification as seen
+          await axios.patch(
+            `${Api}/Notifications/markAsSeen/${user._id}/${item._id}`
+          );
+          setNotificationList((prevList) =>
+            prevList.map((notification) =>
+              notification._id === item._id
+                ? { ...notification, seen: true }
+                : notification
+            )
+          );
+          emitSocket("checkNotification", "");
+        } catch (error) {
+          console.log("Error marking notification as seen:", error);
+        }
+      }
+
+      // Handle different notification types
+      switch (item.NotificationType) {
+        case "connection":
+          setSelectedUser(item.NotificationSender);
+          Navigation.navigate("userprofile");
+          break;
+
+        // Add other notification types here as needed
+        default:
+          break;
+      }
+    },
+    [user._id, emitSocket, Navigation, setSelectedUser]
+  );
+
+  // Use socket to listen for notification updates
+  useEffect(() => {
+    if (socket) {
+      socket.on("newNotification", getNotifications);
+    }
+    return () => {
+      if (socket) {
+        socket.off("newNotification", getNotifications);
+      }
+    };
+  }, [socket, getNotifications]);
+
+  // Fetch notifications when the component mounts
   useEffect(() => {
     getNotifications();
-  }, []);
-  // Notification Options
-  const notiOpotions = [
-    { name: "Friends" },
-    { name: "Posts" },
-    { name: "Others" },
-  ];
-  // HandleNotificationClick} -------
-  const HandleNotificationClick = async (item) => {
-    // Check if the notification is not seen
-    if (!item.seen) {
-      try {
-        // Send request to update the notification as seen
-        await axios.patch(
-          `${Api}/Notifications/markAsSeen/${user._id}/${item._id}`
-        );
-        // Optionally, update the state to mark this item as seen locally
-        setNotificationsList((prevList) =>
-          prevList.map((notification) =>
-            notification._id === item._id
-              ? { ...notification, seen: true }
-              : notification
-          )
-        );
-        emitSocket("checkNotification", "");
-      } catch (error) {
-        console.log("Error marking notification as seen:", error);
-      }
-    }
-    // Handle different types of notifications
-    switch (item.NotificationType) {
-      case "connection":
-        Navigation.navigate("userprofile");
-        setSelectedUser(item.NotificationSender);
-        break;
-
-      default:
-        break;
-    }
-  };
+  }, [getNotifications]);
 
   // -----
   return (
@@ -107,9 +127,9 @@ const Notifications = () => {
       {!NotificationList || NotificationList.length < 0 ? (
         <Text>No Notifications There</Text>
       ) : (
-        NotificationList?.map((item, index) => (
+        notificationList?.map((item, index) => (
           <TouchableOpacity
-            onPress={() => HandleNotificationClick(item)}
+            onPress={() => handleNotificationClick(item)}
             key={index}
             style={{
               // borderWidth: 1,

@@ -7,7 +7,7 @@ import {
   StatusBar,
   ImageBackground,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import HeadingText from "../utils/HeadingText";
 import PragraphText from "../utils/PragraphText";
@@ -22,27 +22,36 @@ import YourChallenges from "../Pages/YourChallenges";
 import { LinearGradient } from "expo-linear-gradient";
 
 const Challenge = ({ navigation }) => {
-  const { width, height } = Dimensions.get("window");
   const { selectedChallengeTopic, setselectedChallengeTopic } = useData();
-  const Challenges = [
-    {
-      ChallengeName: "Web Development",
-      bgColor: "#80bfff",
-      img: "https://i.ibb.co/qn5dFQL/data.png",
-    },
-    {
-      ChallengeName: "App Development",
-      bgColor: "#8cb3d9",
-      img: "https://i.ibb.co/WcPBv7x/app.png",
-    },
-  ];
 
-  const HandleSelectChallenges = (item) => {
-    navigation.navigate("chooseChallenge");
-    setselectedChallengeTopic(item.ChallengeName);
-  };
-  //
-  const [chToggle, setChaToggle] = useState();
+  // Memoize the challenge data to avoid recalculating the array on every render
+  const Challenges = useMemo(
+    () => [
+      {
+        ChallengeName: "Web Development",
+        bgColor: "#80bfff",
+        img: "https://i.ibb.co/qn5dFQL/data.png",
+      },
+      {
+        ChallengeName: "App Development",
+        bgColor: "#8cb3d9",
+        img: "https://i.ibb.co/WcPBv7x/app.png",
+      },
+    ],
+    []
+  );
+
+  // Memoize the handler to prevent re-creation on every render
+  const HandleSelectChallenges = useCallback(
+    (item) => {
+      navigation.navigate("chooseChallenge");
+      setselectedChallengeTopic(item.ChallengeName);
+    },
+    [navigation, setselectedChallengeTopic]
+  );
+
+  // State for toggling challenges, initialize with a proper default value
+  const [chToggle, setChaToggle] = useState(null);
   return (
     <LinearGradient
       colors={["hsl(200, 100%, 96%)", "white", "white", "hsl(336, 100%, 97%)"]}

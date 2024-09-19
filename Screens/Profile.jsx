@@ -15,7 +15,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faEdit } from "@fortawesome/free-regular-svg-icons";
 import { faAward, faBook, faSignOut } from "@fortawesome/free-solid-svg-icons";
 import HrLine from "../utils/HrLine";
-import Post from "../components/Posts";
 import TopicsText from "../utils/TopicsText";
 import { useData } from "../Context/Contexter";
 import AsyncStorage from "@react-native-async-storage/async-storage";

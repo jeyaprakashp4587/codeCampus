@@ -38,9 +38,15 @@ import moment from "moment";
 const Post = () => {
   const { user } = useData();
   const { width, height } = Dimensions.get("window");
-  const postText = useRef(null);
-  const postLink = useRef(null);
+  const postText = useRef("");
+  const postLink = useRef("");
   const inputRef = useRef(null);
+  const [images, setImages] = useState([]);
+  const [uploadText, setUploadText] = useState("Upload");
+  const [uploadIndi, setUploadIndi] = useState(false);
+  const [refreshCon, setRefreshCon] = useState(false);
+  const [hostImageIndi, setHostImageIndi] = useState(false);
+
   const handlePostText = (text) => {
     postText.current = text;
   };
@@ -48,13 +54,16 @@ const Post = () => {
   const handlePostLink = (text) => {
     postLink.current = text;
   };
-  // pick images
+
+  // Request media library permissions
   useEffect(() => {
-    const permission = ImagePicker.requestMediaLibraryPermissionsAsync();
+    const requestPermissions = async () => {
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    };
+    requestPermissions();
   }, []);
-  // select images
-  const [Images, setImages] = useState([]);
-  const [hostImageIndi, setHostImageIndi] = useState(false);
+
+  // Select images from the library
   const selectImage = async () => {
     setHostImageIndi(false);
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -62,81 +71,86 @@ const Post = () => {
       allowsMultipleSelection: true,
       aspect: [4, 3],
     });
-    if (result) {
-      result.assets.map((asset) => {
-        hostImage(asset.uri).then((d) => {
-          setHostImageIndi(true), setImages((prev) => [...prev, d]);
-        });
-      });
+
+    if (result?.assets) {
+      const uploadedImages = await Promise.all(
+        result.assets.map(async (asset) => {
+          return await hostImage(asset.uri);
+        })
+      );
+      setImages((prev) => [...prev, ...uploadedImages]);
+      setHostImageIndi(true);
     }
   };
-  // upload Image
-  const hostImage = async (images) => {
+
+  // Upload image to Firebase
+  const hostImage = useCallback(async (imageUri) => {
     try {
-      const storageRef = ref(storage, "Image/" + Date.now() + ".jpeg");
-      const response = await fetch(images);
+      const storageRef = ref(storage, `Image/${Date.now()}.jpeg`);
+      const response = await fetch(imageUri);
       const blob = await response.blob();
       await uploadBytes(storageRef, blob);
       await updateMetadata(storageRef, {
         contentType: "image/jpeg",
         cacheControl: "public,max-age=31536000",
       });
-      const downloadURL = await getDownloadURL(storageRef);
-      // console.log("url", downloadURL);
-      return downloadURL;
+      return await getDownloadURL(storageRef);
     } catch (error) {
       console.error("Error uploading file:", error);
       throw error;
     }
-  };
-  // upload post
-  const [uploadText, setUploadText] = useState("Upload");
-  const [uploadIndi, setUploadIndi] = useState(false);
-  const HandleUpload = async () => {
+  }, []);
+
+  // Handle post upload
+  const handleUpload = async () => {
     setUploadIndi(true);
-    //  check the post links and texts
     if (postLink.current && postText.current) {
-      const res = await axios.post(`${Api}/Post/UploadPost`, {
-        userId: user._id,
-        Images: Images,
-        postText: postText.current,
-        postLink: postLink.current,
-        Time: moment().format("YYYY-MM-DDTHH:mm:ss"),
-      });
-      if (res.data == "Uploaded") {
-        setUploadText("Uploaded");
+      try {
+        const res = await axios.post(`${Api}/Post/UploadPost`, {
+          userId: user._id,
+          Images: images,
+          postText: postText.current,
+          postLink: postLink.current,
+          Time: moment().format("YYYY-MM-DDTHH:mm:ss"),
+        });
+
+        if (res.data === "Uploaded") {
+          setUploadText("Uploaded");
+          Alert.alert("Uploaded Successfully");
+          refreshFields();
+        } else {
+          Alert.alert("Something went wrong. Please try again.");
+        }
+      } catch (error) {
+        console.error("Upload error:", error);
+        Alert.alert("Upload failed. Please check your connection.");
+      } finally {
         setUploadIndi(false);
-        Actitivity(user._id, "Post Uploaded");
-        setImages([]);
-        postLink.current = "";
-        postText.current = "";
-        inputRef.current.clear();
-        Alert.alert("Uploaded Sucessfully");
-      } else {
-        Alert.alert("Something Wrong?");
       }
     } else {
-      Alert.alert("Fill the Fields");
+      Alert.alert("Please fill in all fields.");
       setUploadIndi(false);
     }
   };
-  // refreshing
-  const [refreshcon, setRefreshcon] = useState(false);
-  const RefreshCon = () => {
-    setRefreshcon(true);
+
+  // Refresh input fields
+  const refreshFields = () => {
+    setRefreshCon(true);
     inputRef.current.clear();
     setImages([]);
+    setUploadText("Upload");
     setTimeout(() => {
-      setRefreshcon(false);
+      setRefreshCon(false);
     }, 1000);
   };
+  //  --------------- //
   return (
     <ScrollView
       style={[pageView, { rowGap: 10 }]}
       refreshControl={
         <RefreshControl
-          refreshing={refreshcon}
-          onRefresh={() => RefreshCon()}
+          refreshing={refreshCon}
+          onRefresh={() => refreshFields()}
         />
       }
     >
@@ -247,8 +261,8 @@ const Post = () => {
             marginTop: 20,
           }}
         >
-          {Images?.length > 0 ? (
-            Images?.map((img, index) => (
+          {images?.length > 0 ? (
+            images?.map((img, index) => (
               <View
                 style={{
                   width: width * 0.5,
@@ -289,7 +303,7 @@ const Post = () => {
         </ScrollView>
         {/* post Button */}
         <Ripple
-          onPress={HandleUpload}
+          onPress={handleUpload}
           style={{
             flexDirection: "row",
             alignItems: "center",

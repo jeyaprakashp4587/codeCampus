@@ -41,131 +41,139 @@ import Posts from "../components/Posts";
 const { width, height } = Dimensions.get("window");
 const Home = () => {
   const navigation = useNavigation();
-
   const { user, setUser } = useData();
-
   const [load, setLoad] = useState(false);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoad(true);
-    }, 100);
-  }, []);
-
-  // carousel data
-
-  const carouel = [
-    {
-      name: "Learning",
-      img: "https://i.ibb.co/R2YnF4F/learn.png",
-      bgColor: "#ffcccc",
-      route: "carrerScreen",
-    },
-    {
-      name: "Practice",
-      img: "https://i.ibb.co/8mjYHzc/practice.png",
-      bgColor: "#cce6ff",
-      route: "Challenge",
-    },
-    {
-      name: "Achive",
-      img: "https://i.ibb.co/6mt33RQ/achive.png",
-      bgColor: "#b3ffb3",
-      route: "Post",
-    },
-  ];
-  // suggest display
   const [suggestDisplay, setSuggestDisplay] = useState(true);
   const [suggestRefresh, setSuggestRefresh] = useState(false);
-  const HandlesuggestDisplay = (data) => {
-    setSuggestDisplay(data);
-  };
-  // time message
-  const getCurrentGreeting = () => {
-    const currentHour = new Date().getHours();
-
-    if (currentHour < 12) {
-      return "Good Morning";
-    } else if (currentHour < 17) {
-      return "Good Afternoon";
-    } else if (currentHour < 20) {
-      return "Good Evening";
-    } else {
-      return "Good Night";
-    }
-  };
-  // refresh page
-  const [refControl, setRefControl] = useState(false);
-  const refreshUser = async () => {
-    setRefControl(true);
-    setSuggestDisplay(true);
-    setSuggestRefresh((prev) => !prev);
-    const res = await axios.post(`${Api}/Login/getUser`, { userId: user._id });
-    if (res.data) {
-      setUser(res.data);
-      setRefControl(false);
-      getConnectionPosts();
-      getNotifications();
-    }
-  };
-  // socket------
+  const [posts, setPosts] = useState([]);
+  const [unseenCount, setUnseenCount] = useState(0);
   const { sendLocalNotification } = NotificationsHook();
   const socket = useSocket();
+  const [refresh, setRefresh] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoad(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const carouselData = useMemo(
+    () => [
+      {
+        name: "Learning",
+        img: "https://i.ibb.co/R2YnF4F/learn.png",
+        bgColor: "#ffcccc",
+        route: "careerScreen",
+      },
+      {
+        name: "Practice",
+        img: "https://i.ibb.co/8mjYHzc/practice.png",
+        bgColor: "#cce6ff",
+        route: "Challenge",
+      },
+      {
+        name: "Achieve",
+        img: "https://i.ibb.co/6mt33RQ/achieve.png",
+        bgColor: "#b3ffb3",
+        route: "Post",
+      },
+    ],
+    []
+  );
+
+  const getCurrentGreeting = useCallback(() => {
+    const currentHour = new Date().getHours();
+    if (currentHour < 12) return "Good Morning";
+    if (currentHour < 17) return "Good Afternoon";
+    if (currentHour < 20) return "Good Evening";
+    return "Good Night";
+  }, []);
+
+  const refreshUser = useCallback(async () => {
+    setRefresh(true);
+    try {
+      setSuggestRefresh(true);
+      const res = await axios.post(`${Api}/Login/getUser`, {
+        userId: user._id,
+      });
+      if (res.data) {
+        setUser(res.data);
+        setRefresh(false);
+        await getConnectionPosts();
+        await getNotifications();
+      }
+    } catch (error) {
+      console.error("Failed to refresh user:", error);
+    }
+  }, [user._id, setUser]);
+
+  const getConnectionPosts = useCallback(async () => {
+    try {
+      const res = await axios.get(`${Api}/Post/getConnectionPosts/${user._id}`);
+      if (res.status === 200) {
+        setPosts(res.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch posts:", error);
+    }
+  }, [user._id]);
+
+  const getNotifications = useCallback(async () => {
+    try {
+      const res = await axios.get(
+        `${Api}/Notifications/getNotifications/${user._id}`
+      );
+      if (res.data) {
+        const unseen = res.data.filter((notification) => !notification.seen);
+        setUnseenCount(unseen.length);
+      }
+    } catch (error) {
+      console.error("Failed to fetch notifications:", error);
+    }
+  }, [user._id]);
+
+  const updateLikeCount = useCallback((postId, newLikeCount) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post._id === postId ? { ...post, Like: newLikeCount } : post
+      )
+    );
+  }, []);
+
   useSocketOn(socket, "Noti-test", (data) => {
-    // console.log(data);
     sendLocalNotification(data);
     getNotifications();
   });
-  // get posts list
-  const [posts, setPosts] = useState();
-  const getConnectionPosts = async () => {
-    const res = await axios.get(`${Api}/Post/getConnectionPosts/${user._id}`);
-    console.log(res.data);
-    if (res.status === 200) {
-      setPosts(res.data);
-    }
-  };
-  // liked post
-  const updateLikeCount = (postId, newLikeCount) => {
-    const updatedPosts = posts.map((post) =>
-      post._id === postId ? { ...post, Like: newLikeCount } : post
-    );
-    setPosts(updatedPosts); // Update the state with the new like count
-  };
 
-  // get unseen Notification length
-  useSocketOn(socket, "checkNotification", () => {
-    getNotifications();
-  });
-  const [unseenCount, setUnseenCount] = useState(0);
-  const getNotifications = async () => {
-    const res = await axios.get(
-      `${Api}/Notifications/getNotifications/${user._id}`
-    );
-    if (res.data) {
-      const unseen = res.data.filter((notification) => !notification.seen);
-      setUnseenCount(unseen.length); // Count unseen notifications
-    }
-  };
-  // update profile picure
-  const setProfilePic = async () => {
-    const res = await axios.post(`${Api}/Profile/setProfile/${user._id}`);
-    if (res.data) {
-      console.log(res.data);
-      setUser(res.data);
-    }
-  };
-  // ----------------------
-  //  ------
+  useSocketOn(socket, "checkNotification", getNotifications);
+
   useEffect(() => {
     getConnectionPosts();
     getNotifications();
     setProfilePic();
-  }, []);
-  // load the skeleton
+  }, [getConnectionPosts, getNotifications]);
+
+  const setProfilePic = useCallback(async () => {
+    try {
+      const res = await axios.post(`${Api}/Profile/setProfile/${user._id}`);
+      if (res.data) {
+        setUser(res.data);
+      }
+    } catch (error) {
+      console.error("Failed to set profile picture:", error);
+    }
+  }, [user._id, setUser]);
+  // -- //
+  const HandlesuggestDisplay = (data) => {
+    setSuggestDisplay(data);
+  };
+
   if (!load) {
     return <HomeSkeleton />;
   }
+
+  // --------- //
   return (
     <View style={[pageView, { paddingHorizontal: 15 }]}>
       {/* header */}
@@ -210,7 +218,7 @@ const Home = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={refControl} onRefresh={refreshUser} />
+          <RefreshControl refreshing={refresh} onRefresh={refreshUser} />
         }
       >
         {/* greeding and notification */}
@@ -330,7 +338,7 @@ const Home = () => {
           style={{ margin: "auto" }}
           width={width * 0.9}
           height={height * 0.22}
-          data={carouel}
+          data={carouselData}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => navigation.navigate(item.route)}

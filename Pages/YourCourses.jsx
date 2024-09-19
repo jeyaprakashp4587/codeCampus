@@ -5,7 +5,7 @@ import {
   View,
   Dimensions,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import HeadingText from "../utils/HeadingText";
 import { Colors, pageView } from "../constants/Colors";
 import { useData } from "../Context/Contexter";
@@ -21,34 +21,48 @@ const { width } = Dimensions.get("window");
 
 const YourCourses = () => {
   const { user, setUser } = useData();
-  const color = [
-    { color1: "#ffb3b3", color2: "#ffe6e6" },
-    { color1: "#b3d9ff", color2: "#e6f2ff" },
-    { color1: "#b3e6cc", color2: "#ecf9f2" },
-    { color1: "#b3b3ff", color2: "#e6e6ff" },
-    { color1: "#ffb3ff", color2: "#ffe6ff" },
-    { color1: "#b3e6cc", color2: "#ecf9f2" },
-    { color1: "#b3e6cc", color2: "#ecf9f2" },
-    { color1: "#b3e6cc", color2: "#ecf9f2" },
-  ];
 
-  const HandleRemoveCourse = async (crName) => {
-    const res = await axios.post(`${Api}/Courses/removeCourse`, {
-      userId: user._id,
-      CourseName: crName,
-    });
-    if (res.data.Email) {
-      setUser(res.data);
-    }
-  };
-  // set refreshing effect
+  const color = useMemo(
+    () => [
+      { color1: "#ffb3b3", color2: "#ffe6e6" },
+      { color1: "#b3d9ff", color2: "#e6f2ff" },
+      { color1: "#b3e6cc", color2: "#ecf9f2" },
+      { color1: "#b3b3ff", color2: "#e6e6ff" },
+      { color1: "#ffb3ff", color2: "#ffe6ff" },
+      { color1: "#b3e6cc", color2: "#ecf9f2" },
+      { color1: "#b3e6cc", color2: "#ecf9f2" },
+      { color1: "#b3e6cc", color2: "#ecf9f2" },
+    ],
+    []
+  ); // Memoize colors to prevent unnecessary re-calculations
+
+  const HandleRemoveCourse = useCallback(
+    async (crName) => {
+      try {
+        const res = await axios.post(`${Api}/Courses/removeCourse`, {
+          userId: user._id,
+          CourseName: crName,
+        });
+
+        if (res.data.Email) {
+          setUser(res.data);
+        }
+      } catch (error) {
+        console.error("Error removing course:", error);
+        // Handle the error (e.g., show notification to user)
+      }
+    },
+    [user._id, setUser]
+  );
+
   const [refresh, setRefresh] = useState(false);
-  const HandleRefresh = () => {
+
+  const HandleRefresh = useCallback(() => {
     setRefresh(true);
     setTimeout(() => {
       setRefresh(false);
     }, 2000);
-  };
+  }, []);
 
   return (
     <View style={pageView}>

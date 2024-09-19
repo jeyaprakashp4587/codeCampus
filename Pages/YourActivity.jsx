@@ -16,45 +16,60 @@ import { faCode } from "@fortawesome/free-solid-svg-icons";
 const YourActivity = () => {
   const { width } = Dimensions.get("window");
   const { user } = useData();
+
   useEffect(() => {
     getAllActivityDates();
   }, []);
-  // get the activity dates
-  const [dates, setDates] = useState([]);
-  const [activitiesList, setActivitiesList] = useState([]);
-  const getAllActivityDates = async () => {
-    const res = await axios.post(
-      `${Api}/Activity/getAllActitvityDates/${user._id}`
-    );
-    if (res.data) {
-      const markedDatesArray = res.data.map((date) => ({
-        [date]: {
-          marked: true,
-        },
-      }));
-      const markedDates = Object.assign({}, ...markedDatesArray);
-      setDates(markedDates);
-    }
-  };
-  // get the particular date activities
-  const [selectesDate, setSeletedDate] = useState("");
 
-  const selectedDatefun = (date) => {
-    getParticularDateActivities(date.dateString);
-  };
-  // get particuar date function
-  const getParticularDateActivities = async (date) => {
-    setSeletedDate(date);
-    const res = await axios.post(
-      `${Api}/Activity/getParticularDateActitvities/${user._id}`,
-      { Date: date }
-    );
-    if (res.data) {
-      setActivitiesList(res.data);
-    } else {
-      setActivitiesList([]);
+  // state to store activity dates and activities list
+  const [dates, setDates] = useState({});
+  const [activitiesList, setActivitiesList] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");
+
+  // Fetch all activity dates
+  const getAllActivityDates = async () => {
+    try {
+      const res = await axios.post(
+        `${Api}/Activity/getAllActivityDates/${user._id}`
+      );
+      if (res.data) {
+        const markedDatesArray = res.data.map((date) => ({
+          [date]: { marked: true },
+        }));
+        const markedDates = Object.assign({}, ...markedDatesArray);
+        setDates(markedDates);
+      } else {
+        setDates({});
+      }
+    } catch (error) {
+      console.error("Error fetching activity dates:", error);
+      Alert.alert("Error", "Failed to fetch activity dates. Please try again.");
     }
   };
+
+  // Fetch activities for a particular date
+  const getParticularDateActivities = async (date) => {
+    setSelectedDate(date);
+    try {
+      const res = await axios.post(
+        `${Api}/Activity/getParticularDateActivities/${user._id}`,
+        { Date: date }
+      );
+      if (res.data) {
+        setActivitiesList(res.data);
+      } else {
+        setActivitiesList([]);
+      }
+    } catch (error) {
+      console.error("Error fetching activities for the date:", error);
+      Alert.alert("Error", "Failed to fetch activities for the selected date.");
+    }
+  };
+
+  // Callback to handle date selection
+  const selectedDateFun = useCallback((date) => {
+    getParticularDateActivities(date.dateString);
+  }, []);
 
   return (
     <View style={pageView}>
@@ -76,12 +91,12 @@ const YourActivity = () => {
       <Calendar
         style={{ borderWidth: 0, width: "100%", height: "auto" }}
         markedDates={dates}
-        onDayPress={selectedDatefun}
+        onDayPress={selectedDateFun}
       />
       {/* list Activities */}
       <HrLine width="100%" />
       <ScrollView>
-        <TopicsText text={selectesDate ? selectesDate : ""} />
+        <TopicsText text={selectedDate ? selectedDate : ""} />
         {activitiesList.map((item, index) => (
           <Text
             style={{

@@ -42,8 +42,9 @@
       "policy": "appVersion"
     },
     "owner": "jeyaprakash4587",
-    "plugins": [
-      "expo-router"
-    ]
+    "plugins": ["expo-router"],
+    "updates": {
+      "url": "https://u.expo.dev/d353dd9c-d8ef-4c2b-86b6-b378fc6ae792"
+    }
   }
 }

@@ -27,26 +27,39 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Search = ({ navigation }) => {
-  const { width, height } = Dimensions.get("window");
   const { setSelectedUser, user } = useData();
   const userName = useRef(null);
   const [history, setHistory] = useState([]);
-  const [users, setUsers] = useState();
-  const handleSearch = debounce((text) => {
-    userName.current = text;
-    getUserName();
-  }, 100);
-  // get userName
-  const getUserName = async () => {
-    const res = await axios.post(`${Api}/Search/getUserName/${user._id}`, {
-      userName: userName.current.trim(),
-    });
-    if (res.data) {
-      // console.log(res.data);
-      setUsers(res.data);
+  const [users, setUsers] = useState([]);
+
+  // Debounced search function
+  const handleSearch = useCallback(
+    debounce((text) => {
+      userName.current = text.trim();
+      if (userName.current) {
+        getUserName();
+      }
+    }, 300),
+    []
+  );
+
+  // Fetch username data based on input
+  const getUserName = useCallback(async () => {
+    try {
+      const res = await axios.post(`${Api}/Search/getUserName/${user._id}`, {
+        userName: userName.current,
+      });
+      if (res.data) {
+        setUsers(res.data);
+      } else {
+        setUsers([]);
+      }
+    } catch (error) {
+      console.error("Error fetching username:", error);
     }
-  };
-  //  search history
+  }, [user._id]);
+
+  // Memoize history to avoid unnecessary updates
   const updateSearchHistory = useCallback((term) => {
     setHistory((prevHistory) => {
       const newHistory = [
@@ -57,25 +70,49 @@ const Search = ({ navigation }) => {
       return newHistory;
     });
   }, []);
-  // render pages
-  const ResultRender = () => {
+
+  // Load search history from AsyncStorage on mount
+  useEffect(() => {
+    const loadHistory = async () => {
+      try {
+        const savedHistory = await AsyncStorage.getItem("history");
+        if (savedHistory) {
+          setHistory(JSON.parse(savedHistory));
+        }
+      } catch (error) {
+        console.error("Error loading search history:", error);
+      }
+    };
+    loadHistory();
+  }, []);
+
+  // Remove item from history
+  const removeHistory = useCallback(
+    (userId) => {
+      const filteredHistory = history.filter((user) => user._id !== userId);
+      setHistory(filteredHistory);
+      AsyncStorage.setItem("history", JSON.stringify(filteredHistory));
+    },
+    [history]
+  );
+
+  // Optimized rendering of search results using memoization
+  const ResultRender = useMemo(() => {
     if (users?.length > 0) {
       return (
         <FlatList
           data={users}
           style={{ marginTop: 20 }}
-          renderItem={(user) => (
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => (
             <TouchableOpacity
               style={{
-                width: "100%",
+                width: "98%",
                 padding: height * 0.015,
                 flexDirection: "row",
                 alignItems: "center",
-                // justifyContent: "space-between",
-                columnGap: 10,
                 marginTop: 10,
                 marginBottom: 10,
-                width: "98%",
                 alignSelf: "center",
                 elevation: 3,
                 backgroundColor: "white",
@@ -83,7 +120,7 @@ const Search = ({ navigation }) => {
               }}
             >
               <Image
-                source={{ uri: user.item?.Images?.profile }}
+                source={{ uri: item?.Images?.profile }}
                 style={{
                   width: 55,
                   height: 55,
@@ -93,7 +130,7 @@ const Search = ({ navigation }) => {
               />
               <View style={{ flex: 1, flexDirection: "column" }}>
                 <Text style={{ letterSpacing: 1, color: Colors.mildGrey }}>
-                  {user.item.firstName} {user.item.LastName}
+                  {item.firstName} {item.LastName}
                 </Text>
                 <Text
                   style={{
@@ -102,14 +139,14 @@ const Search = ({ navigation }) => {
                     fontSize: width * 0.03,
                   }}
                 >
-                  {user.item.InstitudeName}
+                  {item.InstitudeName}
                 </Text>
               </View>
               <Ripple
                 onPress={() => {
                   navigation.navigate("userprofile");
-                  setSelectedUser(user.item);
-                  updateSearchHistory(user.item);
+                  setSelectedUser(item);
+                  updateSearchHistory(item);
                 }}
                 style={{ backgroundColor: Colors.violet, borderRadius: 10 }}
               >
@@ -137,23 +174,7 @@ const Search = ({ navigation }) => {
         </Text>
       );
     }
-  };
-  // check the history
-  useEffect(() => {
-    const loadHistory = async () => {
-      const savedHistory = await AsyncStorage.getItem("history");
-      if (savedHistory) {
-        setHistory(JSON.parse(savedHistory));
-      }
-    };
-    loadHistory();
-  }, []);
-  // remove list from history
-  const removeHistory = (userId) => {
-    const filter = history.filter((user) => user._id != userId);
-    setHistory(filter);
-    AsyncStorage.setItem("history", JSON.stringify(filter));
-  };
+  }, [users]);
   // ------------------------- //
   return (
     <View style={pageView}>

@@ -25,18 +25,34 @@ const SelectedCourse = ({ navigation }) => {
   const { selectedCourse, user, setUser } = useData();
 
   const HandleAddCourse = async () => {
-    const res = await axios.post(`${Api}/Courses/addCourse`, {
-      courseName: selectedCourse.name,
-      userId: user._id,
-    });
-    if (res.data.Email) {
-      setUser(res.data);
-      Alert.alert("Course Added Successfully");
-      Actitivity(user._id, `${selectedCourse.name} Added`);
-    } else {
-      Alert.alert(res.data);
+    try {
+      // Send request to add course
+      const res = await axios.post(`${Api}/Courses/addCourse`, {
+        courseName: selectedCourse.name,
+        userId: user._id,
+      });
+
+      // Check if the response contains user data (Email field presence indicates success)
+      if (res.data.Email) {
+        // Update user data and show success alert
+        setUser(res.data);
+        Alert.alert("Course Added Successfully");
+        Actitivity(user._id, `${selectedCourse.name} Added`);
+
+        // Navigate to course details screen
+        navigation.navigate("courseDetails");
+      } else {
+        // Handle the case where the course couldn't be added (server returned an error message)
+        Alert.alert("Error", res.data || "Failed to add course.");
+      }
+    } catch (error) {
+      // Handle network errors or other unforeseen issues
+      console.error("Error adding course:", error);
+      Alert.alert(
+        "Error",
+        "An error occurred while adding the course. Please try again."
+      );
     }
-    navigation.navigate("courseDetails");
   };
 
   return (

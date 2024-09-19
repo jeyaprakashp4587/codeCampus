@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import { useData } from "../Context/Contexter";
 import HeadingText from "../utils/HeadingText";
@@ -30,71 +30,98 @@ import Ripple from "react-native-material-ripple";
 const { width, height } = Dimensions.get("window");
 
 const ChooseChallenge = ({ navigation }) => {
-  const Levels = [
-    { name: "Newbie", bgcolor: "#009900" },
-    { name: "Junior", bgcolor: "#cca300" },
-    { name: "Expert", bgcolor: "#cc6600" },
-    { name: "Legend", bgcolor: "#990000" },
-  ];
+  const Levels = useMemo(() => {
+    [
+      { name: "Newbie", bgcolor: "#009900" },
+      { name: "Junior", bgcolor: "#cca300" },
+      { name: "Expert", bgcolor: "#cc6600" },
+      { name: "Legend", bgcolor: "#990000" },
+    ];
+  }, []);
 
   const { selectedChallengeTopic, setSelectedChallenge } = useData();
-  const [Challenges, setChallenges] = useState();
+  const [Challenges, setChallenges] = useState([]);
   const [difficultyInfo, setDifficultyInfo] = useState("Newbie");
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const getChallenges = async (ChallengeTopic) => {
-    // console.log(ChallengeTopic);
-    const res = await axios.post(`${Api}/Challenges/getChallenges`, {
-      ChallengeTopic: ChallengeTopic,
-    });
-    if (res.data) {
-      setChallenges([
-        ...res.data.newbieLevel,
-        ...res.data.juniorLevel,
-        ...res.data.expertLevel,
-        ...res.data.legendLevel,
-      ]);
+  // Fetch challenges for the selected topic and level
+  const getChallenges = useCallback(async (ChallengeTopic, level) => {
+    setLoading(true);
+    setError(null); // Reset error before each request
+    try {
+      const res = await axios.post(`${Api}/Challenges/getChallenges`, {
+        ChallengeTopic: ChallengeTopic,
+      });
+
+      if (res.data) {
+        const { newbieLevel, juniorLevel, expertLevel, legendLevel } = res.data;
+        switch (level) {
+          case "Newbie":
+            setChallenges([...newbieLevel]);
+            break;
+          case "Junior":
+            setChallenges([...juniorLevel]);
+            break;
+          case "Expert":
+            setChallenges([...expertLevel]);
+            break;
+          case "Legend":
+            setChallenges([...legendLevel]);
+            break;
+          default:
+            setChallenges([]);
+        }
+      }
+    } catch (err) {
+      setError("Failed to load challenges. Please try again.");
+      console.error("Error fetching challenges:", err);
+    } finally {
+      setLoading(false);
     }
-    return res.data;
-  };
+  }, []);
 
-  useEffect(() => {
-    getChallenges(selectedChallengeTopic);
-  }, [selectedChallengeTopic]);
+  // Handle level selection
+  const HandleSelectLevel = useCallback(
+    (levelName) => {
+      setDifficultyInfo(levelName);
+      setVisible(false);
+      getChallenges(selectedChallengeTopic, levelName);
+    },
+    [getChallenges, selectedChallengeTopic]
+  );
 
-  const HandleSelectLevel = (levelName) => {
-    setDifficultyInfo(levelName);
-    setChallenges(false);
-    setVisible(false);
-    switch (levelName) {
-      case "Newbie":
-        getChallenges(selectedChallengeTopic).then((data) =>
-          setChallenges([...data.newbieLevel])
-        );
-        break;
-      case "Junior":
-        getChallenges(selectedChallengeTopic).then((data) =>
-          setChallenges([...data.juniorLevel])
-        );
-        break;
-      case "Expert":
-        getChallenges(selectedChallengeTopic).then((data) =>
-          setChallenges([...data.expertLevel])
-        );
-        break;
-      case "Legend":
-        getChallenges(selectedChallengeTopic).then((data) =>
-          setChallenges([...data.legendLevel])
-        );
-        break;
-      default:
-        break;
-    }
-  };
-
+  // Open and close menu handlers
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
 
+  // Fetch challenges on focus
+  useEffect(() => {
+    const unsubscribeFocus = navigation.addListener("focus", () => {
+      getChallenges(selectedChallengeTopic, difficultyInfo);
+    });
+
+    return unsubscribeFocus; // Clean up on unmount or focus change
+  }, [navigation, selectedChallengeTopic, difficultyInfo, getChallenges]);
+
+  // Show error or loading indicator
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>{error}</Text>
+      </View>
+    );
+  }
+  // --------------- //
   return (
     <View style={styles.pageView}>
       <HeadingText text={selectedChallengeTopic} />

@@ -16,6 +16,7 @@ import axios from "axios";
 import Api from "../Api";
 import { Button } from "react-native-paper";
 import Actitivity from "../hooks/ActivityHook";
+import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -27,26 +28,46 @@ const CourseDetails = ({ navigation }) => {
     user,
     setUser,
   } = useData();
+  const navigation = useNavigation();
 
-  // ------ //
+  const HandleCourse = useCallback(
+    async (item) => {
+      setLoading(true); // Start loading
+      try {
+        // Set the selected technology
+        setselectedTechnology({ web: item.web, name: item.name });
 
-  const HandleCourse = async (item) => {
-    // await Actitivity(user._id, "course added");
-    setselectedTechnology({ web: item.web, name: item.name });
-    navigation.navigate("learn");
-    const res = await axios.post(`${Api}/Courses/addTech`, {
-      TechName: item.name,
-      CourseName: selectedCourse.name,
-      UserId: user._id,
-    });
-    if (res.data.Email) {
-      setUser(res.data);
-      Alert.alert("Course Added Successfully");
-      Actitivity(user._id, `${selectedCourse.name} Sucessfully Added.`);
-    } else {
-      Alert.alert(res.data);
-    }
-  };
+        // Navigate to "learn" screen immediately
+        navigation.navigate("learn");
+
+        // Make the API request to add the course technology
+        const res = await axios.post(`${Api}/Courses/addTech`, {
+          TechName: item.name,
+          CourseName: selectedCourse.name,
+          UserId: user._id,
+        });
+
+        // Check the response
+        if (res.data.Email) {
+          setUser(res.data);
+          Alert.alert("Success", "Course Added Successfully");
+
+          // Log the activity if course is successfully added
+          Actitivity(user._id, `${selectedCourse.name} Successfully Added.`);
+        } else {
+          Alert.alert("Error", res.data);
+        }
+      } catch (error) {
+        // Catch and handle any errors
+        console.error("Error adding course:", error);
+        Alert.alert("Error", "Failed to add the course. Please try again.");
+      } finally {
+        // End loading state
+        setLoading(false);
+      }
+    },
+    [selectedCourse, setselectedTechnology, user, setUser, navigation]
+  );
 
   return (
     <View style={styles.container}>

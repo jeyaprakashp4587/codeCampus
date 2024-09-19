@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useData } from "../Context/Contexter";
 import HeadingText from "../utils/HeadingText";
 import Fontisto from "@expo/vector-icons/Fontisto";
@@ -22,83 +22,105 @@ import useSocketEmit from "../Socket/useSocketEmit";
 import moment from "moment";
 
 const UserProfile = () => {
-  const { width, height } = Dimensions.get("window");
   const { selectedUser, user, setSelectedUser } = useData();
-  // socket
   const socket = useSocket();
-  const [render, setRender] = useState(false);
   const emitSocket = useSocketEmit(socket);
-  // // send the notification to user
-  const sendNotification = () => {
-    emitSocket("sendNotificationToUser", {
-      ReceiverId: selectedUser._id,
-      SenderId: user._id,
-      Time: moment().format("YYYY-MM-DDTHH:mm:ss"),
-    });
-  };
-  // get the selected user
-  const getSelectedUser = async () => {
-    const res = await axios.post(`${Api}/Login/getUser`, {
-      userId: selectedUser,
-    });
-    if (res.data) {
-      setSelectedUser(res.data);
-      // setRefControl(false);
-      setRender(true);
+  const [render, setRender] = useState(false);
+  const [existsFollower, setExistsFollower] = useState(false);
+  const [loading, setLoading] = useState(false); // Add loading state for API calls
+
+  // Send notification to user
+  const sendNotification = useCallback(() => {
+    if (selectedUser?._id && user?._id) {
+      emitSocket("sendNotificationToUser", {
+        ReceiverId: selectedUser._id,
+        SenderId: user._id,
+        Time: moment().format("YYYY-MM-DDTHH:mm:ss"),
+      });
     }
-  };
+  }, [selectedUser, user, emitSocket]);
+
+  // Fetch selected user data
+  const getSelectedUser = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await axios.post(`${Api}/Login/getUser`, {
+        userId: selectedUser,
+      });
+      if (res.data) {
+        setSelectedUser(res.data);
+        setRender(true);
+      }
+    } catch (error) {
+      console.error("Error fetching selected user:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedUser, setSelectedUser]);
+
+  // Find if the user is already a follower
+  const findExistsFollower = useCallback(async () => {
+    try {
+      const res = await axios.post(`${Api}/Following/findExistsConnection`, {
+        ConnectionId: selectedUser?._id,
+        userId: user._id,
+      });
+      setExistsFollower(res.data === "Yes");
+      setRender(true);
+    } catch (error) {
+      console.error("Error checking follower:", error);
+    }
+  }, [selectedUser, user]);
+
+  // Add follower
+  const addFollower = useCallback(async () => {
+    try {
+      const res = await axios.post(`${Api}/Following/addConnection`, {
+        ConnectionId: selectedUser?._id,
+        userId: user._id,
+      });
+      if (res.data === "Success") {
+        setExistsFollower(true);
+        sendNotification();
+      }
+    } catch (error) {
+      console.error("Error adding follower:", error);
+    }
+  }, [selectedUser, user, sendNotification]);
+
+  // Remove follower
+  const removeConnection = useCallback(async () => {
+    try {
+      const res = await axios.post(
+        `${Api}/Following/removeConnection/${user._id}`,
+        {
+          ConnectionId: selectedUser?._id,
+        }
+      );
+      if (res.data === "Done") {
+        setExistsFollower(false);
+      }
+    } catch (error) {
+      console.error("Error removing connection:", error);
+    }
+  }, [selectedUser, user]);
+
+  // Fetch user data only once when the component is mounted
   useEffect(() => {
     if (!selectedUser?.firstName) {
       getSelectedUser();
-      // console.log(selectedUser);
     }
-  }, [selectedUser]);
-  // ckech if this user follwer
-  const [existsFollower, setExistsfollower] = useState(false);
-  const findExistsFollower = async () => {
-    const res = await axios.post(`${Api}/Following/findExistsConnection`, {
-      ConnectionId: selectedUser?._id,
-      userId: user._id,
-    });
-    if (res.data == "Yes") {
-      setExistsfollower(true);
-      setRender(true);
-      // console.log(res.data);
-    } else {
-      setExistsfollower(false);
-    }
-  };
-  useEffect(() => {
-    findExistsFollower();
-  }, [selectedUser]);
-  // add folower
-  const addFollower = async () => {
-    const res = await axios.post(`${Api}/Following/addConnection`, {
-      ConnectionId: selectedUser?._id,
-      userId: user._id,
-    });
-    if (res.data == "Sucess") {
-      setExistsfollower(true);
-      sendNotification();
-    } else {
-      setExistsfollower(false);
-    }
-  };
+  }, [selectedUser, getSelectedUser]);
 
-  // remove connection
-  const removeConnection = async () => {
-    const res = await axios.post(
-      `${Api}/Following/removeConnection/${user._id}`,
-      {
-        ConnectionId: selectedUser?._id,
-      }
-    );
-    if (res.data == "Done") {
-      setExistsfollower(false);
+  // Check if the user is a follower when the selected user changes
+  useEffect(() => {
+    if (selectedUser?._id) {
+      findExistsFollower();
     }
-  };
-  // render
-  if (!render) {
+  }, [selectedUser, findExistsFollower]);
+
+  // Render check
+  if (!render || loading) {
     return null;
   }
   //

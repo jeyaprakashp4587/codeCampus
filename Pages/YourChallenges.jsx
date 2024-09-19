@@ -23,9 +23,10 @@ const YourChallenges = (props) => {
   const { setSelectedChallenge } = useData();
   const { width, height } = Dimensions.get("window");
   const { user } = useData();
-  const [challenges, setChallenges] = useState();
-  const [skLoad, setSkLoad] = useState();
-  //   fetch chllenges from DB
+  const [challenges, setChallenges] = useState(null); // Initially null
+  const [skLoad, setSkLoad] = useState(false); // Loading state
+
+  // Fetch challenges from the database
   const getChallenges = async (option) => {
     try {
       const res = await axios.post(
@@ -40,15 +41,30 @@ const YourChallenges = (props) => {
       console.error("Error fetching challenges:", error);
     }
   };
-  // console.log("challenges", challenges);
+
+  // Fetch challenges when the screen is focused
   useEffect(() => {
-    setSkLoad(false);
-    getChallenges("All");
-  }, []);
-  // handle operations
+    const unsubscribeFocus = navigation.addListener("focus", () => {
+      setSkLoad(false); // Reset loading state
+      getChallenges("All"); // Fetch all challenges when the screen comes into focus
+    });
+
+    // Optional: Clear challenges when leaving the screen
+    const unsubscribeBlur = navigation.addListener("blur", () => {
+      setChallenges(null); // Clear challenges on leaving the screen
+    });
+
+    // Cleanup the listeners on component unmount
+    return () => {
+      unsubscribeFocus();
+      unsubscribeBlur();
+    };
+  }, [navigation]);
+
+  // Handle option change
   const HandleOption = (option) => {
-    setSkLoad(false);
-    getChallenges(option);
+    setSkLoad(false); // Reset loading state
+    getChallenges(option); // Fetch challenges based on the selected option
   };
   return (
     <View style={[pageView, { borderWidth: 0 }]}>

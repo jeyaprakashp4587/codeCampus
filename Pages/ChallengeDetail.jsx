@@ -8,7 +8,7 @@ import {
   View,
   TextInput,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import { useData } from "../Context/Contexter";
 import HeadingText from "../utils/HeadingText";
@@ -34,130 +34,159 @@ import Skeleton from "../Skeletons/Skeleton";
 import { LinearGradient } from "expo-linear-gradient";
 import Actitivity from "../hooks/ActivityHook";
 import { RefreshControl } from "react-native";
+import { useNavigation } from "expo-router";
 
 const { width, height } = Dimensions.get("window");
 
 const ChallengeDetail = () => {
   const { selectedChallenge, user, setUser, setSelectedChallenge } = useData();
-  // console.log("sele", selectedChallenge);
-  const [uploadTut, setUploadTut] = useState();
+  const navigation = useNavigation();
+  const [uploadTut, setUploadTut] = useState(false);
   const [ChallengeStatus, setChallengeStatus] = useState("");
-  const [statusButtonToggle, setStatusbuttonToggle] = useState(false);
-  const HandleStart = async (chName) => {
-    setStatusbuttonToggle(true);
-    setChallengeStatus("Pending");
-    const res = await axios.post(`${Api}/Challenges/addChallenge`, {
-      userId: user._id,
-      ChallengeName: chName,
-      ChallengeType: selectedChallenge.technologies[0].name,
-      ChallengeImage: selectedChallenge.sample_image,
-      ChallengeLevel: selectedChallenge.level,
-    });
-    if (res.data) setUploadTut(true);
-  };
-
-  const [uploadForm, setUploadForm] = useState({
-    GitRepo: "",
-    LiveLink: "",
-  });
-  const HandleText = (name, text) => {
-    setUploadForm({ ...uploadForm, [name]: text });
-    // console.log(uploadForm.GitRepo);
-  };
-  // upload challenge steps
+  const [statusButtonToggle, setStatusButtonToggle] = useState(false);
+  const [uploadForm, setUploadForm] = useState({ GitRepo: "", LiveLink: "" });
   const [snapImage, setSnapImage] = useState();
-  const [imgLoad, setImageLoad] = useState();
-  const selectSnapImage = async () => {
-    // get permission
-    await ImagePicker.requestMediaLibraryPermissionsAsync();
-    const result = await ImagePicker.launchImageLibraryAsync();
-    uploadSnap(result.assets[0].uri);
-  };
-  // upload snap image to firebase
-  const uploadSnap = async (imguri) => {
-    setImageLoad(true);
-    const storageRef = ref(storage, "Image/" + Date.now + ".jpeg");
-    const response = await fetch(imguri);
-    const blob = await response.blob();
-    await uploadBytes(storageRef, blob);
-    await updateMetadata(storageRef, {
-      contentType: "image/jpeg",
-      cacheControl: "public,max-age=31536000",
-    });
-    const downloadURL = await getDownloadURL(storageRef);
-    setSnapImage(downloadURL);
-    if (downloadURL) {
-      setImageLoad(false);
-    }
-    return downloadURL;
-  };
-  // upload challenge
-  const HandleUpload = async () => {
-    if (uploadForm.GitRepo && uploadForm.LiveLink && snapImage) {
+  const [imgLoad, setImageLoad] = useState(false);
+
+  // Fetch the challenge status
+  const checkChallengeStatus = useCallback(async () => {
+    try {
       const res = await axios.post(
-        `${Api}/Challenges/uploadChallenge/${user._id}`,
+        `${Api}/Challenges/checkChallengeStatus/${user._id}`,
         {
-          GitRepo: uploadForm.GitRepo,
-          LiveLink: uploadForm.LiveLink,
-          SnapImage: snapImage,
-          ChallengeName: selectedChallenge.title,
+          ChallengeName: selectedChallenge?.title,
         }
       );
-      if (res.data == "completed") {
-        setChallengeStatus("completed");
-        Actitivity(user._id, `${selectedChallenge.title} Completed`);
-        // console.log(res.data);
+      if (res.data) {
+        setChallengeStatus(res.data);
+      }
+    } catch (error) {
+      console.error("Error fetching challenge status:", error);
+    }
+  }, [selectedChallenge, user._id]);
+
+  // Fetch a particular challenge
+  const getParticularChallenge = useCallback(async () => {
+    try {
+      const res = await axios.post(
+        `${Api}/Challenges/getParticularChallenge/${user._id}`,
+        {
+          ChallengeName: selectedChallenge?.ChallengeName || null,
+          ChallengeType: selectedChallenge?.ChallengeType || null,
+          ChallengeLevel: selectedChallenge?.ChallengeLevel || null,
+        }
+      );
+      if (res.data) {
+        setSelectedChallenge(res.data);
+        checkChallengeStatus();
+      }
+    } catch (error) {
+      console.error("Error fetching particular challenge:", error);
+    }
+  }, [selectedChallenge, user._id, checkChallengeStatus]);
+
+  // Upload snapshot to Firebase
+  const uploadSnap = async (imgUri) => {
+    setImageLoad(true);
+    try {
+      const storageRef = ref(storage, `Image/${Date.now()}.jpeg`);
+      const response = await fetch(imgUri);
+      const blob = await response.blob();
+      await uploadBytes(storageRef, blob);
+      await updateMetadata(storageRef, {
+        contentType: "image/jpeg",
+        cacheControl: "public,max-age=31536000",
+      });
+      const downloadURL = await getDownloadURL(storageRef);
+      setSnapImage(downloadURL);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    } finally {
+      setImageLoad(false);
+    }
+  };
+
+  // Select and upload an image
+  const selectSnapImage = async () => {
+    try {
+      const permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (permissionResult.granted) {
+        const result = await ImagePicker.launchImageLibraryAsync();
+        if (!result.canceled) {
+          uploadSnap(result.assets[0].uri);
+        }
+      }
+    } catch (error) {
+      console.error("Error selecting image:", error);
+    }
+  };
+
+  // Handle uploading challenge details
+  const HandleUpload = async () => {
+    if (uploadForm.GitRepo && uploadForm.LiveLink && snapImage) {
+      try {
+        const res = await axios.post(
+          `${Api}/Challenges/uploadChallenge/${user._id}`,
+          {
+            GitRepo: uploadForm.GitRepo,
+            LiveLink: uploadForm.LiveLink,
+            SnapImage: snapImage,
+            ChallengeName: selectedChallenge.title,
+          }
+        );
+        if (res.data === "completed") {
+          setChallengeStatus("completed");
+          Actitivity(user._id, `${selectedChallenge.title} Completed`);
+        }
+      } catch (error) {
+        console.error("Error uploading challenge:", error);
       }
     }
   };
-  // check challenge status
-  const checkChallengeStatus = async () => {
-    const res = await axios.post(
-      `${Api}/Challenges/checkChallengeStatus/${user._id}`,
-      {
-        ChallengeName: selectedChallenge?.title,
-      }
-    );
-    if (res.data) {
-      console.log(res.data);
-      setChallengeStatus(res.data);
+
+  // Handle challenge start
+  const HandleStart = async (chName) => {
+    setStatusButtonToggle(true);
+    setChallengeStatus("Pending");
+    try {
+      const res = await axios.post(`${Api}/Challenges/addChallenge`, {
+        userId: user._id,
+        ChallengeName: chName,
+        ChallengeType: selectedChallenge.technologies[0].name,
+        ChallengeImage: selectedChallenge.sample_image,
+        ChallengeLevel: selectedChallenge.level,
+      });
+      if (res.data) setUploadTut(true);
+    } catch (error) {
+      console.error("Error starting challenge:", error);
     }
   };
-  // this useeffect for set challengeStatus
+
+  // Focus listener: Fetch data when the screen comes into focus
   useEffect(() => {
-    if (!selectedChallenge?.status) setStatusbuttonToggle(false);
-    if (selectedChallenge?.status) {
-      setStatusbuttonToggle(true);
-      setChallengeStatus(selectedChallenge?.status);
-    }
-  }, []);
-  // fetch the particular challenge
-  const getParticularChallenge = async () => {
-    const res = await axios.post(
-      `${Api}/Challenges/getParticularChallenge/${user._id}`,
-      {
-        ChallengeName: selectedChallenge.ChallengeName
-          ? selectedChallenge.ChallengeName
-          : null,
-        ChallengeType: selectedChallenge.ChallengeType
-          ? selectedChallenge.ChallengeType
-          : null,
-        ChallengeLevel: selectedChallenge.ChallengeLevel
-          ? selectedChallenge.ChallengeLevel
-          : null,
-      }
-    );
-    if (res.data) {
-      // console.log(res.data);
-      setSelectedChallenge(res.data);
+    const unsubscribeFocus = navigation.addListener("focus", () => {
       checkChallengeStatus();
-    }
-  };
-  // -----
+      getParticularChallenge();
+    });
+
+    // Cleanup listener
+    return unsubscribeFocus;
+  }, [navigation, checkChallengeStatus, getParticularChallenge]);
+
+  // Clear selected challenge on blur
   useEffect(() => {
-    checkChallengeStatus();
-    getParticularChallenge();
-  }, [selectedChallenge]);
+    const unsubscribeBlur = navigation.addListener("blur", () => {
+      setSelectedChallenge(null); // Clear data when navigating away
+    });
+
+    return unsubscribeBlur;
+  }, [navigation, setSelectedChallenge]);
+
+  // Handle text input for challenge form
+  const HandleText = (name, text) => {
+    setUploadForm((prev) => ({ ...prev, [name]: text }));
+  };
 
   const HandleRefresh = () => {};
   // -------------
