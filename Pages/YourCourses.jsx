@@ -132,7 +132,7 @@ const YourCourses = () => {
   );
 };
 
-export default YourCourses;
+export default React.memo(YourCourses);
 
 const styles = StyleSheet.create({
   courseWrapper: {

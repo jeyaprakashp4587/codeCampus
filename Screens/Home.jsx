@@ -163,7 +163,14 @@ const Home = () => {
   const HandlesuggestDisplay = (data) => {
     setSuggestDisplay(data);
   };
-
+  // ideas warapper navigations
+  const carrerNav = useCallback(() => navigation.navigate("carrerScreen"), []);
+  const courseNav = useCallback(() => navigation.navigate("yourcourse"), []);
+  const activityNav = useCallback(
+    () => navigation.navigate("youractivities"),
+    []
+  );
+  // -----------//
   if (!load) {
     return <HomeSkeleton />;
   }
@@ -265,12 +272,8 @@ const Home = () => {
           </Ripple>
         </View>
         {/* ideas wrapper */}
-
         <View style={styles.ideasWrapper}>
-          <TouchableOpacity
-            style={styles.ideaBox}
-            onPress={() => navigation.navigate("carrerScreen")}
-          >
+          <TouchableOpacity style={styles.ideaBox} onPress={carrerNav}>
             <Image
               source={{ uri: "https://i.ibb.co/pX2r3T0/carrer.png" }}
               style={[styles.icon, { tintColor: "#ff9999" }]}
@@ -282,10 +285,7 @@ const Home = () => {
               Career
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("yourcourse")}
-            style={styles.ideaBox}
-          >
+          <TouchableOpacity onPress={courseNav} style={styles.ideaBox}>
             <Image
               source={{ uri: "https://i.ibb.co/QcnJZSz/learning.png" }}
               style={[styles.icon, { tintColor: "#8600b3" }]}
@@ -312,10 +312,7 @@ const Home = () => {
               Assignment
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.ideaBox}
-            onPress={() => navigation.navigate("youractivities")}
-          >
+          <TouchableOpacity style={styles.ideaBox} onPress={activityNav}>
             <Image
               source={{ uri: "https://i.ibb.co/dtmzjnb/calendar.png" }}
               style={[styles.icon, { tintColor: "#0077b3" }]}
@@ -406,7 +403,7 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default React.memo(Home);
 
 const styles = StyleSheet.create({
   calendar: {

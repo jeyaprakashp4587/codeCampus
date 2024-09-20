@@ -231,7 +231,7 @@ const YourChallenges = (props) => {
   );
 };
 
-export default YourChallenges;
+export default React.memo(YourChallenges);
 
 const styles = StyleSheet.create({
   challengeContainer: {

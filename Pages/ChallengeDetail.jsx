@@ -499,4 +499,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChallengeDetail;
+export default React.memo(ChallengeDetail);

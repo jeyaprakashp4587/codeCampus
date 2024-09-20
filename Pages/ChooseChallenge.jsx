@@ -244,7 +244,7 @@ const ChooseChallenge = ({ navigation }) => {
   );
 };
 
-export default ChooseChallenge;
+export default React.memo(ChooseChallenge);
 
 const styles = StyleSheet.create({
   pageView: {

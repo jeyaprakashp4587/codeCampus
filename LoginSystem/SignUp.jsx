@@ -12,7 +12,7 @@ import {
 import React, { useRef, useState, useCallback } from "react";
 import { TextInput } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faCode } from "@fortawesome/free-solid-svg-icons";
+import { faCode, faL } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Ripple from "react-native-material-ripple";
 import Api from "../Api";
@@ -50,9 +50,8 @@ const SignUp = ({ navigation }) => {
     Nationality: "",
   });
 
-  const [loading, setLoading] = useState(false);
   const [showGenderModal, setShowGenderModal] = useState(false);
-
+  const [actiloading, setActiloading] = useState(false);
   // Handle input updates
   const handleInput = useCallback((name, value) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -69,7 +68,7 @@ const SignUp = ({ navigation }) => {
         refs[key].current.setNativeProps({
           style: { borderColor: "red", borderWidth: 1, borderRadius: 5 },
         });
-        setLoading(false);
+
         isValid = false;
       } else {
         refs[key].current.setNativeProps({
@@ -101,11 +100,12 @@ const SignUp = ({ navigation }) => {
 
   // Handle sign-up
   const handleSignUp = async () => {
-    setLoading(true);
+    // Ensure loading is turned on before validation
+    setActiloading(true);
+    // Check if the form is valid before proceeding
     if (validateForm()) {
       try {
         const response = await axios.post(`${Api}/LogIn/signUp`, formData);
-        setLoading(false);
 
         if (response.data === "SignUp Successfully") {
           Alert.alert("Signup Successfully");
@@ -115,11 +115,13 @@ const SignUp = ({ navigation }) => {
         }
       } catch (error) {
         console.error(error);
-        setLoading(false);
         Alert.alert("Signup failed. Try again.");
+      } finally {
+        setActiloading(false);
+        // Ensure loading is turned off after the request completes, whether success or failure
       }
     } else {
-      setLoading(false);
+      // If form validation fails, turn off loading
     }
   };
 
@@ -165,8 +167,9 @@ const SignUp = ({ navigation }) => {
         <View style={{ height: 20 }} />
 
         {/* Sign Up Button */}
+        {/*  */}
         <Ripple onPress={handleSignUp} style={styles.signUpButton}>
-          {loading && <ActivityIndicator size={22} color={Colors.mildGrey} />}
+          {actiloading && <ActivityIndicator size={22} color={Colors.white} />}
           <Text style={styles.signUpText}>Sign Up</Text>
         </Ripple>
       </ScrollView>
@@ -208,7 +211,7 @@ const SignUp = ({ navigation }) => {
   );
 };
 
-export default SignUp;
+export default React.memo(SignUp);
 
 const styles = StyleSheet.create({
   headerText: {
@@ -244,10 +247,11 @@ const styles = StyleSheet.create({
     elevation: 2,
     width: "100%",
     alignSelf: "center",
+    columnGap: 8,
   },
   signUpText: {
-    fontSize: 15,
-    color: "black",
+    fontSize: 16,
+    color: "white",
     fontWeight: "400",
     letterSpacing: 1,
   },

@@ -7,7 +7,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+} from "react";
 import { Colors, pageView } from "../constants/Colors";
 import { EvilIcons } from "@expo/vector-icons";
 import HeadingText from "../utils/HeadingText";
@@ -19,19 +25,16 @@ import { Dimensions } from "react-native";
 import Ripple from "react-native-material-ripple";
 import { useData } from "../Context/Contexter";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faTimes,
-  faUniversity,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Search = ({ navigation }) => {
+const SearchScreen = ({ navigation }) => {
+  // -------------- //
   const { setSelectedUser, user } = useData();
   const userName = useRef(null);
   const [history, setHistory] = useState([]);
   const [users, setUsers] = useState([]);
-
+  const { width, height } = Dimensions.get("window");
   // Debounced search function
   const handleSearch = useCallback(
     debounce((text) => {
@@ -39,7 +42,7 @@ const Search = ({ navigation }) => {
       if (userName.current) {
         getUserName();
       }
-    }, 300),
+    }, 100),
     []
   );
 
@@ -294,6 +297,6 @@ const Search = ({ navigation }) => {
   );
 };
 
-export default Search;
+export default React.memo(SearchScreen);
 
 const styles = StyleSheet.create({});

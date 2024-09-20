@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import HeadingText from "../utils/HeadingText";
 import HrLine from "../utils/HrLine";
@@ -12,6 +12,7 @@ import { Dimensions } from "react-native";
 import TopicsText from "../utils/TopicsText";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCode } from "@fortawesome/free-solid-svg-icons";
+import Skeleton from "../Skeletons/Skeleton";
 
 const YourActivity = () => {
   const { width } = Dimensions.get("window");
@@ -72,53 +73,56 @@ const YourActivity = () => {
   }, []);
 
   return (
+    // <View style={pageView}>
+    //   {/* code icon  */}
+    //   <FontAwesomeIcon
+    //     icon={faCode}
+    //     size={200}
+    //     style={{
+    //       position: "absolute",
+    //       opacity: 0.8,
+    //       color: Colors.veryLightGrey,
+    //       alignSelf: "center",
+    //       top: "60%",
+    //     }}
+    //   />
+    //   {/* heading text */}
+    //   <HeadingText text="Your Activities" />
+    //   {/* calender preview */}
+    //   <Calendar
+    //     style={{ borderWidth: 0, width: "100%", height: "auto" }}
+    //     markedDates={dates}
+    //     onDayPress={selectedDateFun}
+    //   />
+    //   {/* list Activities */}
+    //   <HrLine width="100%" />
+    //   <ScrollView>
+    //     <TopicsText text={selectedDate ? selectedDate : ""} />
+    //     {activitiesList.map((item, index) => (
+    //       <Text
+    //         style={{
+    //           // borderWidth: 1,
+    //           padding: width * 0.03,
+    //           fontSize: width * 0.04,
+    //           color: Colors.white,
+    //           marginBottom: 20,
+    //           borderRadius: 5,
+    //           backgroundColor: Colors.violet,
+    //           letterSpacing: 1,
+    //         }}
+    //         key={index}
+    //       >
+    //         {index + 1}. {item.activityName}
+    //       </Text>
+    //     ))}
+    //   </ScrollView>
+    // </View>
     <View style={pageView}>
-      {/* code icon  */}
-      <FontAwesomeIcon
-        icon={faCode}
-        size={200}
-        style={{
-          position: "absolute",
-          opacity: 0.8,
-          color: Colors.veryLightGrey,
-          alignSelf: "center",
-          top: "60%",
-        }}
-      />
-      {/* heading text */}
-      <HeadingText text="Your Activities" />
-      {/* calender preview */}
-      <Calendar
-        style={{ borderWidth: 0, width: "100%", height: "auto" }}
-        markedDates={dates}
-        onDayPress={selectedDateFun}
-      />
-      {/* list Activities */}
-      <HrLine width="100%" />
-      <ScrollView>
-        <TopicsText text={selectedDate ? selectedDate : ""} />
-        {activitiesList.map((item, index) => (
-          <Text
-            style={{
-              // borderWidth: 1,
-              padding: width * 0.03,
-              fontSize: width * 0.04,
-              color: Colors.white,
-              marginBottom: 20,
-              borderRadius: 5,
-              backgroundColor: Colors.violet,
-              letterSpacing: 1,
-            }}
-            key={index}
-          >
-            {index + 1}. {item.activityName}
-          </Text>
-        ))}
-      </ScrollView>
+      <Skeleton width={200} height={200} />
     </View>
   );
 };
 
-export default YourActivity;
+export default React.memo(YourActivity);
 
 const styles = StyleSheet.create({});

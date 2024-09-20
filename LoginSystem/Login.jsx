@@ -6,7 +6,7 @@ import {
   View,
   Dimensions,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback, useMemo } from "react";
 import { Colors, font, pageView } from "../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ActivityIndicator, Button } from "react-native-paper";

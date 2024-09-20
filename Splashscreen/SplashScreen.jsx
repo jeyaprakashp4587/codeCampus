@@ -1,4 +1,11 @@
-import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useCallback } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -16,9 +23,7 @@ const SplashScreen = () => {
   const { user, setUser } = useData();
   const { height, width } = Dimensions.get("window");
   const nav = useNavigation();
-
-  // State to manage progress length
-  const [length, setLength] = useState(0);
+  const [activityIndicator, setActivityIndicator] = useState(true);
 
   // Function to handle auto login
   const validLogin = useCallback(async () => {
@@ -30,9 +35,11 @@ const SplashScreen = () => {
         });
 
         if (response.data.Email) {
+          setActivityIndicator(false);
           setUser(response.data);
           nav.navigate("Tab"); // Navigate to the main app if login is valid
         } else {
+          setActivityIndicator(false);
           nav.navigate("login"); // Navigate to login screen if email not found
         }
       } else {
@@ -46,20 +53,6 @@ const SplashScreen = () => {
   useEffect(() => {
     validLogin(); // Call auto login on component mount
   }, [validLogin]);
-
-  // Simulating progress bar for splash screen
-  useEffect(() => {
-    let timer;
-    const incrementLength = () => {
-      if (length < 320) {
-        setLength((prevLength) => prevLength + 1); // Increment length state
-        timer = setTimeout(incrementLength, 5); // Adjust the timeout interval for smoother progress
-      }
-    };
-    incrementLength(); // Start the progress
-
-    return () => clearTimeout(timer); // Cleanup to prevent memory leaks
-  }, [length]);
 
   return (
     <View
@@ -111,13 +104,15 @@ const SplashScreen = () => {
         />
         {/* progress bar */}
         <View style={{ position: "absolute", bottom: -300 }}>
-          <ProgressBar width={length} />
+          {activityIndicator && (
+            <ActivityIndicator size={35} color={Colors.mildGrey} />
+          )}
         </View>
       </View>
     </View>
   );
 };
 
-export default SplashScreen;
+export default React.memo(SplashScreen);
 
 const styles = StyleSheet.create({});

@@ -90,7 +90,7 @@ const SelectedCourse = ({ navigation }) => {
   );
 };
 
-export default SelectedCourse;
+export default React.memo(SelectedCourse);
 
 const styles = StyleSheet.create({
   pageView: {

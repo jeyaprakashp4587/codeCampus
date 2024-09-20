@@ -130,6 +130,6 @@ const Challenge = ({ navigation }) => {
   );
 };
 
-export default Challenge;
+export default React.memo(Challenge);
 
 const styles = StyleSheet.create({});

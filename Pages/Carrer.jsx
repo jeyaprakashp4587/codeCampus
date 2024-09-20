@@ -331,7 +331,7 @@ const Carrer = ({ navigation }) => {
   );
 };
 
-export default Carrer;
+export default React.memo(Carrer);
 
 const styles = StyleSheet.create({
   pageView: {

@@ -138,4 +138,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CourseDetails;
+export default React.memo(CourseDetails);

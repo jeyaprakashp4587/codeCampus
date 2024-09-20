@@ -9,6 +9,6 @@ const YourReward = () => {
   );
 };
 
-export default YourReward;
+export default React.memo(YourReward);
 
 const styles = StyleSheet.create({});

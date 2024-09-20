@@ -74,7 +74,7 @@ const LearnPage = () => {
   );
 };
 
-export default LearnPage;
+export default React.memo(LearnPage);
 
 const styles = StyleSheet.create({
   container: {

@@ -18,8 +18,6 @@ import Post from "../Screens/Post";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Challenge from "../Screens/Challenge";
 import MessageScreen from "../Screens/MessageScreen";
-import { useState } from "react";
-import { useEffect } from "react";
 import SignUp from "../LoginSystem/SignUp";
 import Carrer from "../Pages/Carrer";
 import SelectedCourse from "../Pages/SelectedCourse";
@@ -29,7 +27,6 @@ import ChooseChallenge from "../Pages/ChooseChallenge";
 import ChallengeDetail from "../Pages/ChallengeDetail";
 import YourCourses from "../Pages/YourCourses";
 import YourRewards from "../Pages/YourReward";
-import Search from "../Pages/Search";
 import Placement from "../Screens/Placement";
 import SplashScreen from "../Splashscreen/SplashScreen";
 import { Dimensions } from "react-native";
@@ -37,6 +34,7 @@ import YourChallenges from "../Pages/YourChallenges";
 import YourActivity from "../Pages/YourActivity";
 import UserProfile from "../Pages/UserProfile";
 import Notifications from "../Pages/Notifications";
+import SearchScreen from "../Pages/SearchScreen";
 
 // ------------- //
 // Tab navigations
@@ -239,7 +237,7 @@ const StackNavigations = () => {
       />
       <Stack.Screen
         name="search"
-        component={Search}
+        component={SearchScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

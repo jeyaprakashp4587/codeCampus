@@ -36,12 +36,11 @@ const Notifications = () => {
         `${Api}/Notifications/getNotifications/${user._id}`
       );
       if (res.data) {
+        // console.log(res.data);
         setNotificationList(res.data);
       }
     } catch (error) {
       console.error("Error fetching notifications:", error);
-    } finally {
-      setLoading(false);
     }
   }, [user._id]);
 
@@ -145,7 +144,7 @@ const Notifications = () => {
             }}
           >
             <Image
-              source={{ uri: item?.NotificationSenderProfile }}
+              source={{ uri: item?.senderProfileImage }}
               style={{
                 width: width * 0.14,
                 height: height * 0.07,
@@ -162,7 +161,7 @@ const Notifications = () => {
                 lineHeight: 22,
               }}
             >
-              {item.NotificationText}
+              {item?.NotificationText}
             </Text>
             {/* show time */}
             <View
@@ -181,6 +180,6 @@ const Notifications = () => {
   );
 };
 
-export default Notifications;
+export default React.memo(Notifications);
 
 const styles = StyleSheet.create({});
