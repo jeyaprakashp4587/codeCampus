@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
-import Navigation from "./Navigations/Navigation";
+
 import { ContextProvider } from "./Context/Contexter";
 import SplashScreen from "./Splashscreen/SplashScreen";
 import { PaperProvider } from "react-native-paper";
 import { StatusBar } from "react-native";
-import useSocket from "./Socket/useSocket";
-import useSocketEmit from "./Socket/useSocketEmit";
+import StackNavigations from "./Navigations/Navigation";
 import * as Updates from "expo-updates";
 // import checkForUpdates from "./update/checkForUpdates";
 // -----
@@ -18,7 +17,7 @@ const App = () => {
     <PaperProvider>
       <ContextProvider>
         <SafeAreaView style={styles.cn}>
-          <Navigation />
+          <StackNavigations />
         </SafeAreaView>
         <StatusBar barStyle="dark-content" backgroundColor="white" />
       </ContextProvider>

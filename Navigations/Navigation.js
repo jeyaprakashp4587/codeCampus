@@ -36,7 +36,6 @@ import UserProfile from "../Pages/UserProfile";
 import Notifications from "../Pages/Notifications";
 import SearchScreen from "../Pages/SearchScreen";
 
-// ------------- //
 // Tab navigations
 const { width, height } = Dimensions.get("window");
 
@@ -44,10 +43,10 @@ const Tab = createBottomTabNavigator();
 const TabNavigation = () => {
   return (
     <Tab.Navigator
+      detachInactiveScreens={true}
       initialRouteName="home"
       screenOptions={{
         headerShown: false,
-        // tabBarShowLabel: false,
         tabBarIconStyle: {
           color: Colors.lightGrey,
         },
@@ -150,7 +149,8 @@ const TabNavigation = () => {
     </Tab.Navigator>
   );
 };
-// stack navigations
+
+// Stack navigations
 const StackNavigations = () => {
   const Stack = createNativeStackNavigator();
   return (
@@ -158,6 +158,8 @@ const StackNavigations = () => {
       // initialRouteName="splash"
       screenOptions={{
         headerShown: false,
+        animation: "slide_from_right",
+        autoHideHomeIndicator: true,
       }}
     >
       <Stack.Screen
@@ -264,11 +266,6 @@ const StackNavigations = () => {
   );
 };
 
-// --------------- //
-const Navigation = (props) => {
-  return <StackNavigations status={props.status} />;
-};
-
-export default Navigation;
+export default StackNavigations;
 
 const styles = StyleSheet.create({});
