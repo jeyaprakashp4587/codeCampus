@@ -135,12 +135,18 @@ const ChallengeDetail = () => {
             GitRepo: uploadForm.GitRepo,
             LiveLink: uploadForm.LiveLink,
             SnapImage: snapImage,
-            ChallengeName: selectedChallenge.title,
+            ChallengeName:
+              selectedChallenge?.title || selectedChallenge?.ChallengeName,
           }
         );
         if (res.data === "completed") {
           setChallengeStatus("completed");
-          Actitivity(user._id, `${selectedChallenge.title} Completed`);
+          Actitivity(
+            user._id,
+            `${
+              selectedChallenge.title || selectedChallenge?.ChallengeName
+            } Completed`
+          );
         }
       } catch (error) {
         console.error("Error uploading challenge:", error);

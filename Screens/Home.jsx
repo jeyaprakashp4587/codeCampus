@@ -107,7 +107,8 @@ const Home = () => {
     try {
       const res = await axios.get(`${Api}/Post/getConnectionPosts/${user._id}`);
       if (res.status === 200) {
-        setPosts(res.data);
+        // setPosts(res.data);
+        console.log(res.data);
       }
     } catch (error) {
       console.error("Failed to fetch posts:", error);
@@ -390,7 +391,7 @@ const Home = () => {
       <View>
         <FlatList
           data={posts}
-          renderItem={(post, index) => (
+          renderItem={({ post, index }) => (
             <Posts
               post={post}
               updateLikeCount={updateLikeCount}

@@ -29,7 +29,7 @@ const Challenge = ({ navigation }) => {
     () => [
       {
         ChallengeName: "Web Development",
-        bgColor: "#80bfff",
+        bgColor: "#7575a3",
         img: "https://i.ibb.co/qn5dFQL/data.png",
       },
       {
@@ -99,6 +99,7 @@ const Challenge = ({ navigation }) => {
             </TouchableOpacity>
           ))}
           {/* user challenges list */}
+
           <TouchableOpacity
             onPress={() => {
               setChaToggle(!chToggle);
@@ -106,7 +107,7 @@ const Challenge = ({ navigation }) => {
             }}
             style={{
               width: "100%",
-              backgroundColor: "#d6d6c2",
+              backgroundColor: "#009999",
               height: 100,
               justifyContent: "center",
               alignItems: "center",

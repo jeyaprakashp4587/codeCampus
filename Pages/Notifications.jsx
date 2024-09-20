@@ -51,7 +51,7 @@ const Notifications = () => {
         try {
           // Mark the notification as seen
           await axios.patch(
-            `${Api}/Notifications/markAsSeen/${user._id}/${item._id}`
+            `${Api}/Notifications/markAsSeen/${user._id}/${item.NotificationId}`
           );
           setNotificationList((prevList) =>
             prevList.map((notification) =>
