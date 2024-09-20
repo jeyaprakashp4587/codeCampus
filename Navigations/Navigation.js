@@ -80,7 +80,7 @@ const TabNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="Challenge"
+        name="Challenges"
         component={Challenge}
         options={{
           headerShadow: false,
@@ -120,7 +120,7 @@ const TabNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="Placement"
+        name="Jobs"
         component={Placement}
         options={{
           headerShadow: false,

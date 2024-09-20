@@ -65,7 +65,7 @@ const Home = () => {
         name: "Practice",
         img: "https://i.ibb.co/8mjYHzc/practice.png",
         bgColor: "#cce6ff",
-        route: "Challenge",
+        route: "Challenges",
       },
       {
         name: "Achieve",

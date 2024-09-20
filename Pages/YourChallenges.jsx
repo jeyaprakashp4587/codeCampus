@@ -34,6 +34,7 @@ const YourChallenges = (props) => {
         { option: option }
       );
       if (res.data) {
+        setLoading(true);
         setChallenges(res.data);
         setSkLoad(true);
       }
@@ -66,6 +67,39 @@ const YourChallenges = (props) => {
     setSkLoad(false); // Reset loading state
     getChallenges(option); // Fetch challenges based on the selected option
   };
+  // render skeleton
+  const [loading, setLoading] = useState(false);
+  if (!loading) {
+    return (
+      <View style={pageView}>
+        <Skeleton width="100%" height={height * 0.06} radius={10} mt={10} />
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Skeleton
+            width={width * 0.25}
+            height={height * 0.06}
+            radius={10}
+            mt={10}
+          />
+          <Skeleton
+            width={width * 0.25}
+            height={height * 0.06}
+            radius={10}
+            mt={10}
+          />
+          <Skeleton
+            width={width * 0.25}
+            height={height * 0.06}
+            radius={10}
+            mt={10}
+          />
+        </View>
+        <Skeleton width="100%" height={height * 0.3} radius={10} mt={10} />
+        <Skeleton width="100%" height={height * 0.3} radius={10} mt={10} />
+        <Skeleton width="100%" height={height * 0.3} radius={10} mt={10} />
+      </View>
+    );
+  }
+  //  ---------
   return (
     <View style={[pageView, { borderWidth: 0 }]}>
       {/* header options */}

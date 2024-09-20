@@ -1,4 +1,10 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  InteractionManager,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import HeadingText from "../utils/HeadingText";
@@ -15,11 +21,11 @@ import { faCode } from "@fortawesome/free-solid-svg-icons";
 import Skeleton from "../Skeletons/Skeleton";
 
 const YourActivity = () => {
-  const { width } = Dimensions.get("window");
+  const { width, height } = Dimensions.get("window");
   const { user } = useData();
 
   useEffect(() => {
-    getAllActivityDates();
+    InteractionManager.runAfterInteractions(() => getAllActivityDates());
   }, []);
 
   // state to store activity dates and activities list
@@ -34,6 +40,7 @@ const YourActivity = () => {
         `${Api}/Activity/getAllActivityDates/${user._id}`
       );
       if (res.data) {
+        setLoading(true);
         const markedDatesArray = res.data.map((date) => ({
           [date]: { marked: true },
         }));
@@ -71,54 +78,62 @@ const YourActivity = () => {
   const selectedDateFun = useCallback((date) => {
     getParticularDateActivities(date.dateString);
   }, []);
+  // render skeleton
+  const [loading, setLoading] = useState(false);
+  if (!loading) {
+    return (
+      <View style={pageView}>
+        <Skeleton width="100%" height={height * 0.1} radius={10} mt={10} />
+        <Skeleton width="100%" height={height * 0.5} radius={10} mt={10} />
+        <Skeleton width="100%" height={height * 0.1} radius={10} mt={10} />
+      </View>
+    );
+  }
 
   return (
-    // <View style={pageView}>
-    //   {/* code icon  */}
-    //   <FontAwesomeIcon
-    //     icon={faCode}
-    //     size={200}
-    //     style={{
-    //       position: "absolute",
-    //       opacity: 0.8,
-    //       color: Colors.veryLightGrey,
-    //       alignSelf: "center",
-    //       top: "60%",
-    //     }}
-    //   />
-    //   {/* heading text */}
-    //   <HeadingText text="Your Activities" />
-    //   {/* calender preview */}
-    //   <Calendar
-    //     style={{ borderWidth: 0, width: "100%", height: "auto" }}
-    //     markedDates={dates}
-    //     onDayPress={selectedDateFun}
-    //   />
-    //   {/* list Activities */}
-    //   <HrLine width="100%" />
-    //   <ScrollView>
-    //     <TopicsText text={selectedDate ? selectedDate : ""} />
-    //     {activitiesList.map((item, index) => (
-    //       <Text
-    //         style={{
-    //           // borderWidth: 1,
-    //           padding: width * 0.03,
-    //           fontSize: width * 0.04,
-    //           color: Colors.white,
-    //           marginBottom: 20,
-    //           borderRadius: 5,
-    //           backgroundColor: Colors.violet,
-    //           letterSpacing: 1,
-    //         }}
-    //         key={index}
-    //       >
-    //         {index + 1}. {item.activityName}
-    //       </Text>
-    //     ))}
-    //   </ScrollView>
-    // </View>
     <View style={pageView}>
-      <Skeleton width={200} height={200} />
+      {/* code icon  */}
+      <FontAwesomeIcon
+        icon={faCode}
+        size={200}
+        style={{
+          position: "absolute",
+          opacity: 0.8,
+          color: Colors.veryLightGrey,
+          alignSelf: "center",
+          top: "60%",
+        }}
+      />
+      {/* heading text */}
+      <HeadingText text="Your Activities" />
+      {/* calender preview */}
+      <Calendar
+        style={{ borderWidth: 0, width: "100%", height: "auto" }}
+        markedDates={dates}
+        onDayPress={selectedDateFun}
+      />
+      {/* list Activities */}
+      <HrLine width="100%" />
+      <TopicsText text={selectedDate ? selectedDate : ""} />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {activitiesList.map((item, index) => (
+          <Text
+            style={{
+              // borderWidth: 1,
+              padding: width * 0.03,
+              fontSize: width * 0.04,
+              color: Colors.white,
+              marginBottom: 20,
+              borderRadius: 5,
+              backgroundColor: Colors.violet,
+              letterSpacing: 1,
+            }}
+            key={index}
+          >
+            {index + 1}. {item.activityName}
+          </Text>
+        ))}
+      </ScrollView>
     </View>
   );
 };

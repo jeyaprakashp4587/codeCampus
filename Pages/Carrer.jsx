@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Colors, font, pageView } from "../constants/Colors";
 import { useData } from "../Context/Contexter";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -16,6 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import { Dimensions } from "react-native";
+import Skeleton from "../Skeletons/Skeleton";
 
 const Carrer = ({ navigation }) => {
   // courses list
@@ -294,6 +295,25 @@ const Carrer = ({ navigation }) => {
     ],
     []
   );
+  // render skeleton
+
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(true);
+    }, 200);
+  }, []);
+  if (!loading) {
+    return (
+      <View style={pageView}>
+        <Skeleton width="100%" height={height * 0.06} radius={10} mt={10} />
+        <Skeleton width="100%" height={height * 0.5} radius={10} mt={10} />
+        <Skeleton width="100%" height={height * 0.1} radius={10} mt={10} />
+        <Skeleton width="100%" height={height * 0.1} radius={10} mt={10} />
+        <Skeleton width="100%" height={height * 0.1} radius={10} mt={10} />
+      </View>
+    );
+  }
 
   return (
     <ScrollView>

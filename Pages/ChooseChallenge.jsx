@@ -110,8 +110,12 @@ const ChooseChallenge = ({ navigation }) => {
   // Show error or loading indicator
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#0000ff" />
+      <View style={pageView}>
+        <Skeleton width="100%" height={height * 0.06} radius={10} mt={10} />
+        <Skeleton width="100%" height={height * 0.08} radius={10} mt={10} />
+        <Skeleton width="100%" height={height * 0.3} radius={10} mt={10} />
+        <Skeleton width="100%" height={height * 0.3} radius={10} mt={10} />
+        <Skeleton width="100%" height={height * 0.3} radius={10} mt={10} />
       </View>
     );
   }

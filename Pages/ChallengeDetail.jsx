@@ -54,7 +54,8 @@ const ChallengeDetail = () => {
       const res = await axios.post(
         `${Api}/Challenges/checkChallengeStatus/${user._id}`,
         {
-          ChallengeName: selectedChallenge?.ChallengeName,
+          ChallengeName:
+            selectedChallenge?.ChallengeName || selectedChallenge?.title,
         }
       );
       if (res.data == "pending" || res.data == "completed") {
@@ -169,6 +170,7 @@ const ChallengeDetail = () => {
   useEffect(() => {
     const unsubscribeFocus = navigation.addListener("focus", () => {
       getParticularChallenge();
+      checkChallengeStatus();
     });
 
     // Cleanup listener
@@ -190,7 +192,8 @@ const ChallengeDetail = () => {
   };
 
   const HandleRefresh = () => {};
-  // -------------
+
+  // ------
   return (
     <LinearGradient
       colors={["#ffe6f0", "white", "#e6f7ff"]}

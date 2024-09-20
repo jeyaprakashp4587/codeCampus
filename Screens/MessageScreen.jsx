@@ -9,17 +9,7 @@ import NotificationsHook from "../Notification/NotificationsHook";
 const MessageScreen = () => {
   const { user } = useData();
   const { sendLocalNotification } = NotificationsHook();
-  const socket = io(Api, { query: { userId: user._id } });
-  const msg = { text: "hlo" };
-  useEffect(() => {
-    socket.on("connect", () => {
-      // console.log("connecteed");
-      sendLocalNotification(msg);
-    });
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+
   return (
     <View style={pageView}>
       <Text>Under Working!</Text>

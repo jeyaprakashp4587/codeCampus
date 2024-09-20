@@ -27,6 +27,7 @@ import { useData } from "../Context/Contexter";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Skeleton from "../Skeletons/Skeleton";
 
 const SearchScreen = ({ navigation }) => {
   // -------------- //
@@ -35,9 +36,11 @@ const SearchScreen = ({ navigation }) => {
   const [history, setHistory] = useState([]);
   const [users, setUsers] = useState([]);
   const { width, height } = Dimensions.get("window");
+  const [loading, setLoading] = useState(false);
   // Debounced search function
   const handleSearch = useCallback(
     debounce((text) => {
+      setLoading(true);
       userName.current = text.trim();
       if (userName.current) {
         getUserName();
@@ -54,8 +57,10 @@ const SearchScreen = ({ navigation }) => {
       });
       if (res.data) {
         setUsers(res.data);
+        setLoading(false);
       } else {
         setUsers([]);
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error fetching username:", error);
@@ -100,10 +105,11 @@ const SearchScreen = ({ navigation }) => {
   );
 
   // Optimized rendering of search results using memoization
-  const ResultRender = useMemo(() => {
+  const ResultRender = () => {
     if (users?.length > 0) {
       return (
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={users}
           style={{ marginTop: 20 }}
           keyExtractor={(item) => item._id}
@@ -131,7 +137,9 @@ const SearchScreen = ({ navigation }) => {
                   resizeMode: "contain",
                 }}
               />
-              <View style={{ flex: 1, flexDirection: "column" }}>
+              <View
+                style={{ flex: 1, flexDirection: "column", paddingLeft: 10 }}
+              >
                 <Text style={{ letterSpacing: 1, color: Colors.mildGrey }}>
                   {item.firstName} {item.LastName}
                 </Text>
@@ -148,7 +156,7 @@ const SearchScreen = ({ navigation }) => {
               <Ripple
                 onPress={() => {
                   navigation.navigate("userprofile");
-                  setSelectedUser(item);
+                  setSelectedUser(item._id);
                   updateSearchHistory(item);
                 }}
                 style={{ backgroundColor: Colors.violet, borderRadius: 10 }}
@@ -163,7 +171,7 @@ const SearchScreen = ({ navigation }) => {
           )}
         />
       );
-    } else {
+    } else if (!loading) {
       return (
         <Text
           style={{
@@ -177,7 +185,7 @@ const SearchScreen = ({ navigation }) => {
         </Text>
       );
     }
-  }, [users]);
+  };
   // ------------------------- //
   return (
     <View style={pageView}>
@@ -293,6 +301,15 @@ const SearchScreen = ({ navigation }) => {
       )}
       {/* usersList */}
       <ResultRender />
+      {loading ||
+        (userName?.current?.length <= 1 && (
+          <View>
+            <Skeleton width="100%" height={height * 0.07} radius={5} mt={10} />
+            <Skeleton width="100%" height={height * 0.07} radius={5} mt={10} />
+            <Skeleton width="100%" height={height * 0.07} radius={5} mt={10} />
+            <Skeleton width="100%" height={height * 0.07} radius={5} mt={10} />
+          </View>
+        ))}
     </View>
   );
 };

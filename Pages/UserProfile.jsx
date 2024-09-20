@@ -24,6 +24,7 @@ import moment from "moment";
 const UserProfile = () => {
   const { width, height } = Dimensions.get("window");
   const { selectedUser, user, setSelectedUser } = useData();
+  console.log(selectedUser);
   const socket = useSocket();
   const emitSocket = useSocketEmit(socket);
   const [render, setRender] = useState(false);
