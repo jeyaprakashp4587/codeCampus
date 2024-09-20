@@ -107,8 +107,8 @@ const Home = () => {
     try {
       const res = await axios.get(`${Api}/Post/getConnectionPosts/${user._id}`);
       if (res.status === 200) {
-        // setPosts(res.data);
         console.log(res.data);
+        setPosts(res.data);
       }
     } catch (error) {
       console.error("Failed to fetch posts:", error);
@@ -386,20 +386,20 @@ const Home = () => {
             refresh={suggestRefresh}
           />
         </View>
-      </ScrollView>
-      {/* post */}
-      <View>
+        {/* post */}
         <FlatList
-          data={posts}
-          renderItem={({ post, index }) => (
+          data={posts} // Data for FlatList
+          keyExtractor={(item) => item._id} // Key for each post
+          renderItem={({ item, index }) => (
             <Posts
-              post={post}
-              updateLikeCount={updateLikeCount}
-              index={index}
+              post={item.Posts} // Pass post data as props
+              index={index} // Pass index
+              admin={false} // Optionally pass if the user is admin
+              updateLikeCount={updateLikeCount} // Function to update like count
             />
           )}
         />
-      </View>
+      </ScrollView>
     </View>
   );
 };

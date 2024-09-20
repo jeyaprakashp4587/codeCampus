@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Colors, font } from "../constants/Colors";
 import { faComments, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { Dimensions } from "react-native";
@@ -19,6 +19,7 @@ import RelativeTime from "./RelativeTime";
 
 const Posts = ({ post, index, admin, updateLikeCount }) => {
   const { width, height } = Dimensions.get("window");
+  console.log(post);
   const initialText = post.item?.PostText || post.PostText;
   const { user, setUser } = useData();
   const wordThreshold = 20;
@@ -56,9 +57,11 @@ const Posts = ({ post, index, admin, updateLikeCount }) => {
   const [likeCount, setLikeCount] = useState(post?.item?.Like || post?.Like);
 
   const handleLike = async () => {
+    console.log(post?.item);
     try {
       const res = await axios.post(
-        `${Api}/Post/likePost/${post.item?._id || post._id}`
+        `${Api}/Post/likePost/${post?.item?._id || post?._id}`,
+        { userId: user?._id }
       );
       if (res.status === 200) {
         setLikeCount(likeCount + 1);
@@ -93,7 +96,11 @@ const Posts = ({ post, index, admin, updateLikeCount }) => {
         }}
       >
         <Image
-          source={{}}
+          source={{
+            uri: post.item?.SenderDetails
+              ? post?.item?.SenderDetails?.Images.profile
+              : user?.Images?.profile + user?.Images?.profile,
+          }}
           style={{ width: 50, height: 50, borderRadius: 50 }}
         />
         <View style={{ flex: 1, paddingHorizontal: 15 }}>
@@ -105,9 +112,11 @@ const Posts = ({ post, index, admin, updateLikeCount }) => {
               letterSpacing: 1,
             }}
           >
-            {post.item?.firstName
-              ? post.item.firstName + post.item.LastName
-              : post.firstName + post.LastName}
+            {post.item?.SenderDetails
+              ? post?.item?.SenderDetails.firstName +
+                " " +
+                post?.item?.SenderDetails.LastName
+              : user?.firstName + user?.LastName}
           </Text>
           <Text
             style={{
@@ -165,7 +174,7 @@ const Posts = ({ post, index, admin, updateLikeCount }) => {
       >
         {expanded
           ? initialText
-          : `${initialText.split(" ").slice(0, wordThreshold).join(" ")}...`}
+          : `${initialText?.split(" ").slice(0, wordThreshold).join(" ")}...`}
       </Text>
       {countWords(initialText) > wordThreshold && (
         <TouchableOpacity onPress={toggleExpanded} style={styles.showMore}>
@@ -211,15 +220,28 @@ const Posts = ({ post, index, admin, updateLikeCount }) => {
       >
         <TouchableOpacity
           onPress={handleLike}
-          style={{ flexDirection: "row", alignItems: "center" }}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            columnGap: 3,
+          }}
         >
-          <Text style={{ fontFamily: font.poppins, fontSize: width * 0.04 }}>
+          <Text style={{ fontFamily: font.poppins, fontSize: width * 0.048 }}>
             {likeCount}
           </Text>
-          <FontAwesomeIcon size={20} icon={faHeart} color={Colors.mildGrey} />
+          <FontAwesomeIcon
+            size={18}
+            icon={faHeart}
+            color={
+              post?.LikedUsers?.map((user) => user.LikedUser == user._id)
+                ? "red"
+                : Colors.mildGrey
+            }
+          />
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text style={{ fontFamily: font.poppins, fontSize: width * 0.04 }}>
+        <TouchableOpacity style={{ flexDirection: "row", columnGap: 5 }}>
+          <Text style={{ fontFamily: font.poppins, fontSize: width * 0.048 }}>
             12
           </Text>
           <FontAwesomeIcon
