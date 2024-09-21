@@ -393,6 +393,7 @@ const Home = () => {
           renderItem={({ item, index }) => (
             <Posts
               post={item.Posts} // Pass post data as props
+              senderDetails={item.SenderDetails}
               index={index} // Pass index
               admin={false} // Optionally pass if the user is admin
               updateLikeCount={updateLikeCount} // Function to update like count

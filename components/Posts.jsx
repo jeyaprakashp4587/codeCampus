@@ -17,9 +17,9 @@ import { useData } from "../Context/Contexter";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import RelativeTime from "./RelativeTime";
 
-const Posts = ({ post, index, admin, updateLikeCount }) => {
+const Posts = ({ post, index, admin, updateLikeCount, senderDetails }) => {
   const { width, height } = Dimensions.get("window");
-  console.log(post);
+  console.log(senderDetails);
   const initialText = post.item?.PostText || post.PostText;
   const { user, setUser } = useData();
   const wordThreshold = 20;
@@ -57,14 +57,13 @@ const Posts = ({ post, index, admin, updateLikeCount }) => {
   const [likeCount, setLikeCount] = useState(post?.item?.Like || post?.Like);
 
   const handleLike = async () => {
-    console.log(post?.item);
     try {
       const res = await axios.post(
         `${Api}/Post/likePost/${post?.item?._id || post?._id}`,
         { userId: user?._id }
       );
       if (res.status === 200) {
-        setLikeCount(likeCount + 1);
+        setLikeCount((prev) => prev + 1);
         updateLikeCount(post?.item?.Like || post?.Like, likeCount + 1);
       }
     } catch (error) {
@@ -97,9 +96,9 @@ const Posts = ({ post, index, admin, updateLikeCount }) => {
       >
         <Image
           source={{
-            uri: post.item?.SenderDetails
-              ? post?.item?.SenderDetails?.Images.profile
-              : user?.Images?.profile + user?.Images?.profile,
+            uri: senderDetails?.Images
+              ? senderDetails?.Images?.profile
+              : user?.Images?.profile,
           }}
           style={{ width: 50, height: 50, borderRadius: 50 }}
         />
@@ -112,10 +111,8 @@ const Posts = ({ post, index, admin, updateLikeCount }) => {
               letterSpacing: 1,
             }}
           >
-            {post.item?.SenderDetails
-              ? post?.item?.SenderDetails.firstName +
-                " " +
-                post?.item?.SenderDetails.LastName
+            {senderDetails?.firstName
+              ? senderDetails?.firstName + senderDetails?.LastName
               : user?.firstName + user?.LastName}
           </Text>
           <Text
@@ -234,12 +231,15 @@ const Posts = ({ post, index, admin, updateLikeCount }) => {
             size={18}
             icon={faHeart}
             color={
-              post?.LikedUsers?.map((user) => user.LikedUser == user._id)
+              post?.LikedUsers?.some(
+                (likeuser) => likeuser.LikedUser === user._id
+              )
                 ? "red"
                 : Colors.mildGrey
             }
           />
         </TouchableOpacity>
+
         <TouchableOpacity style={{ flexDirection: "row", columnGap: 5 }}>
           <Text style={{ fontFamily: font.poppins, fontSize: width * 0.048 }}>
             12
