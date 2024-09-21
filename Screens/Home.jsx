@@ -129,13 +129,13 @@ const Home = () => {
     }
   }, [user._id]);
 
-  const updateLikeCount = useCallback((postId, newLikeCount) => {
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post._id === postId ? { ...post, Like: newLikeCount } : post
-      )
-    );
-  }, []);
+  // const updateLikeCount = useCallback((postId, newLikeCount) => {
+  //   setPosts((prevPosts) =>
+  //     prevPosts.map((post) =>
+  //       post._id === postId ? { ...post, Like: newLikeCount } : post
+  //     )
+  //   );
+  // }, []);
 
   useSocketOn(socket, "Noti-test", (data) => {
     sendLocalNotification(data);
@@ -396,7 +396,7 @@ const Home = () => {
               senderDetails={item.SenderDetails}
               index={index} // Pass index
               admin={false} // Optionally pass if the user is admin
-              updateLikeCount={updateLikeCount} // Function to update like count
+              // updateLikeCount={updateLikeCount} // Function to update like count
             />
           )}
         />
