@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  Modal, // Import Modal for showing liked users
 } from "react-native";
 import React, { useState } from "react";
 import { Colors, font } from "../constants/Colors";
@@ -18,7 +19,7 @@ import Api from "@/Api";
 
 const Posts = ({ post, index, admin, senderDetails }) => {
   const { width, height } = Dimensions.get("window");
-  const initialText = post?.PostText; // Fixing the data access here
+  const initialText = post?.PostText;
   const { user, setUser } = useData();
   const wordThreshold = 20;
   const [expanded, setExpanded] = useState(false);
@@ -27,6 +28,9 @@ const Posts = ({ post, index, admin, senderDetails }) => {
   const [liked, setLiked] = useState(
     post?.LikedUsers?.some((likeuser) => likeuser?.LikedUser === user?._id)
   );
+
+  const [likedUsers, setLikedUsers] = useState([]); // Store liked users data
+  const [isModalVisible, setIsModalVisible] = useState(false); // Modal visibility state
 
   const toggleExpanded = () => {
     setExpanded(!expanded);
@@ -84,6 +88,21 @@ const Posts = ({ post, index, admin, senderDetails }) => {
       }
     } catch (error) {
       setLiked(true);
+    }
+  };
+
+  // Fetch liked users and show the modal
+  const handleShowLikedUsers = async () => {
+    try {
+      const res = await axios.get(`${Api}/Post/getLikedUsers/${post._id}`);
+      if (res.status === 200) {
+        setLikedUsers(res.data.likedUsers);
+        console.log(res.data);
+        // Assume likedUsers contains first name, last name, and profile picture
+        setIsModalVisible(true); // Open the modal
+      }
+    } catch (err) {
+      console.error("Failed to fetch liked users:", err);
     }
   };
 
@@ -177,6 +196,15 @@ const Posts = ({ post, index, admin, senderDetails }) => {
           />
         </TouchableOpacity>
 
+        <TouchableOpacity
+          style={styles.likeCountButton}
+          onPress={() => handleShowLikedUsers(post?._id)} // Show the list of liked users
+        >
+          <Text style={{ fontFamily: font.poppins, fontSize: width * 0.048 }}>
+            See who liked
+          </Text>
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.commentButton}>
           <Text style={{ fontFamily: font.poppins, fontSize: width * 0.048 }}>
             12
@@ -190,59 +218,81 @@ const Posts = ({ post, index, admin, senderDetails }) => {
 
         <RelativeTime time={post.Time} fsize={width * 0.033} />
       </View>
+
+      {/* Modal to show liked users */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={() => setIsModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <FlatList
+            data={likedUsers}
+            keyExtractor={(item) => item._id} // Assuming _id is unique for each user
+            renderItem={({ item }) => (
+              <View style={styles.likedUser}>
+                <Image
+                  source={{ uri: item.Images.profile }} // Assuming this is the key for profile picture
+                  style={styles.profileImage}
+                />
+                <Text style={styles.userName}>
+                  {item.firstName} {item.LastName}
+                </Text>
+              </View>
+            )}
+          />
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setIsModalVisible(false)}
+          >
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 };
 
-export default Posts;
+// Add necessary styles including modal styling
 const styles = StyleSheet.create({
-  userName: {
-    fontSize: 16,
-    color: Colors.veryDarkGrey,
-    fontFamily: font.poppins,
-    letterSpacing: 1,
-  },
-  instituteText: {
-    fontSize: 14,
-    color: Colors.lightGrey,
-    fontFamily: font.poppins,
-  },
-  deleteButton: {
+  // existing styles...
+  modalContainer: {
+    // flex: 1,
+    width: "100%",
+    height: "60%",
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
     position: "absolute",
-    right: 20,
-    top: 70,
-    backgroundColor: "orange",
-    borderRadius: 4,
-    zIndex: 100,
+    bottom: 0,
+    borderTopStartRadius: 20,
+    borderTopEndRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.lightGrey,
   },
-  deleteText: {
-    color: "white",
-    letterSpacing: 1,
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-  },
-  postText: {
-    fontFamily: font.poppins,
-    fontSize: 14,
-    marginTop: 10,
-    color: Colors.mildGrey,
-  },
-  showMore: {
-    marginTop: 5,
-  },
-  postFooter: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginTop: 5,
-    paddingTop: 10,
-  },
-  likeButton: {
+  likedUser: {
     flexDirection: "row",
     alignItems: "center",
-    columnGap: 3,
+    marginVertical: 5,
   },
-  commentButton: {
-    flexDirection: "row",
-    columnGap: 5,
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  closeButton: {
+    padding: 10,
+    backgroundColor: Colors.primary,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  closeButtonText: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 16,
   },
 });
+
+export default Posts;
