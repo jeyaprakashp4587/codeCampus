@@ -16,6 +16,8 @@ import { useData } from "../Context/Contexter";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import RelativeTime from "./RelativeTime";
 import Api from "@/Api";
+import moment from "moment";
+import { useNavigation } from "@react-navigation/native";
 
 const Posts = ({ post, index, admin, senderDetails }) => {
   const { width, height } = Dimensions.get("window");
@@ -25,6 +27,8 @@ const Posts = ({ post, index, admin, senderDetails }) => {
   const [expanded, setExpanded] = useState(false);
   const [deldisplay, setDeldisplay] = useState(false);
   const [likeCount, setLikeCount] = useState(post?.Like);
+  const navigation = useNavigation();
+  const { setSelectedUser } = useData();
   const [liked, setLiked] = useState(
     post?.LikedUsers?.some((likeuser) => likeuser?.LikedUser === user?._id)
   );
@@ -68,6 +72,7 @@ const Posts = ({ post, index, admin, senderDetails }) => {
     try {
       const response = await axios.post(`${Api}/Post/likePost/${postId}`, {
         userId: user?._id,
+        LikedTime: moment().format("YYYY-MM-DDTHH:mm:ss"),
       });
       if (response.status === 200) {
         setLikeCount((prev) => prev + 1);
@@ -97,7 +102,7 @@ const Posts = ({ post, index, admin, senderDetails }) => {
       const res = await axios.get(`${Api}/Post/getLikedUsers/${post._id}`);
       if (res.status === 200) {
         setLikedUsers(res.data.likedUsers);
-        console.log(res.data);
+        // console.log(res.data);
         // Assume likedUsers contains first name, last name, and profile picture
         setIsModalVisible(true); // Open the modal
       }
@@ -169,6 +174,7 @@ const Posts = ({ post, index, admin, senderDetails }) => {
         <FlatList
           data={post?.Images}
           horizontal
+          // style={{ borderWidth: 1 }}
           renderItem={({ item, index }) => (
             <Image
               key={index}
@@ -177,15 +183,26 @@ const Posts = ({ post, index, admin, senderDetails }) => {
                 width: post.Images.length === 1 ? width * 0.84 : width * 0.8,
                 height: height * 0.3,
                 resizeMode: "contain",
-                borderWidth: 1,
               }}
             />
           )}
         />
       )}
 
-      <View style={styles.postFooter}>
-        <TouchableOpacity onPress={handleLikeToggle} style={styles.likeButton}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          // borderWidth: 1,
+          // flex: 1,
+          marginTop: 5,
+        }}
+      >
+        <TouchableOpacity
+          onPress={handleLikeToggle}
+          style={{ flexDirection: "row", alignItems: "center", columnGap: 5 }}
+        >
           <Text style={{ fontFamily: font.poppins, fontSize: width * 0.048 }}>
             {likeCount}
           </Text>
@@ -195,17 +212,9 @@ const Posts = ({ post, index, admin, senderDetails }) => {
             color={liked ? "red" : Colors.mildGrey}
           />
         </TouchableOpacity>
-
         <TouchableOpacity
-          style={styles.likeCountButton}
-          onPress={() => handleShowLikedUsers(post?._id)} // Show the list of liked users
+          style={{ flexDirection: "row", alignItems: "center", columnGap: 5 }}
         >
-          <Text style={{ fontFamily: font.poppins, fontSize: width * 0.048 }}>
-            See who liked
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.commentButton}>
           <Text style={{ fontFamily: font.poppins, fontSize: width * 0.048 }}>
             12
           </Text>
@@ -215,9 +224,16 @@ const Posts = ({ post, index, admin, senderDetails }) => {
             color={Colors.mildGrey}
           />
         </TouchableOpacity>
-
         <RelativeTime time={post.Time} fsize={width * 0.033} />
       </View>
+      <TouchableOpacity
+        style={{ flexDirection: "row" }}
+        onPress={() => handleShowLikedUsers(post?._id)} // Show the list of liked users
+      >
+        <Text style={{ fontFamily: font.poppins, fontSize: width * 0.03 }}>
+          See who liked
+        </Text>
+      </TouchableOpacity>
 
       {/* Modal to show liked users */}
       <Modal
@@ -226,28 +242,81 @@ const Posts = ({ post, index, admin, senderDetails }) => {
         visible={isModalVisible}
         onRequestClose={() => setIsModalVisible(false)}
       >
-        <View style={styles.modalContainer}>
-          <FlatList
-            data={likedUsers}
-            keyExtractor={(item) => item._id} // Assuming _id is unique for each user
-            renderItem={({ item }) => (
-              <View style={styles.likedUser}>
-                <Image
-                  source={{ uri: item.Images.profile }} // Assuming this is the key for profile picture
-                  style={styles.profileImage}
-                />
-                <Text style={styles.userName}>
-                  {item.firstName} {item.LastName}
-                </Text>
-              </View>
-            )}
-          />
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => setIsModalVisible(false)}
-          >
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
+        <View
+          style={{
+            width: "100%",
+            height: "60%",
+            backgroundColor: "white",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "absolute",
+            bottom: 0,
+            borderTopStartRadius: 20,
+            borderTopEndRadius: 20,
+            borderWidth: 1,
+            borderColor: Colors.lightGrey,
+          }}
+        >
+          {likedUsers.length > 0 ? (
+            <View>
+              <Text
+                style={{
+                  color: Colors.mildGrey,
+                  letterSpacing: 2,
+                  paddingVertical: 10,
+                }}
+              >
+                Likes
+              </Text>
+              <FlatList
+                data={likedUsers}
+                keyExtractor={(item) => item._id}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "flex-start",
+                      // borderWidth: 1,
+                      width: width * 0.9,
+                      marginTop: 8,
+                      columnGap: 10,
+                      paddingVertical: 10,
+                      borderBottomWidth: 1,
+                      borderColor: Colors.veryLightGrey,
+                    }}
+                    onPress={() => {
+                      navigation.navigate("userprofile");
+                      setSelectedUser(item.userId);
+                    }}
+                  >
+                    <Image
+                      source={{ uri: item.profile }}
+                      style={{
+                        width: width * 0.13,
+                        height: height * 0.07,
+                        borderRadius: 50,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: width * 0.04,
+                        letterSpacing: 1,
+                        flex: 1,
+                      }}
+                    >
+                      {item.firstName}
+                      {"  "}
+                      {item.LastName}
+                    </Text>
+                    <RelativeTime time={item.LikedTime} fsize={width * 0.033} />
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
+          ) : (
+            <Text>No Likes</Text>
+          )}
         </View>
       </Modal>
     </View>
@@ -255,44 +324,6 @@ const Posts = ({ post, index, admin, senderDetails }) => {
 };
 
 // Add necessary styles including modal styling
-const styles = StyleSheet.create({
-  // existing styles...
-  modalContainer: {
-    // flex: 1,
-    width: "100%",
-    height: "60%",
-    backgroundColor: "white",
-    justifyContent: "center",
-    alignItems: "center",
-    position: "absolute",
-    bottom: 0,
-    borderTopStartRadius: 20,
-    borderTopEndRadius: 20,
-    borderWidth: 1,
-    borderColor: Colors.lightGrey,
-  },
-  likedUser: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 5,
-  },
-  profileImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 10,
-  },
-  closeButton: {
-    padding: 10,
-    backgroundColor: Colors.primary,
-    borderRadius: 5,
-    marginTop: 10,
-  },
-  closeButtonText: {
-    color: "white",
-    textAlign: "center",
-    fontSize: 16,
-  },
-});
+const styles = StyleSheet.create({});
 
 export default Posts;

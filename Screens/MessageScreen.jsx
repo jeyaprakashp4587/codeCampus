@@ -9,7 +9,9 @@ import NotificationsHook from "../Notification/NotificationsHook";
 const MessageScreen = () => {
   const { user } = useData();
   const { sendLocalNotification } = NotificationsHook();
-
+  // useEffect(() => {
+  //   sendLocalNotification({ text: "hii" });
+  // }, []);
   return (
     <View style={pageView}>
       <Text>Under Working!</Text>

@@ -4,33 +4,28 @@ import { useEffect, useRef, useState } from "react";
 import { Alert, Platform } from "react-native";
 
 const NotificationsHook = () => {
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-      shouldSetBadge: false,
-    }),
-  });
   const [expoPushToken, setExpoPushToken] = useState("");
-  const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
 
   useEffect(() => {
     // Register for push notifications and get the token
-    registerForPushNotificationsAsync().then((token) =>
-      setExpoPushToken(token)
-    );
+    registerForPushNotificationsAsync().then((token) => {
+      if (token) {
+        setExpoPushToken(token);
+        // You might want to send the token to your server here
+      }
+    });
 
     // Listen to incoming notifications
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
-        setNotification(notification);
+        // Handle notification received
       });
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        // console.log(response);
+        // Handle notification response
       });
 
     return () => {
@@ -42,37 +37,39 @@ const NotificationsHook = () => {
   }, []);
 
   async function registerForPushNotificationsAsync() {
-    let token;
-    if (Device.isDevice) {
-      const { status: existingStatus } =
-        await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== "granted") {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
+    try {
+      let token;
+      if (Device.isDevice) {
+        const { status: existingStatus } =
+          await Notifications.getPermissionsAsync();
+        let finalStatus = existingStatus;
+        if (existingStatus !== "granted") {
+          const { status } = await Notifications.requestPermissionsAsync();
+          finalStatus = status;
+        }
+        if (finalStatus !== "granted") {
+          Alert.alert("Failed to get push token for push notification!");
+          return;
+        }
+        token = (await Notifications.getExpoPushTokenAsync()).data;
+        console.log("Expo push token:", token);
+      } else {
+        Alert.alert("Must use physical device for Push Notifications");
       }
-      if (finalStatus !== "granted") {
-        Alert.alert("Failed to get push token for push notification!");
-        return;
+
+      if (Platform.OS === "android") {
+        await Notifications.setNotificationChannelAsync("default", {
+          name: "default",
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 500, 250, 500],
+          lightColor: "#FF231F7C",
+        });
       }
-      token = (await Notifications.getExpoPushTokenAsync()).data;
-      // console.log(token);
-    } else {
-      Alert.alert("Must use physical device for Push Notifications");
-    }
 
-    if (Platform.OS === "android") {
-      Notifications.setNotificationChannelAsync("default", {
-        name: "default",
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 500, 250, 500],
-        lightColor: "#FF231F7C",
-        sound: "default",
-        icon: "chat",
-      });
+      return token;
+    } catch (error) {
+      console.error("Error getting push token:", error);
     }
-
-    return token;
   }
 
   // Function to send a local notification
@@ -83,9 +80,10 @@ const NotificationsHook = () => {
         body: msgData.text,
         data: { msgData },
       },
-      trigger: { seconds: 1 },
+      trigger: null,
     });
   }
+
   return { sendLocalNotification };
 };
 
