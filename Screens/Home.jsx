@@ -107,7 +107,7 @@ const Home = () => {
     try {
       const res = await axios.get(`${Api}/Post/getConnectionPosts/${user._id}`);
       if (res.status === 200) {
-        console.log(res.data);
+        // console.log(res.data);
         setPosts(res.data);
       }
     } catch (error) {

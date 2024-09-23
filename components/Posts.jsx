@@ -5,9 +5,10 @@ import {
   View,
   TouchableOpacity,
   FlatList,
-  Modal, // Import Modal for showing liked users
+  Modal,
+  TextInput,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Colors, font } from "../constants/Colors";
 import { faComments, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { Dimensions } from "react-native";
@@ -18,23 +19,26 @@ import RelativeTime from "./RelativeTime";
 import Api from "@/Api";
 import moment from "moment";
 import { useNavigation } from "@react-navigation/native";
-
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+const { width, height } = Dimensions.get("window");
 const Posts = ({ post, index, admin, senderDetails }) => {
-  const { width, height } = Dimensions.get("window");
   const initialText = post?.PostText;
-  const { user, setUser } = useData();
+  const { user, setUser, setSelectedUser } = useData();
+  const navigation = useNavigation();
   const wordThreshold = 20;
+  // console.log(post);
   const [expanded, setExpanded] = useState(false);
   const [deldisplay, setDeldisplay] = useState(false);
   const [likeCount, setLikeCount] = useState(post?.Like);
-  const navigation = useNavigation();
-  const { setSelectedUser } = useData();
+  const [comments, setComments] = useState(post?.comments || []); // List of comments
+  const [newComment, setNewComment] = useState(""); // Track new comment
   const [liked, setLiked] = useState(
     post?.LikedUsers?.some((likeuser) => likeuser?.LikedUser === user?._id)
   );
-
-  const [likedUsers, setLikedUsers] = useState([]); // Store liked users data
-  const [isModalVisible, setIsModalVisible] = useState(false); // Modal visibility state
+  const [likedUsers, setLikedUsers] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalContentType, setModalContentType] = useState(""); // Either 'likes' or 'comments'
 
   const toggleExpanded = () => {
     setExpanded(!expanded);
@@ -46,70 +50,105 @@ const Posts = ({ post, index, admin, senderDetails }) => {
     setDeldisplay((prev) => !prev);
   };
 
-  const HandleDelete = async (postId) => {
-    try {
-      const res = await axios.post(`${Api}/Post/deletePost/${user?._id}`, {
-        postId,
-      });
-      if (res.data) {
-        setUser(res.data);
+  const HandleDelete = useCallback(
+    async (postId) => {
+      try {
+        const res = await axios.post(`${Api}/Post/deletePost/${user?._id}`, {
+          postId,
+        });
+        if (res.data) {
+          setUser(res.data);
+        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    },
+    [user]
+  );
 
-  const handleLikeToggle = async () => {
+  const handleLikeToggle = useCallback(async () => {
     if (liked) {
       await handleUnlike(post?._id);
     } else {
       await handleLike(post?._id);
     }
-  };
+  }, [liked]);
 
-  const handleLike = async (postId) => {
-    setLiked(true);
-    try {
-      const response = await axios.post(`${Api}/Post/likePost/${postId}`, {
-        userId: user?._id,
-        LikedTime: moment().format("YYYY-MM-DDTHH:mm:ss"),
-      });
-      if (response.status === 200) {
-        setLikeCount((prev) => prev + 1);
-      }
-    } catch (error) {
-      setLiked(false);
-    }
-  };
-
-  const handleUnlike = async (postId) => {
-    setLiked(false);
-    try {
-      const res = await axios.post(`${Api}/Post/unlikePost/${postId}`, {
-        userId: user._id,
-      });
-      if (res.status === 200) {
-        setLikeCount((prev) => prev - 1);
-      }
-    } catch (error) {
+  const handleLike = useCallback(
+    async (postId) => {
       setLiked(true);
-    }
-  };
+      try {
+        const response = await axios.post(`${Api}/Post/likePost/${postId}`, {
+          userId: user?._id,
+          LikedTime: moment().format("YYYY-MM-DDTHH:mm:ss"),
+        });
+        if (response.status === 200) {
+          setLikeCount((prev) => prev + 1);
+        }
+      } catch (error) {
+        setLiked(false);
+      }
+    },
+    [user]
+  );
 
-  // Fetch liked users and show the modal
-  const handleShowLikedUsers = async () => {
+  const handleUnlike = useCallback(
+    async (postId) => {
+      setLiked(false);
+      try {
+        const res = await axios.post(`${Api}/Post/unlikePost/${postId}`, {
+          userId: user._id,
+        });
+        if (res.status === 200) {
+          setLikeCount((prev) => prev - 1);
+        }
+      } catch (error) {
+        setLiked(true);
+      }
+    },
+    [user]
+  );
+
+  const handleSubmitComment = useCallback(async () => {
+    if (newComment.trim() === "") return;
+
+    try {
+      const res = await axios.post(`${Api}/Post/commentPost/${post._id}`, {
+        userId: user._id,
+        commentText: newComment,
+        commentTime: moment().format("YYYY-MM-DDTHH:mm:ss"),
+      });
+
+      if (res.status === 200) {
+        // console.log(res.data.comment);
+        setComments([...comments, res.data.comment]);
+        setNewComment("");
+      }
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+    }
+  }, [newComment, comments, user]);
+
+  const handleShowLikedUsers = useCallback(async () => {
     try {
       const res = await axios.get(`${Api}/Post/getLikedUsers/${post._id}`);
       if (res.status === 200) {
         setLikedUsers(res.data.likedUsers);
-        // console.log(res.data);
-        // Assume likedUsers contains first name, last name, and profile picture
-        setIsModalVisible(true); // Open the modal
+        setModalContentType("likes");
+        setIsModalVisible(true);
+        console.log(res.data);
       }
     } catch (err) {
       console.error("Failed to fetch liked users:", err);
     }
-  };
+  }, [post]);
+
+  const handleShowComments = useCallback(async () => {
+    setModalContentType("comments");
+    setIsModalVisible(true);
+    const res = await axios.post(`${Api}/Post/getComments/${post._id}`);
+    if(res.data)
+  });
 
   return (
     <View
@@ -124,6 +163,7 @@ const Posts = ({ post, index, admin, senderDetails }) => {
         marginHorizontal: 5,
       }}
     >
+      {/* Post Content */}
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <Image
           source={{
@@ -137,7 +177,9 @@ const Posts = ({ post, index, admin, senderDetails }) => {
           <Text style={styles.userName}>
             {senderDetails?.firstName + senderDetails?.LastName}
           </Text>
-          <Text style={styles.instituteText}>{post.Institute}</Text>
+          <Text style={styles.instituteText}>
+            {senderDetails?.InstitudeName}
+          </Text>
         </View>
         {admin && (
           <TouchableOpacity onPress={handleDelDisp}>
@@ -169,12 +211,12 @@ const Posts = ({ post, index, admin, senderDetails }) => {
           </Text>
         </TouchableOpacity>
       )}
+      <Text style={{ color: Colors.violet }}>{post?.PostLink}</Text>
 
       {post?.Images && (
         <FlatList
           data={post?.Images}
           horizontal
-          // style={{ borderWidth: 1 }}
           renderItem={({ item, index }) => (
             <Image
               key={index}
@@ -194,8 +236,6 @@ const Posts = ({ post, index, admin, senderDetails }) => {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          // borderWidth: 1,
-          // flex: 1,
           marginTop: 5,
         }}
       >
@@ -213,10 +253,11 @@ const Posts = ({ post, index, admin, senderDetails }) => {
           />
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={handleShowComments} // Open modal to display comments
           style={{ flexDirection: "row", alignItems: "center", columnGap: 5 }}
         >
           <Text style={{ fontFamily: font.poppins, fontSize: width * 0.048 }}>
-            12
+            {comments.length}
           </Text>
           <FontAwesomeIcon
             icon={faComments}
@@ -226,96 +267,124 @@ const Posts = ({ post, index, admin, senderDetails }) => {
         </TouchableOpacity>
         <RelativeTime time={post.Time} fsize={width * 0.033} />
       </View>
-      <TouchableOpacity
-        style={{ flexDirection: "row" }}
-        onPress={() => handleShowLikedUsers(post?._id)} // Show the list of liked users
+
+      {/* Add New Comment */}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          marginVertical: 5,
+          borderBottomWidth: 1,
+          borderColor: Colors.veryLightGrey,
+        }}
       >
-        <Text style={{ fontFamily: font.poppins, fontSize: width * 0.03 }}>
-          See who liked
-        </Text>
+        <TextInput
+          value={newComment}
+          onChangeText={(text) => {
+            setNewComment(text);
+          }}
+          placeholder="Add a comment..."
+          style={styles.commentInput}
+        />
+        <TouchableOpacity
+          onPress={handleSubmitComment}
+          style={styles.commentBtn}
+        >
+          <FontAwesome name="send-o" size={17} color={Colors.mildGrey} />
+        </TouchableOpacity>
+      </View>
+
+      {/* Show Liked Users Button */}
+      <TouchableOpacity onPress={handleShowLikedUsers} style={styles.likeBtn}>
+        <Text>Show Likes</Text>
       </TouchableOpacity>
 
-      {/* Modal to show liked users */}
+      {/* Modal for displaying liked users or comments */}
       <Modal
+        visible={isModalVisible}
         animationType="slide"
         transparent={true}
-        visible={isModalVisible}
         onRequestClose={() => setIsModalVisible(false)}
       >
-        <View
-          style={{
-            width: "100%",
-            height: "60%",
-            backgroundColor: "white",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "absolute",
-            bottom: 0,
-            borderTopStartRadius: 20,
-            borderTopEndRadius: 20,
-            borderWidth: 1,
-            borderColor: Colors.lightGrey,
-          }}
-        >
-          {likedUsers.length > 0 ? (
-            <View>
-              <Text
-                style={{
-                  color: Colors.mildGrey,
-                  letterSpacing: 2,
-                  paddingVertical: 10,
-                }}
-              >
-                Likes
-              </Text>
-              <FlatList
-                data={likedUsers}
-                keyExtractor={(item) => item._id}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
+        <View style={styles.modalBackground}>
+          <View
+            style={{
+              flexDirection: "row",
+              // borderWidth: 1,
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{
+                textAlign: "left",
+                fontSize: width * 0.04,
+                letterSpacing: 1,
+                textTransform: "capitalize",
+              }}
+            >
+              {modalContentType}
+            </Text>
+            <TouchableOpacity onPress={() => setIsModalVisible(false)}>
+              <FontAwesomeIcon icon={faTimes} color={Colors.mildGrey} />
+            </TouchableOpacity>
+          </View>
+          {modalContentType === "likes" ? (
+            <FlatList
+              data={likedUsers}
+              keyExtractor={(item) => item?._id}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={{
+                    // borderWidth: 1,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    columnGap: 10,
+                    borderBottomWidth: 1,
+                    borderColor: Colors.veryLightGrey,
+                    paddingVertical: 10,
+                    marginTop: 10,
+                  }}
+                  onPress={() => {
+                    navigation.navigate("userprofile");
+                    setSelectedUser(item?.userId);
+                  }}
+                >
+                  {item?.LikedUser}
+                  <Image
+                    source={{ uri: item?.profile }}
                     style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "flex-start",
-                      // borderWidth: 1,
-                      width: width * 0.9,
-                      marginTop: 8,
-                      columnGap: 10,
-                      paddingVertical: 10,
-                      borderBottomWidth: 1,
-                      borderColor: Colors.veryLightGrey,
+                      width: width * 0.1,
+                      height: height * 0.05,
+                      borderRadius: 50,
                     }}
-                    onPress={() => {
-                      navigation.navigate("userprofile");
-                      setSelectedUser(item.userId);
+                  />
+                  <Text
+                    style={{
+                      color: Colors.veryDarkGrey,
+                      letterSpacing: 1,
+                      flex: 1,
                     }}
                   >
-                    <Image
-                      source={{ uri: item.profile }}
-                      style={{
-                        width: width * 0.13,
-                        height: height * 0.07,
-                        borderRadius: 50,
-                      }}
-                    />
-                    <Text
-                      style={{
-                        fontSize: width * 0.04,
-                        letterSpacing: 1,
-                        flex: 1,
-                      }}
-                    >
-                      {item.firstName}
-                      {"  "}
-                      {item.LastName}
-                    </Text>
-                    <RelativeTime time={item.LikedTime} fsize={width * 0.033} />
-                  </TouchableOpacity>
-                )}
-              />
-            </View>
+                    {item?.firstName}
+                    {item?.LastName}
+                  </Text>
+
+                  <RelativeTime time={item?.LikedTime} />
+                </TouchableOpacity>
+              )}
+            />
           ) : (
-            <Text>No Likes</Text>
+            <FlatList
+              data={comments}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.commentItem}>
+                  <Text style={{ fontWeight: "bold" }}>{item?.username}</Text>
+                  <Text>{item?.text}</Text>
+                </View>
+              )}
+            />
           )}
         </View>
       </Modal>
@@ -323,7 +392,44 @@ const Posts = ({ post, index, admin, senderDetails }) => {
   );
 };
 
-// Add necessary styles including modal styling
-const styles = StyleSheet.create({});
-
 export default Posts;
+
+const styles = StyleSheet.create({
+  userName: {
+    fontFamily: font.poppinsBold,
+    fontSize: 16,
+  },
+  instituteText: {
+    color: Colors.mildGrey,
+  },
+  deleteButton: {
+    backgroundColor: "red",
+    padding: 10,
+    borderRadius: 5,
+  },
+  deleteText: {
+    color: "white",
+  },
+  postText: {
+    marginVertical: 10,
+  },
+  showMore: {
+    marginVertical: 10,
+  },
+  likeBtn: {
+    marginVertical: 10,
+  },
+  modalBackground: {
+    backgroundColor: "white",
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    height: "60%",
+    borderWidth: 1,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    borderBottomWidth: 0,
+    borderColor: Colors.veryLightGrey,
+  },
+});
