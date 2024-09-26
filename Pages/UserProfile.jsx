@@ -34,7 +34,7 @@ const UserProfile = () => {
   // Send notification to user
   const sendNotification = useCallback(() => {
     if (selectedUser?._id && user?._id) {
-      emitSocket("sendNotificationToUser", {
+      emitSocket("sendNotificationForConnection", {
         ReceiverId: selectedUser._id,
         SenderId: user._id,
         Time: moment().format("YYYY-MM-DDTHH:mm:ss"),

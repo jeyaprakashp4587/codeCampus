@@ -146,9 +146,12 @@ const Posts = ({ post, index, admin, senderDetails }) => {
   const handleShowComments = useCallback(async () => {
     setModalContentType("comments");
     setIsModalVisible(true);
-    const res = await axios.post(`${Api}/Post/getComments/${post._id}`);
-    if(res.data)
-  });
+    const res = await axios.get(`${Api}/Post/getComments/${post?._id}`);
+    if (res.data) {
+      console.log(res.data);
+      setComments(res.data.comments);
+    }
+  }, [comments, post]);
 
   return (
     <View
@@ -330,9 +333,60 @@ const Posts = ({ post, index, admin, senderDetails }) => {
             </TouchableOpacity>
           </View>
           {modalContentType === "likes" ? (
+            likedUsers?.length > 0 ? (
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                data={likedUsers}
+                keyExtractor={(item) => item?._id}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={{
+                      // borderWidth: 1,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      columnGap: 10,
+                      borderBottomWidth: 1,
+                      borderColor: Colors.veryLightGrey,
+                      paddingVertical: 10,
+                      marginTop: 10,
+                    }}
+                    onPress={() => {
+                      navigation.navigate("userprofile");
+                      setSelectedUser(item?.userId);
+                    }}
+                  >
+                    {item?.LikedUser}
+                    <Image
+                      source={{ uri: item?.profile }}
+                      style={{
+                        width: width * 0.1,
+                        height: height * 0.05,
+                        borderRadius: 50,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        color: Colors.veryDarkGrey,
+                        letterSpacing: 1,
+                        flex: 1,
+                      }}
+                    >
+                      {item?.firstName}
+                      {item?.LastName}
+                    </Text>
+
+                    <RelativeTime time={item?.LikedTime} />
+                  </TouchableOpacity>
+                )}
+              />
+            ) : (
+              <Text>No Likes</Text>
+            )
+          ) : comments?.length > 0 ? (
             <FlatList
-              data={likedUsers}
-              keyExtractor={(item) => item?._id}
+              showsVerticalScrollIndicator={false}
+              data={comments}
+              keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={{
@@ -352,39 +406,37 @@ const Posts = ({ post, index, admin, senderDetails }) => {
                 >
                   {item?.LikedUser}
                   <Image
-                    source={{ uri: item?.profile }}
+                    source={{ uri: item?.commentedBy?.profile }}
                     style={{
                       width: width * 0.1,
                       height: height * 0.05,
                       borderRadius: 50,
                     }}
                   />
-                  <Text
-                    style={{
-                      color: Colors.veryDarkGrey,
-                      letterSpacing: 1,
-                      flex: 1,
-                    }}
-                  >
-                    {item?.firstName}
-                    {item?.LastName}
-                  </Text>
+                  <View style={{ flex: 1 }}>
+                    <Text
+                      style={{
+                        color: Colors.veryDarkGrey,
+                        letterSpacing: 1,
+                        fontSize: width * 0.033,
+                      }}
+                    >
+                      {item?.commentedBy?.firstName} {"  "}
+                      {item?.commentedBy?.LastName}
+                    </Text>
+                    <Text
+                      style={{ fontSize: width * 0.03, color: Colors.mildGrey }}
+                    >
+                      {item?.commentText}
+                    </Text>
+                  </View>
 
-                  <RelativeTime time={item?.LikedTime} />
+                  <RelativeTime time={item?.commentedAt} />
                 </TouchableOpacity>
               )}
             />
           ) : (
-            <FlatList
-              data={comments}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <View style={styles.commentItem}>
-                  <Text style={{ fontWeight: "bold" }}>{item?.username}</Text>
-                  <Text>{item?.text}</Text>
-                </View>
-              )}
-            />
+            <Text>No Comments</Text>
           )}
         </View>
       </Modal>
