@@ -122,6 +122,7 @@ const SignUp = ({ navigation }) => {
       }
     } else {
       // If form validation fails, turn off loading
+      setActiloading(true);
     }
   };
 
