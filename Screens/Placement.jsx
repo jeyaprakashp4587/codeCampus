@@ -12,7 +12,7 @@ const Placement = () => {
       {/* header */}
       <HeadingText text="Placement" />
       {/* jobs lists */}
-      <Text>Under Working:)</Text>
+      <Text>We will meet on another date bye dude :)</Text>
     </View>
   );
 };

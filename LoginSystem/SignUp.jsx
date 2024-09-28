@@ -121,8 +121,7 @@ const SignUp = ({ navigation }) => {
         // Ensure loading is turned off after the request completes, whether success or failure
       }
     } else {
-      // If form validation fails, turn off loading
-      setActiloading(true);
+      // If form validation fails, turn off loading     
     }
   };
 
