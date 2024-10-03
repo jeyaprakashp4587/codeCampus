@@ -31,7 +31,7 @@ const Posts = ({ post, index, admin, senderDetails }) => {
   const [expanded, setExpanded] = useState(false);
   const [deldisplay, setDeldisplay] = useState(false);
   const [likeCount, setLikeCount] = useState(post?.Like);
-  const [comments, setComments] = useState(post?.comments || []); // List of comments
+  const [comments, setComments] = useState(post?.Comments || []); // List of comments
   const [newComment, setNewComment] = useState(""); // Track new comment
   const [liked, setLiked] = useState(
     post?.LikedUsers?.some((likeuser) => likeuser?.LikedUser === user?._id)
@@ -401,7 +401,7 @@ const Posts = ({ post, index, admin, senderDetails }) => {
                   }}
                   onPress={() => {
                     navigation.navigate("userprofile");
-                    setSelectedUser(item?.userId);
+                    setSelectedUser(item?.commentedBy?.userId);
                   }}
                 >
                   {item?.LikedUser}

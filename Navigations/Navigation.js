@@ -35,6 +35,7 @@ import YourActivity from "../Pages/YourActivity";
 import UserProfile from "../Pages/UserProfile";
 import Notifications from "../Pages/Notifications";
 import SearchScreen from "../Pages/SearchScreen";
+import Assignment from "../Pages/Assignments";
 
 // Tab navigations
 const { width, height } = Dimensions.get("window");
@@ -260,6 +261,11 @@ const StackNavigations = () => {
       <Stack.Screen
         name="userprofile"
         component={UserProfile}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Assignments"
+        component={Assignment}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

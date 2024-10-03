@@ -7,8 +7,15 @@ import {
   View,
   TextInput,
   ActivityIndicator,
+  InteractionManager,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Colors, pageView } from "../constants/Colors";
 import HeadingText from "../utils/HeadingText";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -44,46 +51,54 @@ const Profile = ({ navigation }) => {
     const grand = await Imagepicker.getMediaLibraryPermissionsAsync();
   };
   useEffect(() => {
-    ImagePermission();
+    InteractionManager.runAfterInteractions(
+      async () => await ImagePermission()
+    );
   }, []);
   // host the image to firebase storage bucket
   const [uploadIndicator, setUploadIndicator] = useState(false);
-  const hostImage = async (imageUri, imageType) => {
-    setUploadIndicator(imageType);
-    try {
-      const storageRef = ref(storage, "Image/" + Date.now() + ".jpeg");
-      const response = await fetch(imageUri);
-      const blob = await response.blob();
-      await uploadBytes(storageRef, blob);
-      await updateMetadata(storageRef, {
-        contentType: "image/jpeg",
-        cacheControl: "public,max-age=31536000",
-      });
-      const downloadURL = await getDownloadURL(storageRef);
-      return downloadURL;
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      throw error;
-    }
-  };
+  const hostImage = useCallback(
+    async (imageUri, imageType) => {
+      setUploadIndicator(imageType);
+      try {
+        const storageRef = ref(storage, "Image/" + Date.now() + ".jpeg");
+        const response = await fetch(imageUri);
+        const blob = await response.blob();
+        await uploadBytes(storageRef, blob);
+        await updateMetadata(storageRef, {
+          contentType: "image/jpeg",
+          cacheControl: "public,max-age=31536000",
+        });
+        const downloadURL = await getDownloadURL(storageRef);
+        return downloadURL;
+      } catch (error) {
+        console.error("Error uploading file:", error);
+        throw error;
+      }
+    },
+    [Image]
+  );
   // change profile picture
-  const HandleChangeProfile = async (imageType) => {
-    const result = await Imagepicker.launchImageLibraryAsync({
-      mediaTypes: Imagepicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: imageType == "profile" ? [4, 4] : [9, 6],
-      quality: 1,
-    });
-    if (result.assets[0].uri) {
-      hostImage(result.assets[0].uri, imageType)
-        .then((imageuri) => {
-          upload(imageuri, imageType);
-        })
-        .catch((err) => setUploadIndicator(false));
-    }
-  };
+  const HandleChangeProfile = useCallback(
+    async (imageType) => {
+      const result = await Imagepicker.launchImageLibraryAsync({
+        mediaTypes: Imagepicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: imageType == "profile" ? [4, 4] : [9, 6],
+        quality: 1,
+      });
+      if (result.assets[0].uri) {
+        hostImage(result.assets[0].uri, imageType)
+          .then((imageuri) => {
+            upload(imageuri, imageType);
+          })
+          .catch((err) => setUploadIndicator(false));
+      }
+    },
+    [Image]
+  );
   // upload to server
-  const upload = async (ImageUrl, ImageType) => {
+  const upload = useCallback(async (ImageUrl, ImageType) => {
     const res = await axios.post(`${Api}/Profile/updateProfileImages`, {
       ImageUri: ImageUrl,
       ImageType: ImageType,
@@ -93,7 +108,7 @@ const Profile = ({ navigation }) => {
       setUser(res.data);
       setUploadIndicator(false);
     }
-  };
+  }, []);
   // update user names and bio
   const [aboutUpdate, setAboutUpdate] = useState(false);
   const [uploadActivityIndi, setUploadActivityIndi] = useState(false);
@@ -106,7 +121,7 @@ const Profile = ({ navigation }) => {
     about[name] = text;
     // console.log(about.Bio);
   };
-  const HandleUpdate = async () => {
+  const HandleUpdate = useCallback(async () => {
     setUploadActivityIndi(!uploadActivityIndi);
     const res = await axios.post(
       `${Api}/Profile/updateProfileData/${user._id}`,
@@ -117,7 +132,7 @@ const Profile = ({ navigation }) => {
       setAboutUpdate(!aboutUpdate);
       setUploadActivityIndi(false);
     }
-  };
+  }, []);
   // refresh page
   const [refControl, setRefControl] = useState(false);
   const refreshUser = async () => {
@@ -130,6 +145,38 @@ const Profile = ({ navigation }) => {
       setRefControl(false);
     }
   };
+  // render skeleton
+  useEffect(() => {
+    setTimeout(() => setLoading(true), 200);
+  }, []);
+  const [loading, setLoading] = useState(false);
+  if (!loading) {
+    return (
+      <View style={pageView}>
+        <Skeleton width="100%" height={height * 0.3} radius={10} mt={10} />
+        <View
+          style={{
+            position: "absolute",
+            top: height * 0.22,
+            zIndex: 10,
+            left: width * 0.11,
+          }}
+        >
+          <Skeleton
+            width={width * 0.26}
+            height={height * 0.13}
+            radius={50}
+            mt={10}
+          />
+        </View>
+        <Skeleton width="100%" height={height * 0.2} radius={10} mt={10} />
+        <Skeleton width="100%" height={height * 0.11} radius={10} mt={10} />
+        <Skeleton width="100%" height={height * 0.11} radius={10} mt={10} />
+        <Skeleton width="100%" height={height * 0.11} radius={10} mt={10} />
+      </View>
+    );
+  }
+  // --------
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: "white" }}

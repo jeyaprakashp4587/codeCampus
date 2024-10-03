@@ -19,7 +19,7 @@ import { EvilIcons } from "@expo/vector-icons";
 import { faBell, faTimesCircle } from "@fortawesome/free-regular-svg-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useData } from "../Context/Contexter";
-import { Dimensions } from "react-native";
+import { Dimensions, InteractionManager } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { RefreshControl } from "react-native";
 import axios from "axios";
@@ -31,6 +31,7 @@ import useSocketOn from "../Socket/useSocketOn";
 import NotificationsHook from "../Notification/NotificationsHook";
 import Ripple from "react-native-material-ripple";
 import Posts from "../components/Posts";
+import { debounce } from "lodash";
 // code -----------
 
 const { width, height } = Dimensions.get("window");
@@ -129,25 +130,21 @@ const Home = () => {
     }
   }, [user._id]);
 
-  // const updateLikeCount = useCallback((postId, newLikeCount) => {
-  //   setPosts((prevPosts) =>
-  //     prevPosts.map((post) =>
-  //       post._id === postId ? { ...post, Like: newLikeCount } : post
-  //     )
-  //   );
-  // }, []);
-
-  useSocketOn(socket, "Noti-test", (data) => {
-    sendLocalNotification(data);
-    getNotifications();
+  useSocketOn(socket, "Noti-test", async (data) => {
+    InteractionManager.runAfterInteractions(async () => {
+      await sendLocalNotification(data);
+      await getNotifications();
+    });
   });
 
   useSocketOn(socket, "checkNotification", getNotifications);
 
   useEffect(() => {
-    getConnectionPosts();
-    getNotifications();
-    setProfilePic();
+    InteractionManager.runAfterInteractions(async () => {
+      await getConnectionPosts();
+      await getNotifications();
+      await setProfilePic();
+    });
   }, [getConnectionPosts, getNotifications]);
 
   const setProfilePic = useCallback(async () => {
@@ -165,10 +162,14 @@ const Home = () => {
     setSuggestDisplay(data);
   };
   // ideas warapper navigations
-  const carrerNav = useCallback(() => navigation.navigate("carrerScreen"), []);
-  const courseNav = useCallback(() => navigation.navigate("yourcourse"), []);
+  const debounceNavigation = useCallback(
+    debounce((route) => navigation.navigate(route), 100),
+    []
+  );
+  const carrerNav = useCallback(() => debounceNavigation("carrerScreen"), []);
+  const courseNav = useCallback(() => debounceNavigation("yourcourse"), []);
   const activityNav = useCallback(
-    () => navigation.navigate("youractivities"),
+    () => debounceNavigation("youractivities"),
     []
   );
   // -----------//
@@ -193,8 +194,8 @@ const Home = () => {
             style={[
               styles.profileImage,
               {
-                width: width * 0.15,
-                height: width * 0.15,
+                width: width * 0.12,
+                height: width * 0.12,
                 borderRadius: 50,
                 borderWidth: 1,
                 // borderColor: "#404040",
@@ -299,6 +300,7 @@ const Home = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => navigation.navigate("Assignments")}
             style={styles.ideaBox}
             // onPress={() => userSuggestions()}
           >
