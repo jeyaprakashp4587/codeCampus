@@ -107,7 +107,9 @@ const SignUp = ({ navigation }) => {
       try {
         const response = await axios.post(`${Api}/LogIn/signUp`, formData);
 
-        if (response.data === "SignUp Successfully") {
+        if (response.data == "SignUp Sucessfully") {
+          //SignUp Sucessfully
+          console.log(response.data);
           Alert.alert("Signup Successfully");
           navigation.navigate("login");
         } else if (response.data === "Email has Already Taken") {
@@ -121,7 +123,7 @@ const SignUp = ({ navigation }) => {
         // Ensure loading is turned off after the request completes, whether success or failure
       }
     } else {
-      // If form validation fails, turn off loading     
+      // If form validation fails, turn off loading
     }
   };
 

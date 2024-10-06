@@ -316,7 +316,7 @@ const Carrer = ({ navigation }) => {
   }
 
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.pageView}>
         <Text style={styles.titleText}>Choose Your Learning Carrer</Text>
         <Image
