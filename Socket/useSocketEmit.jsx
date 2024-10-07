@@ -1,10 +1,7 @@
-const useSocketEmit = (socket) => {
-  const emitEvent = (eventName, data) => {
-    if (socket) {
-      socket.emit(eventName, data);
-    }
-  };
-  return emitEvent;
+const useSocketEmit = (socket, eventName, data) => {
+  if (socket) {
+    socket.emit(eventName, data);
+  }
 };
 
 export default useSocketEmit;

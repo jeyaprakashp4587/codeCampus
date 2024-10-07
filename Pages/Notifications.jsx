@@ -27,7 +27,6 @@ const Notifications = () => {
 
   // Socket handling
   const socket = useSocket();
-  const emitSocket = useSocketEmit(socket);
 
   // Fetch notifications from the API
   const getNotifications = useCallback(async () => {
@@ -60,7 +59,7 @@ const Notifications = () => {
                 : notification
             )
           );
-          emitSocket("checkNotification", "");
+          useSocketEmit(socket, "checkNotification", "");
         } catch (error) {
           console.log("Error marking notification as seen:", error);
         }
@@ -78,7 +77,7 @@ const Notifications = () => {
           break;
       }
     },
-    [user._id, emitSocket, Navigation, setSelectedUser]
+    [user._id, Navigation, setSelectedUser]
   );
 
   // Use socket to listen for notification updates
@@ -105,76 +104,66 @@ const Notifications = () => {
       <TopicsText text="Notifications" mb={5} />
       {/* hr line */}
       <HrLine margin={1} width="100%" />
-      {/* Notification options */}
-      {/* <View style={{ flexDirection: "row", columnGap: 20, marginTop: 10 }}>
-        {notiOpotions.map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            style={{
-              borderWidth: 1,
-              padding: 10,
-              borderRadius: 6,
-              paddingHorizontal: 20,
-            }}
-          >
-            <Text style={{ letterSpacing: 2 }}>{item.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </View> */}
+
       {/* Notifications Sections */}
       {!notificationList || notificationList.length < 0 ? (
         <Text>No Notifications There</Text>
       ) : (
-        notificationList?.map((item, index) => (
-          <TouchableOpacity
-            onPress={() => handleNotificationClick(item)}
-            key={index}
-            style={{
-              // borderWidth: 1,
-              padding: width * 0.06,
-              borderRadius: 7,
-              marginTop: 15,
-              position: "relative",
-              flexDirection: "row",
-              alignItems: "center",
-              columnGap: 20,
-              backgroundColor: item?.seen ? "white" : Colors.veryLightGrey,
-              // flexWrap: "wrap",
-              elevation: 3,
-            }}
-          >
-            <Image
-              source={{ uri: item?.senderProfileImage }}
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={notificationList}
+          renderItem={({ item, index }) => (
+            <TouchableOpacity
+              onPress={() => handleNotificationClick(item)}
+              key={index}
               style={{
-                width: width * 0.14,
-                height: height * 0.07,
-                borderRadius: 50,
-              }}
-            />
-            <Text
-              numberOfLines={2}
-              style={{
-                color: Colors.mildGrey,
-                letterSpacing: 1,
-                fontSize: width * 0.033,
-                maxWidth: 250,
-                lineHeight: 22,
+                // borderWidth: 1,
+                padding: width * 0.06,
+                borderRadius: 7,
+                marginTop: 15,
+                position: "relative",
+                flexDirection: "row",
+                alignItems: "center",
+                columnGap: 20,
+                backgroundColor: item?.seen ? "white" : Colors.veryLightGrey,
+                // flexWrap: "wrap",
+                elevation: 3,
+                marginHorizontal: 5,
               }}
             >
-              {item?.NotificationText}
-            </Text>
-            {/* show time */}
-            <View
-              style={{
-                position: "absolute",
-                bottom: height * 0.007,
-                right: width * 0.05,
-              }}
-            >
-              <RelativeTime time={item?.Time} />
-            </View>
-          </TouchableOpacity>
-        ))
+              <Image
+                source={{ uri: item?.senderProfileImage }}
+                style={{
+                  width: width * 0.14,
+                  height: height * 0.07,
+                  borderRadius: 50,
+                }}
+              />
+              <Text
+                numberOfLines={2}
+                style={{
+                  color: Colors.mildGrey,
+                  letterSpacing: 1,
+                  fontSize: width * 0.033,
+                  maxWidth: 250,
+                  lineHeight: 22,
+                }}
+              >
+                {item?.NotificationText}
+              </Text>
+              {/* show time */}
+              <View
+                style={{
+                  position: "absolute",
+                  bottom: height * 0.007,
+                  right: width * 0.05,
+                }}
+              >
+                <RelativeTime time={item?.Time} />
+              </View>
+            </TouchableOpacity>
+          )}
+        />
       )}
     </View>
   );

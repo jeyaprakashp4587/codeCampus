@@ -34,6 +34,8 @@ import Api from "../Api";
 import { useRef } from "react";
 import Actitivity from "../hooks/ActivityHook";
 import moment from "moment";
+import useSocketEmit from "../Socket/useSocketEmit";
+import useSocket from "../Socket/useSocket";
 
 const Post = () => {
   const { user } = useData();
@@ -46,7 +48,11 @@ const Post = () => {
   const [uploadIndi, setUploadIndi] = useState(false);
   const [refreshCon, setRefreshCon] = useState(false);
   const [hostImageIndi, setHostImageIndi] = useState(false);
-
+  const socket = useSocket();
+  useSocketEmit(socket, "PostNotiToConnections", {
+    Time: moment().format("YYYY-MM-DDTHH:mm:ss"),
+  });
+  useSocketEmit(socket, "hi", "hii");
   const handlePostText = (text) => {
     postText.current = text;
   };
@@ -117,6 +123,11 @@ const Post = () => {
         if (res.data === "Uploaded") {
           setUploadText("Uploaded");
           Alert.alert("Uploaded Successfully");
+          useSocketEmit(
+            socket,
+            "PostNotiToConnections",
+            `${user?.firstName} ${user?.LastName} Uploaded a New Post`
+          );
           refreshFields();
         } else {
           Alert.alert("Something went wrong. Please try again.");

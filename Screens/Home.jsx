@@ -131,13 +131,15 @@ const Home = () => {
   }, [user._id]);
 
   useSocketOn(socket, "Noti-test", async (data) => {
-    InteractionManager.runAfterInteractions(async () => {
-      await sendLocalNotification(data);
-      await getNotifications();
-    });
+    console.log(data);
+    await sendLocalNotification(data);
+    await getNotifications();
   });
 
-  useSocketOn(socket, "checkNotification", getNotifications);
+  useSocketOn(socket, "checkNotification", (data) => {
+    // getNotifications();
+    console.log(data);
+  });
 
   useEffect(() => {
     InteractionManager.runAfterInteractions(async () => {

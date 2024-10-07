@@ -159,7 +159,7 @@ const StackNavigations = () => {
       // initialRouteName="splash"
       screenOptions={{
         headerShown: false,
-        animation: "fade_from_bottom",
+        animation: "slide_from_right",
       }}
     >
       <Stack.Screen
