@@ -20,23 +20,25 @@ import useSocket from "../Socket/useSocket";
 import useSocketEmit from "../Socket/useSocketEmit";
 
 const Notifications = () => {
-  const { user, setSelectedUser } = useData();
+  const { user, setSelectedUser, setselectedPost } = useData();
   const { width, height } = Dimensions.get("window");
   const Navigation = useNavigation();
   const [notificationList, setNotificationList] = useState([]);
 
   // Socket handling
   const socket = useSocket();
-
+  const emitevent = useSocketEmit(socket);
   // Fetch notifications from the API
   const getNotifications = useCallback(async () => {
     try {
       const res = await axios.get(
         `${Api}/Notifications/getNotifications/${user._id}`
       );
-      if (res.data) {
-        // console.log(res.data);
+      if (res.status == 200) {
+        console.log(res.data);
         setNotificationList(res.data);
+      } else {
+        setNotificationList([]);
       }
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -46,6 +48,8 @@ const Notifications = () => {
   // Handle notification click
   const handleNotificationClick = useCallback(
     async (item) => {
+      console.log(item);
+      emitevent("checkNotification", { socketId: user?.SocketId });
       if (!item.seen) {
         try {
           // Mark the notification as seen
@@ -59,7 +63,6 @@ const Notifications = () => {
                 : notification
             )
           );
-          useSocketEmit(socket, "checkNotification", "");
         } catch (error) {
           console.log("Error marking notification as seen:", error);
         }
@@ -71,13 +74,16 @@ const Notifications = () => {
           setSelectedUser(item.NotificationSender);
           Navigation.navigate("userprofile");
           break;
-
+        case "post":
+          setselectedPost(item?.NotificationId);
+          Navigation.navigate("Postviewer");
+          break;
         // Add other notification types here as needed
         default:
           break;
       }
     },
-    [user._id, Navigation, setSelectedUser]
+    [user._id, Navigation, setSelectedUser, emitevent]
   );
 
   // Use socket to listen for notification updates

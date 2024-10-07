@@ -102,7 +102,7 @@ const Home = () => {
     } catch (error) {
       console.error("Failed to refresh user:", error);
     }
-  }, [user._id, setUser]);
+  }, [user?._id, setUser]);
 
   const getConnectionPosts = useCallback(async () => {
     try {
@@ -118,27 +118,31 @@ const Home = () => {
 
   const getNotifications = useCallback(async () => {
     try {
+      if (user.Notifications.length < 0) {
+        console.log(user?.Notifications.length);
+      }
       const res = await axios.get(
         `${Api}/Notifications/getNotifications/${user._id}`
       );
-      if (res.data) {
-        const unseen = res.data.filter((notification) => !notification.seen);
+      if (res.status == 200) {
+        const unseen = res?.data?.filter((notification) => !notification.seen);
         setUnseenCount(unseen.length);
       }
     } catch (error) {
       console.error("Failed to fetch notifications:", error);
     }
-  }, [user._id]);
+  }, [user._id, useSocketOn]);
 
+  useSocketOn(socket, "updateNoti", async (data) => {
+    console.log(data);
+    if (data.text == "sucess") {
+      await getNotifications();
+    }
+  });
   useSocketOn(socket, "Noti-test", async (data) => {
     console.log(data);
     await sendLocalNotification(data);
     await getNotifications();
-  });
-
-  useSocketOn(socket, "checkNotification", (data) => {
-    // getNotifications();
-    console.log(data);
   });
 
   useEffect(() => {
@@ -390,21 +394,21 @@ const Home = () => {
             refresh={suggestRefresh}
           />
         </View>
-        {/* post */}
-        <FlatList
-          data={posts} // Data for FlatList
-          keyExtractor={(item) => item._id} // Key for each post
-          renderItem={({ item, index }) => (
-            <Posts
-              post={item.Posts} // Pass post data as props
-              senderDetails={item.SenderDetails}
-              index={index} // Pass index
-              admin={false} // Optionally pass if the user is admin
-              // updateLikeCount={updateLikeCount} // Function to update like count
-            />
-          )}
-        />
       </ScrollView>
+      {/* post */}
+      <FlatList
+        data={posts} // Data for FlatList
+        keyExtractor={(item) => item._id} // Key for each post
+        renderItem={({ item, index }) => (
+          <Posts
+            post={item.Posts} // Pass post data as props
+            senderDetails={item.SenderDetails}
+            index={index} // Pass index
+            admin={false} // Optionally pass if the user is admin
+            // updateLikeCount={updateLikeCount} // Function to update like count
+          />
+        )}
+      />
     </View>
   );
 };

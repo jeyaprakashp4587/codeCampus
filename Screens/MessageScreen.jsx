@@ -4,14 +4,15 @@ import { pageView } from "../constants/Colors";
 import io from "socket.io-client";
 import Api from "../Api";
 import { useData } from "../Context/Contexter";
-import NotificationsHook from "../Notification/NotificationsHook";
+
+import useNotificationsHook from "../Notification/NotificationsHook";
 
 const MessageScreen = () => {
   const { user } = useData();
-  const { sendLocalNotification } = NotificationsHook();
-  // useEffect(() => {
-  //   sendLocalNotification({ text: "hii" });
-  // }, []);
+  const { sendLocalNotification } = useNotificationsHook();
+  useEffect(() => {
+    sendLocalNotification({ text: "hii" });
+  }, []);
   return (
     <View style={pageView}>
       <Text>Under Working!</Text>

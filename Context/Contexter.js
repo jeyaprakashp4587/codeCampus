@@ -8,9 +8,12 @@ export const ContextProvider = ({ children }) => {
   const [selectedChallengeTopic, setselectedChallengeTopic] = useState();
   const [selectedChallenge, setSelectedChallenge] = useState();
   const [selectedUser, setSelectedUser] = useState();
+  const [selectedPost, setselectedPost] = useState();
   return (
     <Contexter.Provider
       value={{
+        selectedPost,
+        setselectedPost,
         selectedCourse,
         setSelectedCourse,
         selectedTechnology,

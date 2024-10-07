@@ -36,6 +36,7 @@ import UserProfile from "../Pages/UserProfile";
 import Notifications from "../Pages/Notifications";
 import SearchScreen from "../Pages/SearchScreen";
 import Assignment from "../Pages/Assignments";
+import PostViewer from "../Pages/PostViewer";
 
 // Tab navigations
 const { width, height } = Dimensions.get("window");
@@ -265,6 +266,11 @@ const StackNavigations = () => {
       <Stack.Screen
         name="Assignments"
         component={Assignment}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Postviewer"
+        component={PostViewer}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

@@ -26,7 +26,7 @@ const UserProfile = () => {
   const { selectedUser, user, setSelectedUser } = useData();
   // console.log(selectedUser);
   const socket = useSocket();
-  const emitSocket = useSocketEmit(socket);
+  const emitSocketEvent = useSocketEmit(socket);
   const [render, setRender] = useState(false);
   const [existsFollower, setExistsFollower] = useState(false);
   const [loading, setLoading] = useState(false); // Add loading state for API calls
@@ -34,13 +34,13 @@ const UserProfile = () => {
   // Send notification to user
   const sendNotification = useCallback(() => {
     if (selectedUser?._id && user?._id) {
-      emitSocket("sendNotificationForConnection", {
+      emitSocketEvent("sendNotificationForConnection", {
         ReceiverId: selectedUser._id,
         SenderId: user._id,
         Time: moment().format("YYYY-MM-DDTHH:mm:ss"),
       });
     }
-  }, [selectedUser, user, emitSocket]);
+  }, [selectedUser, user, emitSocketEvent]);
 
   // Fetch selected user data
   const getSelectedUser = useCallback(async () => {
