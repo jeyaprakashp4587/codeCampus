@@ -30,7 +30,7 @@ const YourChallenges = (props) => {
   const getChallenges = async (option) => {
     try {
       const res = await axios.post(
-        `${Api}/Challenges/getUserChallege/${user._id}`,
+        `${Api}/Challenges/getUserChallenge/${user._id}`,
         { option: option }
       );
       if (res.data) {

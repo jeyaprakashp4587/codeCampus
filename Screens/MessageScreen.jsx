@@ -4,7 +4,6 @@ import { pageView } from "../constants/Colors";
 import io from "socket.io-client";
 import Api from "../Api";
 import { useData } from "../Context/Contexter";
-
 import useNotificationsHook from "../Notification/NotificationsHook";
 
 const MessageScreen = () => {

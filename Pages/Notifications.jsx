@@ -34,7 +34,7 @@ const Notifications = () => {
       const res = await axios.get(
         `${Api}/Notifications/getNotifications/${user._id}`
       );
-      if (res.status == 200) {
+      if (res.data) {
         console.log(res.data);
         setNotificationList(res.data);
       } else {
@@ -43,12 +43,12 @@ const Notifications = () => {
     } catch (error) {
       console.error("Error fetching notifications:", error);
     }
-  }, [user._id]);
+  }, [user._id, notificationList]);
 
   // Handle notification click
   const handleNotificationClick = useCallback(
     async (item) => {
-      console.log(item);
+      // console.log(item);
       emitevent("checkNotification", { socketId: user?.SocketId });
       if (!item.seen) {
         try {
@@ -75,7 +75,7 @@ const Notifications = () => {
           Navigation.navigate("userprofile");
           break;
         case "post":
-          setselectedPost(item?.NotificationId);
+          setselectedPost(item?.postId);
           Navigation.navigate("Postviewer");
           break;
         // Add other notification types here as needed
@@ -101,7 +101,8 @@ const Notifications = () => {
   // Fetch notifications when the component mounts
   useEffect(() => {
     getNotifications();
-  }, [getNotifications]);
+    // console.log(notificationList);
+  }, []);
 
   // -----
   return (
@@ -112,8 +113,17 @@ const Notifications = () => {
       <HrLine margin={1} width="100%" />
 
       {/* Notifications Sections */}
-      {!notificationList || notificationList.length < 0 ? (
-        <Text>No Notifications There</Text>
+      {!notificationList || notificationList.length <= 0 ? (
+        <Text
+          style={{
+            fontSize: width * 0.05,
+            color: Colors.violet,
+            letterSpacing: 2,
+            marginTop: 10,
+          }}
+        >
+          No Notifications There
+        </Text>
       ) : (
         <FlatList
           showsVerticalScrollIndicator={false}

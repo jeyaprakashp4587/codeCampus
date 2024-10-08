@@ -73,13 +73,16 @@ const ChallengeDetail = () => {
       const res = await axios.post(
         `${Api}/Challenges/getParticularChallenge/${user._id}`,
         {
-          ChallengeName: selectedChallenge?.ChallengeName || null,
+          ChallengeName:
+            selectedChallenge?.ChallengeName || selectedChallenge?.title,
           ChallengeType: selectedChallenge?.ChallengeType || null,
-          ChallengeLevel: selectedChallenge?.ChallengeLevel || null,
+          ChallengeLevel:
+            selectedChallenge?.ChallengeLevel || selectedChallenge?.level,
         }
       );
       if (res.data) {
         // console.log(res.data);
+
         setSelectedChallenge(res.data);
         checkChallengeStatus();
       }
@@ -177,6 +180,7 @@ const ChallengeDetail = () => {
     const unsubscribeFocus = navigation.addListener("focus", () => {
       getParticularChallenge();
       checkChallengeStatus();
+      // console.log(selectedChallenge);
     });
 
     // Cleanup listener
@@ -196,8 +200,14 @@ const ChallengeDetail = () => {
   const HandleText = (name, text) => {
     setUploadForm((prev) => ({ ...prev, [name]: text }));
   };
-
-  const HandleRefresh = () => {};
+  const [refreshing, setRefreshing] = useState(false);
+  const HandleRefresh = () => {
+    setRefreshing(true);
+    // console.log(selectedChallenge);
+    Promise.all([getParticularChallenge()]).then((data) =>
+      setRefreshing(false)
+    );
+  };
 
   // ------
   return (
@@ -213,9 +223,14 @@ const ChallengeDetail = () => {
     >
       <HeadingText text="Challenge Details" />
       <ScrollView
-        style={{ flex: 1 }}
+        style={{ flex: 1, marginBottom: 20 }}
         showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl onRefresh={() => HandleRefresh()} />}
+        refreshControl={
+          <RefreshControl
+            onRefresh={() => HandleRefresh()}
+            refreshing={refreshing}
+          />
+        }
       >
         {selectedChallenge?.sample_image || selectedChallenge?.level ? (
           <View style={{ flexDirection: "column", rowGap: 30, marginTop: 25 }}>
@@ -247,7 +262,7 @@ const ChallengeDetail = () => {
                 }}
               />
             )}
-            <TopicsText text={selectedChallenge?.title} fszie={20} mb={5} />
+            <TopicsText text={selectedChallenge?.title} fsize={20} mb={5} />
             <View
               style={{
                 flexDirection: "row",
@@ -256,7 +271,7 @@ const ChallengeDetail = () => {
             >
               <Text
                 style={{
-                  fontWeight: "60=",
+                  fontWeight: "600",
                   color: "orange",
                   textTransform: "capitalize",
                 }}
@@ -305,26 +320,30 @@ const ChallengeDetail = () => {
                 function={() => HandleStart(selectedChallenge.title)}
               />
             )}
-            <TouchableOpacity
-              onPress={() => setUploadTut(!uploadTut)}
-              style={{
-                borderWidth: 1,
-                padding: 10,
-                borderRadius: 5,
-                alignItems: "center",
-                borderColor: Colors.mildGrey,
-                display: uploadTut ? "none" : "flex",
-              }}
-            >
-              <Text
+            {ChallengeStatus == "pending" && (
+              <TouchableOpacity
+                onPress={() => setUploadTut(!uploadTut)}
                 style={{
-                  color: Colors.mildGrey,
-                  fontSize: 17,
+                  // borderWidth: 1,
+                  padding: 10,
+                  borderRadius: 5,
+                  alignItems: "center",
+                  // borderColor: Colors.mildGrey,
+                  backgroundColor: "#80bfff",
+                  display: uploadTut ? "none" : "flex",
                 }}
               >
-                How To Upload
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    color: Colors.white,
+                    fontSize: 17,
+                    letterSpacing: 1,
+                  }}
+                >
+                  How To Upload
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         ) : (
           <View style={{ rowGap: 20 }}>
@@ -496,7 +515,29 @@ const ChallengeDetail = () => {
               </Text>
             </Ripple>
           </View>
-        ) : null}
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("ChallengeViewer");
+            }}
+            style={{
+              marginTop: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              columnGap: 5,
+              justifyContent: "center",
+              borderWidth: 1,
+              borderColor: Colors.mildGrey,
+              borderRadius: 5,
+              padding: 10,
+            }}
+          >
+            <Text style={{ letterSpacing: 1, fontSize: 18 }}>
+              See Your Challenge
+            </Text>
+          </TouchableOpacity>
+        )}
+        {/* view completed postviewer */}
       </ScrollView>
     </LinearGradient>
   );

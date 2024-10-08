@@ -88,7 +88,7 @@ const useNotificationsHook = () => {
         });
       }
     } catch (error) {
-      console.error("Error registering for push notifications:", error);
+      // console.error("Error registering for push notifications:", error);
     }
     return token;
   }
@@ -104,12 +104,12 @@ const useNotificationsHook = () => {
           data: { msgData },
         },
         trigger: {
-          seconds: 1, // Notification will trigger after 2 seconds
+          seconds: 2, // Notification will trigger after 2 seconds
         },
       });
-      // console.log("Notification scheduled with ID:", notificationId);
+      console.log("Notification scheduled with ID:", notificationId);
     } catch (error) {
-      console.error("Error scheduling notification:", error);
+      // console.error("Error scheduling notification:", error);
     }
   }
 

@@ -49,10 +49,9 @@ const Post = () => {
   const [refreshCon, setRefreshCon] = useState(false);
   const [hostImageIndi, setHostImageIndi] = useState(false);
   const socket = useSocket();
-  useSocketEmit(socket, "PostNotiToConnections", {
-    Time: moment().format("YYYY-MM-DDTHH:mm:ss"),
-  });
-  useSocketEmit(socket, "hi", "hii");
+
+  const emitEvent = useSocketEmit(socket);
+
   const handlePostText = (text) => {
     postText.current = text;
   };
@@ -112,28 +111,31 @@ const Post = () => {
     setUploadIndi(true);
     if (postLink.current && postText.current) {
       try {
-        const res = await axios.post(`${Api}/Post/UploadPost`, {
-          userId: user._id,
+        const res = await axios.post(`${Api}/Post/uploadPost`, {
+          userId: user?._id,
           Images: images,
           postText: postText.current,
           postLink: postLink.current,
           Time: moment().format("YYYY-MM-DDTHH:mm:ss"),
         });
 
-        if (res.data === "Uploaded") {
+        if (res.status == 200) {
           setUploadText("Uploaded");
+          console.log(res.data);
+          emitEvent("PostNotiToConnections", {
+            Time: moment().format("YYYY-MM-DDTHH:mm:ss"),
+            postId: res.data?.postId,
+          });
           Alert.alert("Uploaded Successfully");
-          useSocketEmit(
-            socket,
-            "PostNotiToConnections",
-            `${user?.firstName} ${user?.LastName} Uploaded a New Post`
-          );
           refreshFields();
         } else {
           Alert.alert("Something went wrong. Please try again.");
         }
       } catch (error) {
-        console.error("Upload error:", error);
+        console.error(
+          "Upload error:",
+          error.response ? error.response.data : error.message
+        );
         Alert.alert("Upload failed. Please check your connection.");
       } finally {
         setUploadIndi(false);

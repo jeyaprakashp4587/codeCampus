@@ -22,12 +22,13 @@ import { useNavigation } from "@react-navigation/native";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
+
 const Posts = ({ post, index, admin, senderDetails }) => {
   const initialText = post?.PostText;
   const { user, setUser, setSelectedUser } = useData();
   const navigation = useNavigation();
   const wordThreshold = 20;
-  // console.log(post);
+  console.log(post);
   const [expanded, setExpanded] = useState(false);
   const [deldisplay, setDeldisplay] = useState(false);
   const [likeCount, setLikeCount] = useState(post?.Like);
@@ -60,7 +61,7 @@ const Posts = ({ post, index, admin, senderDetails }) => {
           setUser(res.data);
         }
       } catch (err) {
-        console.log(err);
+        // console.log(err);
       }
     },
     [user]
@@ -120,12 +121,12 @@ const Posts = ({ post, index, admin, senderDetails }) => {
       });
 
       if (res.status === 200) {
-        // console.log(res.data.comment);
+        console.log(res.data.comment);
         setComments([...comments, res.data.comment]);
         setNewComment("");
       }
     } catch (error) {
-      console.error("Error submitting comment:", error);
+      // console.error("Error submitting comment:", error);
     }
   }, [newComment, comments, user]);
 
@@ -136,10 +137,10 @@ const Posts = ({ post, index, admin, senderDetails }) => {
         setLikedUsers(res.data.likedUsers);
         setModalContentType("likes");
         setIsModalVisible(true);
-        console.log(res.data);
+        // console.log(res.data);
       }
     } catch (err) {
-      console.error("Failed to fetch liked users:", err);
+      // console.error("Failed to fetch liked users:", err);
     }
   }, [post]);
 
@@ -148,7 +149,7 @@ const Posts = ({ post, index, admin, senderDetails }) => {
     setIsModalVisible(true);
     const res = await axios.get(`${Api}/Post/getComments/${post?._id}`);
     if (res.data) {
-      console.log(res.data);
+      // console.log(res.data);
       setComments(res.data.comments);
     }
   }, [comments, post]);
@@ -225,7 +226,7 @@ const Posts = ({ post, index, admin, senderDetails }) => {
               key={index}
               source={{ uri: item }}
               style={{
-                width: post.Images.length === 1 ? width * 0.84 : width * 0.8,
+                width: post?.Images.length === 1 ? width * 0.84 : width * 0.8,
                 height: height * 0.3,
                 resizeMode: "contain",
               }}
@@ -268,7 +269,7 @@ const Posts = ({ post, index, admin, senderDetails }) => {
             color={Colors.mildGrey}
           />
         </TouchableOpacity>
-        <RelativeTime time={post.Time} fsize={width * 0.033} />
+        <RelativeTime time={post?.Time} fsize={width * 0.033} />
       </View>
 
       {/* Add New Comment */}
