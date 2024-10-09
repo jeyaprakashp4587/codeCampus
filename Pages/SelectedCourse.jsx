@@ -41,9 +41,10 @@ const SelectedCourse = ({ navigation }) => {
 
         // Navigate to course details screen
         navigation.navigate("courseDetails");
-      } else {
+      } else if (res.data == "Enrolled") {
         // Handle the case where the course couldn't be added (server returned an error message)
-        Alert.alert("Error", res.data || "Failed to add course.");
+        Alert.alert("You are enrolled in this course");
+        navigation.navigate("courseDetails");
       }
     } catch (error) {
       // Handle network errors or other unforeseen issues

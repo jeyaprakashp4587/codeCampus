@@ -49,20 +49,16 @@ const CourseDetails = () => {
         // Check the response
         if (res.data.Email) {
           setUser(res.data);
-          Alert.alert("Success", "Course Added Successfully");
-
+          Alert.alert("Course Added Successfully");
           // Log the activity if course is successfully added
           Actitivity(user._id, `${selectedCourse.name} Successfully Added.`);
-        } else {
-          Alert.alert("Error", res.data);
+        } else if (res.data == "Enrolled") {
+          Alert.alert("You are already enrolled in this Tool");
         }
       } catch (error) {
         // Catch and handle any errors
         console.error("Error adding course:", error);
         Alert.alert("Error", "Failed to add the course. Please try again.");
-      } finally {
-        // End loading state
-        setLoading(false);
       }
     },
     [selectedCourse, setselectedTechnology, user, setUser, navigation]

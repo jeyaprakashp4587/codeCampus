@@ -53,61 +53,26 @@ const Challenge = ({ navigation }) => {
   // State for toggling challenges, initialize with a proper default value
   const [chToggle, setChaToggle] = useState(null);
   return (
-    <LinearGradient
-      colors={["hsl(200, 100%, 96%)", "white", "white", "hsl(336, 100%, 97%)"]}
-      style={{
-        backgroundColor: "white",
-        flex: 1,
-        paddingHorizontal: width * 0.03,
-      }}
-      start={[0, 1]}
-      end={[1, 0]}
-    >
-      <ScrollView>
-        <HeadingText text="Develop Your Skills Here" />
-        <View style={{ borderWidth: 0, paddingVertical: 20 }}>
-          {Challenges.map((item, index) => (
-            <TouchableOpacity
-              onPress={() => HandleSelectChallenges(item)}
-              key={index}
-              style={{
-                width: "100%",
-                backgroundColor: item.bgColor,
-                height: 100,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 10,
-                marginBottom: 30,
-                elevation: 5,
-                flexDirection: "row",
-                columnGap: 20,
-              }}
-            >
-              <Image
-                source={{ uri: item.img }}
-                style={{
-                  width: 40,
-                  height: 40,
-                  tintColor: Colors.veryLightGrey,
-                }}
-              />
-              <PragraphText
-                text={item.ChallengeName}
-                fsize={19}
-                color={Colors.veryLightGrey}
-              />
-            </TouchableOpacity>
-          ))}
-          {/* user challenges list */}
-
+    // <LinearGradient
+    //   colors={["hsl(200, 100%, 96%)", "white", "white", "hsl(336, 100%, 97%)"]}
+    //   style={{
+    //     backgroundColor: "white",
+    //     flex: 1,
+    //     paddingHorizontal: width * 0.03,
+    //   }}
+    //   start={[0, 1]}
+    //   end={[1, 0]}
+    // >
+    <ScrollView style={{ paddingHorizontal: 20, backgroundColor: "white" }}>
+      <HeadingText text="Develop Your Skills Here" />
+      <View style={{ borderWidth: 0, paddingVertical: 20 }}>
+        {Challenges.map((item, index) => (
           <TouchableOpacity
-            onPress={() => {
-              setChaToggle(!chToggle);
-              navigation.navigate("yourchallenges");
-            }}
+            onPress={() => HandleSelectChallenges(item)}
+            key={index}
             style={{
               width: "100%",
-              backgroundColor: "#009999",
+              backgroundColor: item.bgColor,
               height: 100,
               justifyContent: "center",
               alignItems: "center",
@@ -118,16 +83,47 @@ const Challenge = ({ navigation }) => {
               columnGap: 20,
             }}
           >
-            <FontAwesomeIcon icon={faCode} size={40} color="white" />
+            <Image
+              source={{ uri: item.img }}
+              style={{
+                width: 40,
+                height: 40,
+                tintColor: Colors.veryLightGrey,
+              }}
+            />
             <PragraphText
-              text="My Challenges"
+              text={item.ChallengeName}
               fsize={19}
-              color={Colors.white}
+              color={Colors.veryLightGrey}
             />
           </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </LinearGradient>
+        ))}
+        {/* user challenges list */}
+
+        <TouchableOpacity
+          onPress={() => {
+            setChaToggle(!chToggle);
+            navigation.navigate("yourchallenges");
+          }}
+          style={{
+            width: "100%",
+            backgroundColor: "#009999",
+            height: 100,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 10,
+            marginBottom: 30,
+            elevation: 5,
+            flexDirection: "row",
+            columnGap: 20,
+          }}
+        >
+          <FontAwesomeIcon icon={faCode} size={40} color="white" />
+          <PragraphText text="My Challenges" fsize={19} color={Colors.white} />
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
+    // </LinearGradient>
   );
 };
 

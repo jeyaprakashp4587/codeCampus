@@ -9,6 +9,7 @@ export const ContextProvider = ({ children }) => {
   const [selectedChallenge, setSelectedChallenge] = useState();
   const [selectedUser, setSelectedUser] = useState();
   const [selectedPost, setselectedPost] = useState();
+  const [assignmentType, setAssignmentType] = useState();
   return (
     <Contexter.Provider
       value={{
@@ -26,6 +27,8 @@ export const ContextProvider = ({ children }) => {
         setUser,
         selectedUser,
         setSelectedUser,
+        assignmentType,
+        setAssignmentType,
       }}
     >
       {children}

@@ -38,6 +38,7 @@ import SearchScreen from "../Pages/SearchScreen";
 import Assignment from "../Pages/Assignments";
 import PostViewer from "../Pages/PostViewer";
 import ChallengeViewer from "../Pages/ChallengeViewer";
+import AssignmentPlayGround from "../Pages/AssignmentPlayGround";
 
 // Tab navigations
 const { width, height } = Dimensions.get("window");
@@ -277,6 +278,11 @@ const StackNavigations = () => {
       <Stack.Screen
         name="ChallengeViewer"
         component={ChallengeViewer}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AssignmentPlayGround"
+        component={AssignmentPlayGround}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

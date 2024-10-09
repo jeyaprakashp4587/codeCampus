@@ -195,6 +195,8 @@ const Posts = ({ post, index, admin, senderDetails, elevation }) => {
             />
           </TouchableOpacity>
         )}
+        {/* display wrapper */}
+
         {deldisplay && (
           <TouchableOpacity
             onPress={() => HandleDelete(post._id)}
@@ -462,6 +464,10 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
     padding: 10,
     borderRadius: 5,
+    position: "absolute",
+    right: 0,
+    top: height * 0.03,
+    zIndex: 20,
   },
   deleteText: {
     color: "white",

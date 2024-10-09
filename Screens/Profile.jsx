@@ -544,7 +544,7 @@ const Profile = ({ navigation }) => {
       {/* posts */}
       <View style={{ paddingHorizontal: 20 }}>
         <TopicsText text={user?.Posts?.length > 0 ? "Posts" : null} />
-        {user?.Posts.map((post, index) => (
+        {user?.Posts?.map((post, index) => (
           <Posts post={post} index={index} admin={true} />
         ))}
       </View>

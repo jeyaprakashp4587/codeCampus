@@ -183,6 +183,9 @@ const Home = () => {
     () => debounceNavigation("youractivities"),
     []
   );
+  const assignmentNav = useCallback(() => {
+    debounceNavigation("Assignments");
+  }, []);
   // -----------//
   if (!load) {
     return <HomeSkeleton />;
@@ -311,7 +314,7 @@ const Home = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Assignments")}
+            onPress={assignmentNav}
             style={styles.ideaBox}
             // onPress={() => userSuggestions()}
           >
@@ -400,7 +403,7 @@ const Home = () => {
           />
         </View>
         {/* posts */}
-        <FlatList
+        {/* <FlatList
           data={posts} // Data for FlatList
           keyExtractor={(item) => item._id} // Key for each post
           renderItem={({ item, index }) => (
@@ -412,7 +415,7 @@ const Home = () => {
               // updateLikeCount={updateLikeCount} // Function to update like count
             />
           )}
-        />
+        /> */}
       </ScrollView>
     </View>
   );

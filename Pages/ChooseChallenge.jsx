@@ -56,7 +56,6 @@ const ChooseChallenge = ({ navigation }) => {
       const res = await axios.post(`${Api}/Challenges/getChallenges`, {
         ChallengeTopic: ChallengeTopic,
       });
-
       if (res.data) {
         const { newbieLevel, juniorLevel, expertLevel, legendLevel } = res.data;
         switch (level) {
