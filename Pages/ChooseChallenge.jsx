@@ -140,7 +140,7 @@ const ChooseChallenge = ({ navigation }) => {
           anchor={
             <TouchableOpacity onPress={openMenu}>
               <FontAwesomeIcon
-                icon={faListDots}
+                icon={faBars}
                 color={Colors.mildGrey}
                 size={20}
               />
@@ -154,12 +154,12 @@ const ChooseChallenge = ({ navigation }) => {
               onPress={() => HandleSelectLevel(level.name)}
               title={level.name}
               titleStyle={{
-                color: "white",
+                color: "black",
                 letterSpacing: 1,
                 fontWeight: 300,
               }}
               style={{
-                backgroundColor: Colors.mildGrey,
+                backgroundColor: Colors.white,
                 borderLeftWidth: 0,
                 borderRightWidth: 0,
                 borderTopWidth: 1,

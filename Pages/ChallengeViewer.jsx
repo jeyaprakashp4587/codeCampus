@@ -19,13 +19,14 @@ const ChallengeViewer = () => {
   const { width, height } = Dimensions.get("window");
   const { user, selectedChallenge } = useData();
   const [challenge, setChallenge] = useState();
+  console.log(selectedChallenge);
   const getChallenge = async () => {
     const res = await axios.get(
       `${Api}/Challenges/getCompletedChallenge/${user?._id}/${selectedChallenge?.title}`
     );
     if (res.data) {
       setChallenge(res.data);
-      console.log(res.data);
+      // console.log(res.data);
     }
   };
   console.log(challenge);
@@ -33,9 +34,9 @@ const ChallengeViewer = () => {
     getChallenge();
   }, []);
   return (
-    <ScrollView style={pageView}>
-      <TopicsText text="Challenge View" />
-      <View style={{ flex: 1 }}>
+    <ScrollView style={{ backgroundColor: "white" }}>
+      <View style={{ flex: 1, paddingHorizontal: 20 }}>
+        <TopicsText text="Challenge View" />
         <Text
           style={{
             fontSize: width * 0.045,
@@ -98,6 +99,7 @@ const ChallengeViewer = () => {
           letterSpacing: 1,
           color: "black",
           marginVertical: 10,
+          paddingHorizontal: 20,
         }}
       >
         Live View
@@ -107,12 +109,15 @@ const ChallengeViewer = () => {
           borderWidth: 0,
           flex: 1,
           borderRadius: 10,
-          overflow: "hidden",
+          marginBottom: 10,
         }}
       >
         <WebView
+          javaScriptEnabled={true}
+          scrollEnabled={true}
+          nestedScrollEnabled
           source={{ uri: challenge?.LiveLink }}
-          style={{ borderWidth: 1, height: height * 1 }}
+          style={{ borderWidth: 1, height: height * 0.8 }}
         />
       </View>
     </ScrollView>

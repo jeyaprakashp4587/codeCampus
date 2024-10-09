@@ -8,7 +8,7 @@ import {
   View,
   TextInput,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Colors, pageView } from "../constants/Colors";
 import { useData } from "../Context/Contexter";
 import HeadingText from "../utils/HeadingText";
@@ -35,6 +35,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import Actitivity from "../hooks/ActivityHook";
 import { RefreshControl } from "react-native";
 import { useNavigation } from "expo-router";
+import moment from "moment";
 
 const { width, height } = Dimensions.get("window");
 
@@ -75,14 +76,15 @@ const ChallengeDetail = () => {
         {
           ChallengeName:
             selectedChallenge?.ChallengeName || selectedChallenge?.title,
-          ChallengeType: selectedChallenge?.ChallengeType || null,
+          ChallengeType:
+            selectedChallenge?.ChallengeType ||
+            selectedChallenge?.ChallengeType,
           ChallengeLevel:
             selectedChallenge?.ChallengeLevel || selectedChallenge?.level,
         }
       );
       if (res.data) {
         // console.log(res.data);
-
         setSelectedChallenge(res.data);
         checkChallengeStatus();
       }
@@ -156,6 +158,53 @@ const ChallengeDetail = () => {
       }
     }
   };
+  // handle upload a challenge as a post
+  const postText = useMemo(
+    () => [
+      `Thrilled to announce that I’ve just completed a challenging ${selectedChallenge?.ChallengeType} project! The task was ${selectedChallenge?.ChallengeName}. Check out the details in the link below!`,
+      `Excited to share that I’ve finished a new ${selectedChallenge?.ChallengeType} challenge! It was called ${selectedChallenge?.ChallengeName}. Check out more info below!`,
+      `Happy to say I’ve completed another ${selectedChallenge?.ChallengeType} project! The challenge was ${selectedChallenge?.ChallengeName}. Here’s the link to know more!`,
+      `Proud to announce that I’ve finished the ${selectedChallenge?.ChallengeName} challenge, which was a ${selectedChallenge?.ChallengeType} project! Check the link below!`,
+      `Just wrapped up an amazing ${selectedChallenge?.ChallengeType} project called ${selectedChallenge?.ChallengeName}! Take a look at the details below!`,
+      `Completed a fantastic ${selectedChallenge?.ChallengeType} challenge today! The project was ${selectedChallenge?.ChallengeName}. Check out more below!`,
+      `Feeling accomplished! I’ve just completed the ${selectedChallenge?.ChallengeType} project named ${selectedChallenge?.ChallengeName}. Have a look at the details below!`,
+      `Done with another challenging ${selectedChallenge?.ChallengeType} project! It was called ${selectedChallenge?.ChallengeName}. Check the link below!`,
+      `Finished a tricky ${selectedChallenge?.ChallengeType} challenge named ${selectedChallenge?.ChallengeName}. Check out the details below!`,
+      `Successfully completed the ${selectedChallenge?.ChallengeName} project, which was part of a challenging ${selectedChallenge?.ChallengeType}. Check out the link below!`,
+    ],
+    []
+  );
+
+  const handleUploadPost = async () => {
+    try {
+      const res = await axios.post(`${Api}/Post/uploadPost`, {
+        userId: user?._id,
+        Images: snapImage,
+        postText: postText[Math.floor(Math.random() * postText.length)],
+        postLink: uploadForm.LiveLink,
+        Time: moment().format("YYYY-MM-DDTHH:mm:ss"),
+      });
+
+      if (res.status == 200) {
+        console.log(res.data);
+        emitEvent("PostNotiToConnections", {
+          Time: moment().format("YYYY-MM-DDTHH:mm:ss"),
+          postId: res.data?.postId,
+        });
+        Alert.alert("Uploaded Successfully");
+        refreshFields();
+      } else {
+        Alert.alert("Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      console.error(
+        "Upload error:",
+        error.response ? error.response.data : error.message
+      );
+      Alert.alert("Upload failed. Please check your connection.");
+    }
+  };
+  //
 
   // Handle challenge start
   const HandleStart = async (chName) => {
@@ -186,15 +235,6 @@ const ChallengeDetail = () => {
     // Cleanup listener
     return unsubscribeFocus;
   }, [navigation, checkChallengeStatus, getParticularChallenge]);
-
-  // Clear selected challenge on blur
-  useEffect(() => {
-    const unsubscribeBlur = navigation.addListener("blur", () => {
-      setSelectedChallenge(null); // Clear data when navigating away
-    });
-
-    return unsubscribeBlur;
-  }, [navigation, setSelectedChallenge]);
 
   // Handle text input for challenge form
   const HandleText = (name, text) => {
