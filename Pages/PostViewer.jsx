@@ -21,12 +21,13 @@ const PostViewer = () => {
     getPostDetail();
   }, []);
   return (
-    <View>
+    <View style={{ backgroundColor: "white", flex: 1 }}>
       <Posts
         post={post?.Posts} // Pass post data as props
         senderDetails={post?.SenderDetails}
         index={0} // Pass index
-        admin={false} // Optionally pass if the user is admin
+        admin={false}
+        elevation={true} // Optionally pass if the user is admin
         // updateLikeCount={updateLikeCount} // Function to update like count
       />
     </View>

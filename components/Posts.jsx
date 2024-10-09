@@ -23,15 +23,15 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
 
-const Posts = ({ post, index, admin, senderDetails }) => {
+const Posts = ({ post, index, admin, senderDetails, elevation }) => {
   const initialText = post?.PostText;
   const { user, setUser, setSelectedUser } = useData();
   const navigation = useNavigation();
-  const wordThreshold = 20;
+  const wordThreshold = 10;
   console.log(post);
   const [expanded, setExpanded] = useState(false);
   const [deldisplay, setDeldisplay] = useState(false);
-  const [likeCount, setLikeCount] = useState(post?.Like);
+  const [likeCount, setLikeCount] = useState(Number(post?.Like));
   const [comments, setComments] = useState(post?.Comments || []); // List of comments
   const [newComment, setNewComment] = useState(""); // Track new comment
   const [liked, setLiked] = useState(
@@ -163,8 +163,8 @@ const Posts = ({ post, index, admin, senderDetails }) => {
         borderRadius: 10,
         backgroundColor: "white",
         marginBottom: 10,
-        elevation: 3,
-        marginHorizontal: 5,
+        elevation: elevation ? 0 : 3,
+        // marginHorizontal: 5,
       }}
     >
       {/* Post Content */}
@@ -179,10 +179,12 @@ const Posts = ({ post, index, admin, senderDetails }) => {
         />
         <View style={{ flex: 1, paddingHorizontal: 15 }}>
           <Text style={styles.userName}>
-            {senderDetails?.firstName + senderDetails?.LastName}
+            {senderDetails
+              ? senderDetails?.firstName + " " + senderDetails?.LastName
+              : user?.firstName + " " + user?.LastName}
           </Text>
           <Text style={styles.instituteText}>
-            {senderDetails?.InstitudeName}
+            {senderDetails ? senderDetails?.InstitudeName : user?.InstitudeName}
           </Text>
         </View>
         {admin && (
@@ -219,6 +221,7 @@ const Posts = ({ post, index, admin, senderDetails }) => {
 
       {post?.Images && (
         <FlatList
+          showsHorizontalScrollIndicator={false}
           data={post?.Images}
           horizontal
           renderItem={({ item, index }) => (

@@ -36,6 +36,8 @@ import Actitivity from "../hooks/ActivityHook";
 import { RefreshControl } from "react-native";
 import { useNavigation } from "expo-router";
 import moment from "moment";
+import useSocket from "../Socket/useSocket";
+import useSocketEmit from "../Socket/useSocketEmit";
 
 const { width, height } = Dimensions.get("window");
 
@@ -46,9 +48,10 @@ const ChallengeDetail = () => {
   const [ChallengeStatus, setChallengeStatus] = useState("");
   const [statusButtonToggle, setStatusButtonToggle] = useState(false);
   const [uploadForm, setUploadForm] = useState({ GitRepo: "", LiveLink: "" });
-  const [snapImage, setSnapImage] = useState();
   const [imgLoad, setImageLoad] = useState(false);
-
+  const [images, setImages] = useState([]);
+  const socket = useSocket();
+  const emitEvent = useSocketEmit(socket);
   // Fetch the challenge status
   const checkChallengeStatus = useCallback(async () => {
     try {
@@ -106,7 +109,7 @@ const ChallengeDetail = () => {
         cacheControl: "public,max-age=31536000",
       });
       const downloadURL = await getDownloadURL(storageRef);
-      setSnapImage(downloadURL);
+      return downloadURL;
     } catch (error) {
       console.error("Error uploading image:", error);
     } finally {
@@ -120,9 +123,18 @@ const ChallengeDetail = () => {
       const permissionResult =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (permissionResult.granted) {
-        const result = await ImagePicker.launchImageLibraryAsync();
+        const result = await ImagePicker.launchImageLibraryAsync({
+          selectionLimit: 4,
+          allowsMultipleSelection: true,
+          aspect: [4, 3],
+        });
         if (!result.canceled) {
-          uploadSnap(result.assets[0].uri);
+          const uploadedImages = await Promise.all(
+            result.assets.map(async (asset) => {
+              return await uploadSnap(asset.uri);
+            })
+          );
+          setImages((prev) => [...prev, ...uploadedImages]);
         }
       }
     } catch (error) {
@@ -132,20 +144,21 @@ const ChallengeDetail = () => {
 
   // Handle uploading challenge details
   const HandleUpload = async () => {
-    if (uploadForm.GitRepo && uploadForm.LiveLink && snapImage) {
+    if (uploadForm.GitRepo && uploadForm.LiveLink && images) {
       try {
         const res = await axios.post(
           `${Api}/Challenges/uploadChallenge/${user._id}`,
           {
             GitRepo: uploadForm.GitRepo,
             LiveLink: uploadForm.LiveLink,
-            SnapImage: snapImage,
+            SnapImage: images,
             ChallengeName:
               selectedChallenge?.title || selectedChallenge?.ChallengeName,
           }
         );
         if (res.data === "completed") {
           setChallengeStatus("completed");
+          await handleUploadPost();
           Actitivity(
             user._id,
             `${
@@ -179,14 +192,14 @@ const ChallengeDetail = () => {
     try {
       const res = await axios.post(`${Api}/Post/uploadPost`, {
         userId: user?._id,
-        Images: snapImage,
+        Images: images,
         postText: postText[Math.floor(Math.random() * postText.length)],
         postLink: uploadForm.LiveLink,
         Time: moment().format("YYYY-MM-DDTHH:mm:ss"),
       });
 
       if (res.status == 200) {
-        console.log(res.data);
+        // console.log(res.data);
         emitEvent("PostNotiToConnections", {
           Time: moment().format("YYYY-MM-DDTHH:mm:ss"),
           postId: res.data?.postId,
@@ -521,18 +534,18 @@ const ChallengeDetail = () => {
               <PragraphText text="Upload Snapshot" padding={1} fsize={15} />
             </TouchableOpacity>
             {/* show oupload image */}
-            {snapImage ? (
-              <Image
-                source={{ uri: snapImage }}
-                style={{
-                  width: "100%",
-                  height: height * 0.3,
-                  resizeMode: "contain",
-                }}
-              />
-            ) : (
-              <Text></Text>
-            )}
+            {images.length > 0
+              ? images.map((item) => (
+                  <Image
+                    source={{ uri: item }}
+                    style={{
+                      width: "100%",
+                      height: height * 0.3,
+                      resizeMode: "contain",
+                    }}
+                  />
+                ))
+              : null}
             {/*  */}
             <Ripple
               onPress={HandleUpload}
@@ -555,7 +568,7 @@ const ChallengeDetail = () => {
               </Text>
             </Ripple>
           </View>
-        ) : (
+        ) : ChallengeStatus == "completed" ? (
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("ChallengeViewer");
@@ -576,7 +589,7 @@ const ChallengeDetail = () => {
               See Your Challenge
             </Text>
           </TouchableOpacity>
-        )}
+        ) : null}
         {/* view completed postviewer */}
       </ScrollView>
     </LinearGradient>

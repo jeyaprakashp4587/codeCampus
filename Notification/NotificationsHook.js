@@ -19,13 +19,13 @@ const useNotificationsHook = () => {
     });
 
     // Handle notifications when the app is in the foreground
-    // Notifications.setNotificationHandler({
-    //   handleNotification: async () => ({
-    //     shouldShowAlert: true,
-    //     shouldPlaySound: true,
-    //     shouldSetBadge: true,
-    //   }),
-    // });
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+      }),
+    });
 
     // Listen to incoming notifications
     notificationListener.current =

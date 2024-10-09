@@ -394,21 +394,21 @@ const Home = () => {
             refresh={suggestRefresh}
           />
         </View>
+        {/* posts */}
+        <FlatList
+          data={posts} // Data for FlatList
+          keyExtractor={(item) => item._id} // Key for each post
+          renderItem={({ item, index }) => (
+            <Posts
+              post={item.Posts} // Pass post data as props
+              senderDetails={item.SenderDetails}
+              index={index} // Pass index
+              admin={false} // Optionally pass if the user is admin
+              // updateLikeCount={updateLikeCount} // Function to update like count
+            />
+          )}
+        />
       </ScrollView>
-      {/* post */}
-      <FlatList
-        data={posts} // Data for FlatList
-        keyExtractor={(item) => item._id} // Key for each post
-        renderItem={({ item, index }) => (
-          <Posts
-            post={item.Posts} // Pass post data as props
-            senderDetails={item.SenderDetails}
-            index={index} // Pass index
-            admin={false} // Optionally pass if the user is admin
-            // updateLikeCount={updateLikeCount} // Function to update like count
-          />
-        )}
-      />
     </View>
   );
 };
