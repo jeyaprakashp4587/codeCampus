@@ -36,6 +36,7 @@ import Actitivity from "../hooks/ActivityHook";
 import moment from "moment";
 import useSocketEmit from "../Socket/useSocketEmit";
 import useSocket from "../Socket/useSocket";
+import { useSocketContext } from "../Socket/SocketContext";
 
 const Post = () => {
   const { user } = useData();
@@ -48,7 +49,7 @@ const Post = () => {
   const [uploadIndi, setUploadIndi] = useState(false);
   const [refreshCon, setRefreshCon] = useState(false);
   const [hostImageIndi, setHostImageIndi] = useState(false);
-  const socket = useSocket();
+  const socket = useSocketContext();
 
   const emitEvent = useSocketEmit(socket);
 
@@ -121,7 +122,7 @@ const Post = () => {
 
         if (res.status == 200) {
           setUploadText("Uploaded");
-          console.log(res.data);
+          // console.log(res.data);
           emitEvent("PostNotiToConnections", {
             Time: moment().format("YYYY-MM-DDTHH:mm:ss"),
             postId: res.data?.postId,

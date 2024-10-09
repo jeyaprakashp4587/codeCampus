@@ -32,6 +32,7 @@ import NotificationsHook from "../Notification/NotificationsHook";
 import Ripple from "react-native-material-ripple";
 import Posts from "../components/Posts";
 import { debounce } from "lodash";
+import { useSocketContext } from "../Socket/SocketContext";
 // code -----------
 
 const { width, height } = Dimensions.get("window");
@@ -44,7 +45,7 @@ const Home = () => {
   const [posts, setPosts] = useState([]);
   const [unseenCount, setUnseenCount] = useState(0);
   const { sendLocalNotification } = NotificationsHook();
-  const socket = useSocket();
+  const socket = useSocketContext();
   const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
@@ -119,7 +120,7 @@ const Home = () => {
   const getNotifications = useCallback(async () => {
     try {
       if (user.Notifications.length < 0) {
-        console.log(user?.Notifications.length);
+        // console.log(user?.Notifications.length);
       }
       const res = await axios.get(
         `${Api}/Notifications/getNotifications/${user._id}`
@@ -132,15 +133,19 @@ const Home = () => {
       console.error("Failed to fetch notifications:", error);
     }
   }, [user._id, useSocketOn]);
-
+  useEffect(() => {
+    navigation.addListener("focus", () => {
+      getNotifications();
+    });
+  }, [navigation]);
   useSocketOn(socket, "updateNoti", async (data) => {
     console.log(data);
-    if (data.text == "sucess") {
-      await getNotifications();
+    if (data) {
+      getNotifications();
     }
   });
   useSocketOn(socket, "Noti-test", async (data) => {
-    console.log(data);
+    // console.log(data);
     await sendLocalNotification(data);
     await getNotifications();
   });

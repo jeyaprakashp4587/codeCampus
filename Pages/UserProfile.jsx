@@ -20,12 +20,13 @@ import Api from "../Api";
 import useSocket from "../Socket/useSocket";
 import useSocketEmit from "../Socket/useSocketEmit";
 import moment from "moment";
+import { useSocketContext } from "../Socket/SocketContext";
 
 const UserProfile = () => {
   const { width, height } = Dimensions.get("window");
   const { selectedUser, user, setSelectedUser } = useData();
   // console.log(selectedUser);
-  const socket = useSocket();
+  const socket = useSocketContext();
   const emitSocketEvent = useSocketEmit(socket);
   const [render, setRender] = useState(false);
   const [existsFollower, setExistsFollower] = useState(false);

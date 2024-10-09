@@ -28,7 +28,7 @@ const Posts = ({ post, index, admin, senderDetails, elevation }) => {
   const { user, setUser, setSelectedUser } = useData();
   const navigation = useNavigation();
   const wordThreshold = 10;
-  console.log(post);
+  // console.log(post);
   const [expanded, setExpanded] = useState(false);
   const [deldisplay, setDeldisplay] = useState(false);
   const [likeCount, setLikeCount] = useState(Number(post?.Like));

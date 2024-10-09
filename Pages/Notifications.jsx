@@ -18,6 +18,7 @@ import RelativeTime from "../components/RelativeTime";
 import { useNavigation } from "@react-navigation/native";
 import useSocket from "../Socket/useSocket";
 import useSocketEmit from "../Socket/useSocketEmit";
+import { useSocketContext } from "../Socket/SocketContext";
 
 const Notifications = () => {
   const { user, setSelectedUser, setselectedPost } = useData();
@@ -26,7 +27,7 @@ const Notifications = () => {
   const [notificationList, setNotificationList] = useState([]);
 
   // Socket handling
-  const socket = useSocket();
+  const socket = useSocketContext();
   const emitevent = useSocketEmit(socket);
   // Fetch notifications from the API
   const getNotifications = useCallback(async () => {
