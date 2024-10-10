@@ -4,12 +4,12 @@ import { useData } from "@/Context/Contexter";
 import axios from "axios";
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { View, Text, Button, Alert, Dimensions } from "react-native";
-import { RadioButton } from "react-native-paper"; // Make sure to install react-native-paper
+import { RadioButton } from "react-native-paper";
 import PragraphText from "@/utils/PragraphText";
 import { Colors } from "@/constants/Colors";
 
 const AssignmentPlayGround = () => {
-  const { assignmentType } = useData();
+  const { assignmentType, user } = useData();
   const { width, height } = Dimensions.get("window");
   const [currentQuiz, setCurrentQuiz] = useState();
   const difficulty = ["easy", "medium", "hard"];
@@ -17,21 +17,32 @@ const AssignmentPlayGround = () => {
   const HandleSetDifficulty = (level) => {
     setDifficultyInfo(level);
     getAssignment(assignmentType, level);
+    checkExistsLevel();
   };
-
+  //  check the exists level info
+  const checkExistsLevel = useCallback(
+    (level) => {
+      const findAssignment = user?.Assignments?.find(
+        (item) =>
+          item.AssignmentType.toLowerCase() == assignmentType.toLowerCase()
+      );
+      console.log("asignment", findAssignment);
+    },
+    [user, difficultyInfo]
+  );
+  //
   const getAssignment = useCallback(
     async (ChallengeTopic, level) => {
-      console.log(level);
+      // console.log(level);
       try {
         const res = await axios.get(
           `${Api}/Assignment/getAssignments/${ChallengeTopic}`
         );
         if (res.data) {
           const { easy, medium, hard } = res.data;
-
           switch (level) {
             case "easy":
-              console.log(easy);
+              // console.log(easy);
               setCurrentQuiz([...easy]);
               break;
             case "medium":
@@ -70,7 +81,7 @@ const AssignmentPlayGround = () => {
   );
 
   // Check answers and evaluate score
-  const checkAnswers = useCallback(() => {
+  const checkAnswers = useCallback(async () => {
     let score = 0;
     currentQuiz?.forEach((item, index) => {
       if (item.answer === selectedAnswers[index]) {
@@ -86,7 +97,14 @@ const AssignmentPlayGround = () => {
         ? 15
         : 15
     ) {
-      Alert.alert("Congratulations!", "You passed the quiz!");
+      const res = await axios.post(
+        `${Api}/Assignment/saveAssignment/${user._id}`,
+        { AssignmentType: assignmentType, point: score, level: difficultyInfo }
+      );
+      if (res.data.Email) {
+        setUserId(res.data);
+        Alert.alert("Congratulations!", "You passed the quiz!");
+      }
     } else {
       Alert.alert("Try Again!", `You did not pass. Score: ${score}`);
     }

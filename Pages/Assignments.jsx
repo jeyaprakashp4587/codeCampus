@@ -71,7 +71,7 @@ const Assignments = () => {
   //
   const HandleSelectAssignment = useCallback(
     (Tool) => {
-      console.log(Tool.toLowerCase()); // Use the new Tool value directly
+      // console.log(Tool.toLowerCase()); // Use the new Tool value directly
 
       const findTool = userTools?.find(
         (i) => i.toLowerCase() == Tool.toLowerCase() // Compare with the current Tool, not the previous selectedTool state
