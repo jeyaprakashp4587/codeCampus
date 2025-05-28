@@ -33,8 +33,7 @@ import Ripple from "react-native-material-ripple";
 import Posts from "../components/Posts";
 import { debounce } from "lodash";
 import { useSocketContext } from "../Socket/SocketContext";
-// code -----------
-
+// ---- code ---- //
 const { width, height } = Dimensions.get("window");
 const Home = () => {
   const navigation = useNavigation();
